@@ -134,6 +134,10 @@
     }
 }
 
+html {
+    scrollbar-gutter: stable;
+}
+
 /* MARKDOWN */
 .prose {
     line-height: 1.75;
