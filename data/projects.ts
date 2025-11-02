@@ -46,7 +46,7 @@ export const softwareEngineeringProjects = [
   {
     title: "Zed Django Snippets",
     description: "A collection of useful Django snippets for Zed.",
-    tags: ["Next.js", "API", "Maps"],
+    tags: ["TypeScript"],
     link: "https://github.com/bencres/zed-django-snippets",
   },
 ];
