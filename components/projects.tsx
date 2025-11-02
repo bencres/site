@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ExternalLink } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -14,31 +14,10 @@ export default function Projects() {
     "technical-art" | "software-engineering"
   >("technical-art");
 
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768);
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, []);
-
   const projects =
     category === "technical-art"
       ? technicalArtProjects
       : softwareEngineeringProjects;
-
-  const motionProps = isMobile
-    ? {
-        initial: { opacity: 0 },
-        animate: { opacity: 1 },
-        exit: { opacity: 0 },
-      }
-    : {
-        initial: { opacity: 0, height: 0 },
-        animate: { opacity: 1, height: "auto" },
-        exit: { opacity: 0, height: 0 },
-      };
 
   return (
     <section id="projects" className="mb-20 scroll-mt-24">
@@ -71,7 +50,9 @@ export default function Projects() {
         <AnimatePresence mode="wait">
           <motion.div
             key={category}
-            {...motionProps}
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.25, ease: "easeOut" }}
             className="grid md:grid-cols-2 gap-6"
           >
