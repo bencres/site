@@ -10,7 +10,7 @@ export default function BackButton() {
   return (
     <motion.button
       whileHover={{ x: -4 }}
-      onClick={() => router.back()}
+      onClick={() => router.push("/")}
       className="group flex items-center gap-2 text-sm text-muted-foreground hover:text-accent transition-colors cursor-pointer"
     >
       <ArrowLeft

@@ -1,3 +1,4 @@
+// animated-main.tsx
 "use client";
 
 import { motion } from "framer-motion";
@@ -13,9 +14,13 @@ interface AnimatedMainProps {
 
 export default function AnimatedMain({ posts }: AnimatedMainProps) {
   return (
-    <motion.main className="max-w-4xl mx-auto px-6 py-16 md:py-24">
-      <Hero />
-      <Projects />
+    <motion.main layout className="max-w-4xl mx-auto px-6 py-16 md:py-24">
+      <motion.div layout>
+        <Hero />
+      </motion.div>
+      <motion.div layout>
+        <Projects />
+      </motion.div>
       {/*<motion.div layout>
         <Experience />
       </motion.div>*/}
