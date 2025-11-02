@@ -16,9 +16,9 @@ export default function AnimatedMain({ posts }: AnimatedMainProps) {
     <motion.main className="max-w-4xl mx-auto px-6 py-16 md:py-24">
       <Hero />
       <Projects />
-      <motion.div layout>
+      {/*<motion.div layout>
         <Experience />
-      </motion.div>
+      </motion.div>*/}
       <motion.div layout>
         <Blog posts={posts} />
       </motion.div>

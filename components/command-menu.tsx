@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { Search, Github, Linkedin, Mail } from "lucide-react";
+import { Search, Github, Linkedin, Mail, Download } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import {
   CommandDialog,
@@ -62,6 +62,14 @@ export default function CommandMenu() {
           },
         },
         {
+          label: "Download Resume",
+          icon: Download,
+          action: () => {
+            window.open("/cressman-benjamin-resume.pdf", "_blank");
+            setOpen(false);
+          },
+        },
+        {
           label: "GitHub",
           icon: Github,
           action: () => {
@@ -83,7 +91,14 @@ export default function CommandMenu() {
       title: "Navigate",
       items: [
         {
-          label: "Projects",
+          label: "Home",
+          action: () => {
+            setOpen(false);
+            router.push("/");
+          },
+        },
+        {
+          label: "Work",
           action: () => {
             setOpen(false);
 
@@ -96,19 +111,19 @@ export default function CommandMenu() {
             }
           },
         },
-        {
-          label: "Experience",
-          action: () => {
-            setOpen(false);
-            if (pathname === "/") {
-              document
-                .getElementById("experience")
-                ?.scrollIntoView({ behavior: "smooth" });
-            } else {
-              router.push("/#experience");
-            }
-          },
-        },
+        // {
+        //   label: "Experience",
+        //   action: () => {
+        //     setOpen(false);
+        //     if (pathname === "/") {
+        //       document
+        //         .getElementById("experience")
+        //         ?.scrollIntoView({ behavior: "smooth" });
+        //     } else {
+        //       router.push("/#experience");
+        //     }
+        //   },
+        // },
         {
           label: "Blog",
           action: () => {

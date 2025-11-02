@@ -20,14 +20,14 @@ export default function Header() {
             href="/#projects"
             className="hidden md:block text-sm hover:text-accent transition rounded-md"
           >
-            Projects
+            Work
           </a>
-          <a
+          {/*<a
             href="/#experience"
             className="hidden md:block text-sm hover:text-accent transition rounded-md"
           >
             Experience
-          </a>
+          </a>*/}
           <a
             href="/#blog"
             className="hidden md:block text-sm hover:text-accent transition rounded-md"

@@ -21,7 +21,7 @@ export default function Projects() {
 
   return (
     <section id="projects" className="mb-20 scroll-mt-24">
-      <h2 className="text-3xl font-bold mb-8">Projects</h2>
+      <h2 className="text-3xl font-bold mb-8">Work</h2>
 
       <div className="flex gap-3 mb-8">
         <button
