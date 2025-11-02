@@ -9,6 +9,8 @@ excerpt: "A quick guide to creating a Houdini package in Houdini 21 with a custo
 
 It took me a while to figure this out, so I thought I'd write a quick blog post.
 
+Check out the template [here](https://github.com/bencres/houdini-package-template).
+
 ---
 
 There are a bunch of different ways to create one; what I'm going to show here is the easiest for one individual user. You can check out SideFX's [Houdini Package documentation](https://www.sidefx.com/docs/houdini/ref/plugins.html) for more detailed information.

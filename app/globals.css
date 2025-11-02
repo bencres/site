@@ -118,7 +118,6 @@
 @layer base {
     * {
         @apply border-border;
-        /* improve focus ring styling - larger padding, rounded corners, softer appearance */
         outline: 2px solid transparent;
         outline-offset: 2px;
     }
@@ -206,4 +205,21 @@ html {
 
 .prose a {
     color: var(--accent);
+}
+
+.prose blockquote {
+    border-left: 4px solid var(--accent);
+    padding: 0.75rem 1.25rem;
+    margin: 1rem 2rem;
+    background-color: var(--card);
+    color: hsl(var(--foreground));
+    border-radius: 0.25rem;
+}
+
+.prose blockquote::before {
+    content: none;
+}
+
+.prose blockquote p {
+    margin: 0;
 }
