@@ -47,6 +47,8 @@ export default function Header() {
             </a>
             <a
               href="/cressman-benjamin-resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-muted-foreground hover:text-accent transition rounded-sm"
               title="Download Resume"
             >
