@@ -29,7 +29,7 @@ export default function Projects() {
           className={`px-4 py-2 rounded-lg font-medium transition ${
             category === "technical-art"
               ? "bg-accent text-accent-foreground"
-              : "bg-card border border-border hover:border-accent text-foreground"
+              : "border border-border hover:border-accent text-foreground bg-card"
           }`}
         >
           Technical Art
@@ -39,7 +39,7 @@ export default function Projects() {
           className={`px-4 py-2 rounded-lg font-medium transition ${
             category === "software-engineering"
               ? "bg-accent text-accent-foreground"
-              : "bg-card border border-border hover:border-accent text-foreground"
+              : "border border-border hover:border-accent text-foreground bg-card"
           }`}
         >
           Software Engineering
@@ -62,7 +62,7 @@ export default function Projects() {
                 href={project.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-6 rounded-lg border border-border hover:border-accent bg-card hover:bg-card/80 transition group"
+                className="p-6 bg-card rounded-lg border border-border hover:border-accent hover:shadow-lg shadow-blue-500/50 transition group"
               >
                 <div className="flex items-start justify-between mb-3">
                   <h3 className="text-xl font-semibold group-hover:text-accent transition">

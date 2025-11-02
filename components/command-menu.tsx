@@ -149,7 +149,7 @@ export default function CommandMenu() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="hidden md:flex items-center gap-2 px-3 py-2 rounded-lg border border-border hover:bg-card/50 transition text-sm text-muted-foreground"
+        className="hidden md:flex items-center gap-2 px-3 py-2 rounded-lg border border-border hover:border-accent bg-card transition text-sm text-foreground"
       >
         <Search size={16} />
         <span>⌘K</span>

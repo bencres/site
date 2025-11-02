@@ -17,7 +17,7 @@ export default function Blog({ posts }: { posts: PostMeta[] }) {
           <MotionLink
             key={post.slug}
             href={`/blog/${post.slug}`}
-            className="p-4 rounded-lg border border-border hover:border-accent hover:bg-card/50 transition group flex items-center justify-between block"
+            className="p-4 bg-card rounded-lg border border-border hover:border-accent transition group flex items-center justify-between block hover:shadow-md shadow-blue-500/50"
             whileHover={{ x: 8 }}
             transition={{ duration: 0.1, ease: "linear" }}
           >
