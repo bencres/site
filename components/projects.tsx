@@ -50,9 +50,11 @@ export default function Projects() {
         <AnimatePresence mode="wait">
           <motion.div
             key={category}
-            initial={{ opacity: 0, height: 0 }}
+            // There's definitely a better way to do this.
+            // TODO: calculate this.
+            initial={{ opacity: 0, height: 400 }}
             animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
+            exit={{ opacity: 0, height: 400 }}
             transition={{ duration: 0.25, ease: "easeOut" }}
             className="grid md:grid-cols-2 gap-6"
           >
