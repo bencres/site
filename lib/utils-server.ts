@@ -3,6 +3,7 @@ import path from "path";
 import matter from "gray-matter";
 import { remark } from "remark";
 import remarkRehype from "remark-rehype";
+import rehypeExternalLinks from "rehype-external-links";
 import rehypeHighlight from "rehype-highlight";
 import rehypeStringify from "rehype-stringify";
 import "highlight.js/styles/github-dark.css";
@@ -53,6 +54,10 @@ export async function getRenderedPost(slug: string): Promise<Post> {
   const processed = await remark()
     .use(remarkRehype)
     .use(rehypeHighlight)
+    .use(rehypeExternalLinks, {
+      target: "_blank",
+      rel: ["noopener", "noreferrer"],
+    })
     .use(rehypeStringify)
     .process(content);
 
