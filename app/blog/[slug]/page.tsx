@@ -45,8 +45,6 @@ export default async function BlogPostPage({
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <Header />
-
       <main className="max-w-4xl mx-auto px-6 py-12">
         <article className="prose prose-invert max-w-none space-y-6">
           <header className="mb-10">
@@ -78,7 +76,6 @@ export default async function BlogPostPage({
           <BackButton />
         </div>
       </main>
-      <Footer />
     </div>
   );
 }
