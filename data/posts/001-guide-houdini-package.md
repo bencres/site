@@ -7,8 +7,6 @@ tags: ["houdini", "python", "tech art"]
 excerpt: "A quick guide to creating a Houdini package in Houdini 21 with a custom Python library and Python panel."
 ---
 
-It took me a while to figure this out, so I thought I'd write a quick blog post.
-
 Check out the template [here](https://github.com/bencres/houdini-package-template).
 
 ---
