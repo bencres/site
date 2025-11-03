@@ -68,6 +68,7 @@ export default async function BlogPostPage({
               prose-ol:list-decimal
               prose-ul:list-disc
               prose-hr:border-border
+              transition-colors duration-300
             "
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
