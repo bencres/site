@@ -77,10 +77,8 @@ export default async function BlogPostPage({
         <div className="mt-12">
           <BackButton />
         </div>
-        <div>
-          <Footer />
-        </div>
       </main>
+      <Footer />
     </div>
   );
 }
