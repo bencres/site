@@ -9,14 +9,14 @@ export const technicalArtProjects = [
   {
     title: "Grimhook",
     description:
-      "Technical artist on Grimhook. Developed a variety of tools and shaders, like a fast Fourier transform ocean and a procedural hand-painted generator.",
+      "Technical artist on Grimhook at Unlimited Fries. Developed a variety of tools and shaders, like a fast Fourier transform ocean and a procedural hand-painted generator.",
     tags: ["Python", "HLSL", "Unreal Engine"],
     link: "https://store.steampowered.com/app/2667430/Grimhook/",
   },
   {
     title: "Death Bloom",
     description:
-      "Lead artist on Death Bloom. Managed a team of 13 artists. Responsible for art direction and developing tools and shaders to support development.",
+      "Lead artist on Death Bloom at UTD. Managed a team of 13 artists. Responsible for art direction and developing tools and shaders to support development.",
     tags: ["Python", "HLSL", "Unreal Engine"],
     link: "https://www.atec-animgames.com/game-lab",
   },
