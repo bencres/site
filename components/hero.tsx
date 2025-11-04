@@ -16,7 +16,7 @@ export default function Hero() {
           <b>
             <a
               href="mailto:ben@utdallas.edu"
-              className="text-accent hover:text-accent/80 transition"
+              className="text-blue-600 hover:text-blue-400 transition"
             >
               ben@utdallas.edu
             </a>
