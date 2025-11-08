@@ -140,7 +140,7 @@ export default function CommandMenu() {
       ],
     },
     {
-      title: "Blog Posts",
+      title: "Featured Blog Posts",
       items: blogCommands,
     },
   ];
