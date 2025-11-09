@@ -4,7 +4,7 @@ export const technicalArtProjects = [
     description:
       "A tool for digital creators to unify asset access and management across content creation applications.",
     tags: ["Python", "Houdini", "Unreal Engine 5", "Maya", "WIP"],
-    link: "https://github.com/bencres/asset-browser",
+    link: "https://github.com/pxf-lab/uab",
   },
   {
     title: "Grimhook",
