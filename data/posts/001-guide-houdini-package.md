@@ -1,7 +1,7 @@
 ---
 title: "Houdini 21: How to Create a Package"
 category: "tech art"
-date: "01-11-2025"
+date: "2025-11-01"
 id: "ta-0001"
 tags: ["houdini", "python", "tech art"]
 excerpt: "A quick guide to creating a Houdini package in Houdini 21 with a custom Python library and Python panel."

@@ -12,8 +12,7 @@ export async function generateStaticParams() {
 }
 
 function formatReadableDate(raw: string) {
-  // Expecting dates like "1-11-2025" (day-month-year)
-  const [day, month, year] = raw.split("-").map(Number);
+  const [year, month, day] = raw.split("-").map(Number);
 
   const date = new Date(year, month - 1, day);
 

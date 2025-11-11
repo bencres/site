@@ -8,7 +8,7 @@ import { formatReadableDate } from "@/lib/utils-client";
 export default function Blog({ posts }: { posts: PostMeta[] }) {
   return (
     <section id="blog" className="mb-20 scroll-mt-24">
-      <h2 className="text-3xl font-bold mb-10">Blog Posts</h2>
+      <h2 className="text-3xl font-bold mb-10">Blog</h2>
       <div className="space-y-4">
         {[...posts]
           .sort(

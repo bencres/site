@@ -1,7 +1,7 @@
 ---
 title: "Universal Asset Browser: Houdini Integration"
 category: "tech art"
-date: "08-11-2025"
+date: "2025-11-08"
 id: "ta-0002"
 tags: ["houdini", "python", "tech art", "uab"]
 excerpt: "Integrating the Universal Asset Browser with Houdini."
