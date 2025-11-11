@@ -9,9 +9,9 @@ excerpt: "Writing an algorithm to dynamically resize grid cells and grid dimensi
 
 # Purpose
 
-- Users often want to easily see up-close the Preview image of an asset to inspect it for their scene. They also often need to glance at many assets at once to glance through their assets to get an idea of which ones may be suitable. This algorithm is designed to enable that.
+- Users often want to easily see up-close the Preview image of an asset to inspect it for their scene. They also often need to glance at many assets at once to get a quick idea of which ones may be suitable. This algorithm is designed to enable that, smoothly transitioning between zoom levels in the browser.
 
-![The default size of the UAB's browser.](/blog-images/003-default-size.png)
+![The default size of the UAB's browser.](/blog-images/003-default.png)
 
 ![The UAB's browser at minimum size.](/blog-images/003-smallest-size.png)
 
