@@ -5,13 +5,13 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Ben Cressman",
   description:
-    "Technical artist specializing in Python, Houdini, Unreal, and Nuke.",
+    "Pipeline TD at Pixel Foundry. Technical artist specializing in Python, Houdini, Unreal, and Nuke.",
   openGraph: {
     title: "Ben Cressman",
     description:
       "Technical artist specializing in Python, Houdini, Unreal, and Nuke.",
     url: "https://bencres.dev",
-    siteName: "Ben Cressman's Work and Blog",
+    siteName: "Ben Cressman's Site",
     images: [
       {
         url: "https://bencres.dev/embed-default-image.jpg",
