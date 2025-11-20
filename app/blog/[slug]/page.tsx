@@ -5,6 +5,7 @@ import Header from "@/components/header";
 import BackButton from "@/components/ui/back-button";
 import { getAllPosts, getRenderedPost } from "@/lib/utils-server";
 import Footer from "@/components/footer";
+import MarkdownImageLoader from "@/components/markdown-image-loader";
 
 export async function generateStaticParams() {
   const posts = getAllPosts();
@@ -71,6 +72,7 @@ export default async function BlogPostPage({
             "
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
+          <MarkdownImageLoader />
         </article>
         <div className="mt-12">
           <BackButton />
