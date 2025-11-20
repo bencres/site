@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     description:
       "Technical artist specializing in Python, Houdini, Unreal, and Nuke.",
     url: "https://bencres.dev",
-    siteName: "Ben Cressman's Portfolio",
+    siteName: "Ben Cressman's Work and Blog",
     images: [
       {
         url: "https://bencres.dev/embed-default-image.jpg",
