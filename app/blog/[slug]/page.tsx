@@ -1,23 +1,56 @@
-export const runtime = "nodejs";
-
 import { notFound } from "next/navigation";
-import Header from "@/components/header";
-import BackButton from "@/components/ui/back-button";
+import type { Metadata } from "next";
 import { getAllPosts, getRenderedPost } from "@/lib/utils-server";
-import Footer from "@/components/footer";
+import BackButton from "@/components/ui/back-button";
 import MarkdownImageLoader from "@/components/markdown-image-loader";
+
+export const runtime = "nodejs";
 
 export async function generateStaticParams() {
   const posts = getAllPosts();
   return posts.map((p) => ({ slug: p.slug }));
 }
 
+export async function generateMetadata({
+  params,
+}: {
+  params: { slug: string };
+}): Promise<Metadata> {
+  const post = await getRenderedPost(params.slug);
+  if (!post) notFound();
+
+  const { title, excerpt } = post.meta;
+
+  const description =
+    excerpt ||
+    "A blog post by Ben Cressman about technical art and software engineering.";
+  const url = `https://bencres.dev/blog/${params.slug}`;
+  const image = "https://bencres.dev/embed_icon.jpg";
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url,
+      type: "article",
+      siteName: "Ben Cressman's Portfolio",
+      images: [{ url: image, width: 1200, height: 630 }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [image],
+    },
+  };
+}
+
 function formatReadableDate(raw: string) {
   const [year, month, day] = raw.split("-").map(Number);
-
   const date = new Date(year, month - 1, day);
-
-  if (isNaN(date.getTime())) return raw; // fallback if unparsable
+  if (isNaN(date.getTime())) return raw;
 
   const dayNumber = date.getDate();
   const ordinal =
@@ -28,19 +61,16 @@ function formatReadableDate(raw: string) {
         : dayNumber % 10 === 3 && dayNumber !== 13
           ? "rd"
           : "th";
-
-  const fullMonth = date.toLocaleString("en-US", { month: "long" });
-
-  return `${fullMonth} ${dayNumber}${ordinal}, ${year}`;
+  const monthName = date.toLocaleString("en-US", { month: "long" });
+  return `${monthName} ${dayNumber}${ordinal}, ${year}`;
 }
 
 export default async function BlogPostPage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: { slug: string };
 }) {
-  const { slug } = await params;
-  const post = await getRenderedPost(slug);
+  const post = await getRenderedPost(params.slug);
   if (!post) notFound();
 
   return (
@@ -74,6 +104,7 @@ export default async function BlogPostPage({
           />
           <MarkdownImageLoader />
         </article>
+
         <div className="mt-12">
           <BackButton />
         </div>
