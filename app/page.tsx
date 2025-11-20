@@ -14,9 +14,9 @@ export const metadata: Metadata = {
     siteName: "Ben Cressman's Portfolio",
     images: [
       {
-        url: "https://bencres.dev/embed_icon.jpg",
-        width: 2048,
-        height: 2048,
+        url: "https://bencres.dev/embed-default-image.jpg",
+        width: 1200,
+        height: 630,
         alt: "Ben Cressman's logo",
       },
     ],
