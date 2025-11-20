@@ -6,10 +6,16 @@ export default function Hero() {
           Ben Cressman
         </h1>
         <p className="text-lg text-muted-foreground max-w-3xl leading-relaxed">
-          Technical artist and developer based in Dallas, Texas.
+          Technical artist and developer based in{" "}
+          <span className="font-semibold">Dallas, Texas</span>.
         </p>
         <p className="text-lg text-muted-foreground max-w-3xl leading-relaxed mt-4">
-          Expertise in Python, Houdini, Unreal Engine 5, Maya, C#, and Unity.
+          Expertise in <span className="font-semibold">Python</span>,{" "}
+          <span className="font-semibold">Houdini</span>,{" "}
+          <span className="font-semibold">Unreal Engine 5</span>,{" "}
+          <span className="font-semibold">Maya</span>,{" "}
+          <span className="font-semibold">C#</span>, and{" "}
+          <span className="font-semibold">Unity</span>.
         </p>
         <p className="text-lg text-muted-foreground max-w-2xl leading-relaxed mt-4">
           Get in touch:{" "}
