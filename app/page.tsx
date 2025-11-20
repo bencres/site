@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Ben Cressman",
   description:
-    "Pipeline TD at Pixel Foundry. Technical artist specializing in Python, Houdini, Unreal, and Nuke.",
+    "Technical artist specializing in Python, Houdini, Unreal, and Nuke.",
   openGraph: {
     title: "Ben Cressman",
     description:
