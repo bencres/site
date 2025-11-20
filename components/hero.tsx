@@ -13,7 +13,9 @@ export default function Hero() {
           Expertise in <span className="font-semibold">Python</span>,{" "}
           <span className="font-semibold">Houdini</span>,{" "}
           <span className="font-semibold">Unreal Engine 5</span>,{" "}
-          <span className="font-semibold">Maya</span>,{" "}
+          <span className="font-semibold">Nuke</span>,{" "}
+          <span className="font-semibold">Maya</span>, their{" "}
+          <span className="font-semibold">Python API's</span>,{" "}
           <span className="font-semibold">C#</span>, and{" "}
           <span className="font-semibold">Unity</span>.
         </p>
