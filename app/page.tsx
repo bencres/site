@@ -3,7 +3,7 @@ import { getAllPosts } from "@/lib/utils-server";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Ben Cressman's Work and Blog",
+  title: "Ben Cressman",
   description:
     "Technical artist specializing in Python, Houdini, Unreal, and Nuke.",
   openGraph: {
