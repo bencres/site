@@ -1,6 +1,7 @@
 export const runtime = "nodejs";
 
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import Header from "@/components/header";
 import BackButton from "@/components/ui/back-button";
 import { getAllPosts, getRenderedPost } from "@/lib/utils-server";
@@ -10,6 +11,51 @@ import MarkdownImageLoader from "@/components/markdown-image-loader";
 export async function generateStaticParams() {
   const posts = getAllPosts();
   return posts.map((p) => ({ slug: p.slug }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const post = await getRenderedPost(slug);
+
+  if (!post) {
+    return {
+      title: "Post Not Found",
+    };
+  }
+
+  const url = `https://bencres.dev/blog/${slug}`;
+
+  return {
+    title: post.meta.title,
+    description: post.meta.excerpt,
+    openGraph: {
+      title: post.meta.title,
+      description: post.meta.excerpt,
+      url,
+      siteName: "Ben Cressman's Work and Blog",
+      images: [
+        {
+          url: "https://bencres.dev/embed-default-image.jpg",
+          width: 1200,
+          height: 630,
+          alt: post.meta.title,
+        },
+      ],
+      locale: "en_US",
+      type: "article",
+      publishedTime: post.meta.date,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.meta.title,
+      description: post.meta.excerpt,
+      images: ["https://bencres.dev/embed-default-image.jpg"],
+    },
+  };
 }
 
 function formatReadableDate(raw: string) {
