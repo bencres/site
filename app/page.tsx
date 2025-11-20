@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description:
     "Technical artist specializing in Python, Houdini, Unreal, and Nuke.",
   openGraph: {
-    title: "Ben Cressman's Work and Blog",
+    title: "Ben Cressman",
     description:
       "Technical artist specializing in Python, Houdini, Unreal, and Nuke.",
     url: "https://bencres.dev",
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Ben Cressman's Work and Blog",
+    title: "Ben Cressman",
     description:
       "Technical artist specializing in Python, Houdini, Unreal, and Nuke.",
     images: ["https://bencres.dev/embed_icon.jpg"],
