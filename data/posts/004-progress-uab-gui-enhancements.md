@@ -103,4 +103,4 @@ We're currently in discussion regarding what makes the most sense for the next f
 
 I'm really happy with the progress over the last two weeks. It feels like the UAB has hit the point of being genuinely useful, and that is an absolutely awesome feeling.
 
-If anyone has any feature suggestions or questions about the project, feeling free to get in touch with me.
+If anyone has any feature suggestions or questions about the project, feel free to get in touch with me.
