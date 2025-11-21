@@ -1,5 +1,9 @@
 export const posts = [
   {
+    title: "Universal Asset Browser Progress Update: GUI Enhancements, Launcher Shenanigans, and a New Server/Client Model",
+    slug: "004-progress-uab-gui-enhancements",
+  },
+  {
     title: "Universal Asset Browser: Houdini Integration",
     slug: "002-progress-uab-houdini-integration",
   },
