@@ -10,8 +10,9 @@ export default function Hero() {
           <span className="font-semibold">Dallas, Texas</span>.
         </p>
         <p className="text-lg text-muted-foreground max-w-3xl leading-relaxed mt-4">
-          <span className="font-semibold">Pipeline TD at Pixel Foundry</span>{" "}
-          supporting photo-real effects and photogrammetry.
+          <span className="font-semibold">Pipeline TD</span> at{" "}
+          <span className="font-semibold">Pixel Foundry</span> supporting
+          photo-real effects and photogrammetry.
         </p>
         <p className="text-lg text-muted-foreground max-w-3xl leading-relaxed mt-4">
           Expertise in <span className="font-semibold">Python</span>,{" "}
