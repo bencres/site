@@ -29,7 +29,7 @@ export default function Hero() {
           <b>
             <a
               href="mailto:ben@utdallas.edu"
-              className="text-blue-600 hover:text-blue-400 transition"
+              className="text-blue-600 hover:text-blue-400 transition rounded-md"
             >
               ben@utdallas.edu
             </a>

@@ -10,7 +10,7 @@ export default function Header() {
       <nav className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
         <Link
           href="/"
-          className="text-xl font-bold text-accent hover:text-accent/80 transition-colors"
+          className="text-xl font-bold text-accent hover:text-accent/80 transition-colors rounded-md p-0.5"
         >
           bencres.dev
         </Link>
@@ -18,7 +18,7 @@ export default function Header() {
         <div className="flex items-center gap-6">
           <a
             href="/#projects"
-            className="hidden md:block text-sm hover:text-accent transition rounded-md"
+            className="hidden md:block text-sm hover:text-accent transition rounded-md p-0.5"
           >
             Work
           </a>
@@ -30,7 +30,7 @@ export default function Header() {
           </a>*/}
           <a
             href="/#blog"
-            className="hidden md:block text-sm hover:text-accent transition rounded-md"
+            className="hidden md:block text-sm hover:text-accent transition rounded-md p-0.5"
           >
             Blog
           </a>
@@ -40,7 +40,7 @@ export default function Header() {
           <div className="flex gap-3">
             <a
               href="mailto:ben@utdallas.edu"
-              className="text-muted-foreground hover:text-accent transition rounded-sm"
+              className="text-muted-foreground hover:text-accent transition rounded-sm p-0.5"
               title="Send Email"
             >
               <Mail size={18} />
@@ -49,7 +49,7 @@ export default function Header() {
               href="/cressman-benjamin-resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-accent transition rounded-sm"
+              className="text-muted-foreground hover:text-accent transition rounded-sm p-0.5"
               title="Download Resume"
             >
               <Download size={18} />
@@ -58,7 +58,7 @@ export default function Header() {
               href="https://github.com/bencres"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-accent transition rounded-sm"
+              className="text-muted-foreground hover:text-accent transition rounded-sm p-0.5"
               title="Open GitHub"
             >
               <Github size={18} />
@@ -67,7 +67,7 @@ export default function Header() {
               href="https://linkedin.com/in/bencres"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-accent transition rounded-sm"
+              className="text-muted-foreground hover:text-accent transition rounded-sm p-0.5"
               title="Open LinkedIn"
             >
               <Linkedin size={18} />
