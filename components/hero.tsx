@@ -6,8 +6,12 @@ export default function Hero() {
           Ben Cressman
         </h1>
         <p className="text-lg text-muted-foreground max-w-3xl leading-relaxed">
-          Pipeline TD at Pixel Foundry. Technical artist and developer based in{" "}
+          Technical artist and developer based in{" "}
           <span className="font-semibold">Dallas, Texas</span>.
+        </p>
+        <p className="text-lg text-muted-foreground max-w-3xl leading-relaxed mt-4">
+          <span className="font-semibold">Pipeline TD at Pixel Foundry</span>{" "}
+          supporting photo-real effects and photogrammetry.
         </p>
         <p className="text-lg text-muted-foreground max-w-3xl leading-relaxed mt-4">
           Expertise in <span className="font-semibold">Python</span>,{" "}
