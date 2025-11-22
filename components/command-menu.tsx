@@ -65,7 +65,7 @@ export default function CommandMenu() {
           label: "Download Resume",
           icon: Download,
           action: () => {
-            window.open("/cressman-benjamin-resume.pdf", "_blank");
+            window.open("/ben-cressman-tech-artist-resume.pdf", "_blank");
             setOpen(false);
           },
         },
