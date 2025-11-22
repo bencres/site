@@ -22,12 +22,6 @@ export default function Header() {
           >
             Work
           </a>
-          {/*<a
-            href="/#experience"
-            className="hidden md:block text-sm hover:text-accent transition rounded-md"
-          >
-            Experience
-          </a>*/}
           <a
             href="/#blog"
             className="hidden md:block text-sm hover:text-accent transition rounded-md p-0.5"
@@ -46,7 +40,7 @@ export default function Header() {
               <Mail size={18} />
             </a>
             <a
-              href="/cressman-benjamin-resume.pdf"
+              href="/ben-cressman-tech-artist-resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
               className="text-muted-foreground hover:text-accent transition rounded-sm p-0.5"
