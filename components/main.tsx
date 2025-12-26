@@ -4,6 +4,7 @@
 import Hero from "@/components/hero";
 import Projects from "@/components/projects";
 import Experience from "@/components/experience";
+import OpenSource from "@/components/open-source";
 import Blog from "@/components/blog";
 import type { PostMeta } from "@/lib/utils-server";
 
@@ -22,6 +23,9 @@ export default function Main({ posts }: MainProps) {
       </div>
       <div>
         <Experience />
+      </div>
+      <div>
+        <OpenSource />
       </div>
       <div>
         <Blog posts={posts} />
