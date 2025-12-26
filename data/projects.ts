@@ -18,7 +18,7 @@ export const technicalArtProjects = [
     description:
       "Lead artist on Death Bloom at UTD. Managed a team of 13 artists. Responsible for art direction and developing tools and shaders to support development.",
     tags: ["Python", "HLSL", "Unreal Engine"],
-    link: "https://www.atec-animgames.com/game-lab",
+    link: "https://vimeo.com/825557758",
   },
 ];
 
