@@ -2,7 +2,7 @@ export const technicalArtProjects = [
   {
     title: "Pixel Foundry Pipeline",
     description:
-      "Developed the Pixel Foundry Lab's photo-real effects and photogrammetry pipeline and built our project management and version control system and CI/CD pipeline.",
+      "Developed the Pixel Foundry's photo-real effects and photogrammetry pipeline and built our project management and version control system and CI/CD pipeline.",
     tags: ["Python", "Houdini", "Nuke", "GitHub Actions", "WIP"],
     link: "https://github.com/pxf-lab/pxf-pipeline",
   },
