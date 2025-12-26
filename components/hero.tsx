@@ -6,13 +6,12 @@ export default function Hero() {
           Ben Cressman
         </h1>
         <p className="text-lg text-muted-foreground max-w-3xl leading-relaxed">
-          Technical artist and developer based in{" "}
+          Software engineer based in{" "}
           <span className="font-semibold">Dallas, Texas</span>.
         </p>
         <p className="text-lg text-muted-foreground max-w-3xl leading-relaxed mt-4">
-          <span className="font-semibold">Pipeline TD</span> at{" "}
-          <span className="font-semibold">Pixel Foundry</span> supporting
-          photo-real effects and photogrammetry.
+          I have <strong>two years</strong> of experience in technical art and pipeline development for games and visual effects.
+          Currently, I am a <strong>Pipeline TD at Pixel Foundry</strong>, where I am responsible for developing our photo-real effects and photogrammetry pipeline.
         </p>
         <p className="text-lg text-muted-foreground max-w-3xl leading-relaxed mt-4">
           Expertise in <span className="font-semibold">Python</span>,{" "}
