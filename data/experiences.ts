@@ -10,8 +10,6 @@ export const experiences = [
       "Houdini",
       "Nuke",
       "GitHub Actions",
-      "Unreal Engine 5",
-      "Maya",
     ],
   },
   {
@@ -31,7 +29,7 @@ export const experiences = [
     company: "The University of Texas at Dallas",
     duration: "Aug 2023 - May 2026",
     description:
-      "Taught Programming for Digital Artists, an introductory Python course. Wrote the Bass School's educational programming infrastructure to automate testing, grading, and feedback, reducing server costs by 16x as compared to the previous system.",
+      "TA for Programming for Digital Artists, an introductory Python course. Wrote the Bass School's educational programming infrastructure to automate most testing, grading, and feedback, reducing server costs by 16x as compared to the previous system.",
     tools: [
       "Python",
       "GitHub Actions",
@@ -46,7 +44,7 @@ export const experiences = [
     tools: [
       "Python",
       "HLSL",
-      "Unreal Engine",
+      "Unreal",
     ],
   },
   {
@@ -54,11 +52,11 @@ export const experiences = [
     company: "The University of Texas at Dallas",
     duration: "January 2023 - May 2023",
     description:
-      "Lead artist on Death Bloom, for which I developed a variety of assets, tools, and shaders to meet the production needs of a realistic horror game.",
+      "Lead artist on Death Bloom, for which I developed a variety of assets, tools, and shaders to meet the production needs of a realistic horror game, and managed a team of 13 artists.",
     tools: [
       "Python",
       "HLSL",
-      "Unreal Engine",
+      "Unreal",
     ],
   }
 ];
