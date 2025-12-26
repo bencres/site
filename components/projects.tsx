@@ -34,7 +34,7 @@ export default function Projects() {
         {technicalArtProjects.map((project) => (
           <div
             key={project.title}
-            className="p-6 bg-card rounded-lg border border-border flex flex-col h-full"
+            className="p-6 bg-card rounded-lg border border-border flex flex-col h-full hover:border-accent transition-all duration-150 ease-linear"
           >
             <div className="flex-1">
               <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
