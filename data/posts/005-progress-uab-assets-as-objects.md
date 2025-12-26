@@ -85,7 +85,7 @@ Refactoring from dictionaries to objects across the entire codebase was a signif
 
 # Next Steps
 
-With the object model in place, the next logical steps are:
+With the object model in place, the next steps I'm considering are:
 
 1. **Collections**: As mentioned in the previous update, collections will group related assets, for LOD's, texture variants, and materials. 
 
