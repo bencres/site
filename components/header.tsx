@@ -23,6 +23,12 @@ export default function Header() {
             Work
           </a>
           <a
+            href="/#experience"
+            className="hidden md:block text-sm hover:text-accent transition rounded-md p-0.5"
+          >
+            Experience
+          </a>
+          <a
             href="/#blog"
             className="hidden md:block text-sm hover:text-accent transition rounded-md p-0.5"
           >

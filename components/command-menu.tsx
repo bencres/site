@@ -111,19 +111,19 @@ export default function CommandMenu() {
             }
           },
         },
-        // {
-        //   label: "Experience",
-        //   action: () => {
-        //     setOpen(false);
-        //     if (pathname === "/") {
-        //       document
-        //         .getElementById("experience")
-        //         ?.scrollIntoView({ behavior: "smooth" });
-        //     } else {
-        //       router.push("/#experience");
-        //     }
-        //   },
-        // },
+        {
+          label: "Experience",
+          action: () => {
+            setOpen(false);
+            if (pathname === "/") {
+              document
+                .getElementById("experience")
+                ?.scrollIntoView({ behavior: "smooth" });
+            } else {
+              router.push("/#experience");
+            }
+          },
+        },
         {
           label: "Blog",
           action: () => {
