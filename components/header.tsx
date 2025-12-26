@@ -28,6 +28,11 @@ export default function Header() {
           >
             Experience
           </a>
+
+          <a href="/#open-source" className="hidden md:block text-sm hover:text-accent transition rounded-md p-0.5">
+            Open Source
+          </a>
+
           <a
             href="/#blog"
             className="hidden md:block text-sm hover:text-accent transition rounded-md p-0.5"
