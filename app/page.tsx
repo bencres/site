@@ -1,4 +1,4 @@
-import AnimatedMain from "@/components/animated-main";
+import Main from "@/components/main";
 import { getAllPosts } from "@/lib/utils-server";
 import type { Metadata } from "next";
 
@@ -37,7 +37,7 @@ export default function Page() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <AnimatedMain posts={posts} />
+      <Main posts={posts} />
     </div>
   );
 }
