@@ -4,14 +4,14 @@ export const experiences = [
     company: "Pixel Foundry",
     duration: "May 2025 - Present",
     description:
-      "I am a pipeline TD at Pixel Foundry, where I am responsible for developing our photo-real effects and photogrammetry pipeline. I built our project management and version control system and CI/CD pipeline and the PXF's free Universal Asset Browser.",
+      "Developing the Pixel Foundry's photo-real effects and photogrammetry pipeline and the Universal Asset Browser.",
     tools: [
       "Python",
       "Houdini",
       "Nuke",
       "GitHub Actions",
       "Unreal Engine 5",
-      "Maya"
+      "Maya",
     ],
   },
   {
@@ -39,7 +39,7 @@ export const experiences = [
   },
   {
     title: "Technical Artist",
-    company: "Unlimited Fries",
+    company: "Unlimited Fries Studios",
     duration: "May 2023 - Sep 2023",
     description:
       "Technical artist on Grimhook, for which I developed multiple shaders and tools to meet the production needs of a hand-painted 3D bullet-hell. These included a real-time ocean using fast Fourier transform and a procedural hand-painting generator.",
