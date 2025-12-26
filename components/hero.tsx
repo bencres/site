@@ -6,8 +6,8 @@ export default function Hero() {
           Ben Cressman
         </h1>
         <p className="text-lg text-muted-foreground max-w-3xl leading-relaxed">
-          Software engineer based in{" "}
-          <span className="font-semibold">Dallas, Texas</span>.
+          <strong>Software engineer</strong> based in{" "}
+          <span className="font-semibold">Dallas, Texas</span>, working in the entertainment industry.
         </p>
         <p className="text-lg text-muted-foreground max-w-3xl leading-relaxed mt-4">
           I have <strong>two years</strong> of experience in technical art and pipeline development for games and visual effects.
