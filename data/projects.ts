@@ -1,8 +1,15 @@
 export const technicalArtProjects = [
   {
+    title: "Pixel Foundry Pipeline",
+    description:
+      "Developed the Pixel Foundry Lab's photo-real effects and photogrammetry pipeline. Built our project management and version control system and CI/CD pipeline.",
+    tags: ["Python", "Houdini", "Nuke", "GitHub Actions", "WIP"],
+    link: "https://github.com/pxf-lab/pxf-pipeline",
+  },
+  {
     title: "Universal Asset Browser",
     description:
-      "A tool for digital creators to unify asset access and management across content creation applications.",
+      "Developer of the Pixel Foundry's Universal Asset Browser, a tool for digital creators to unify asset access and management across content creation applications.",
     tags: ["Python", "Houdini", "Unreal Engine 5", "Maya", "WIP"],
     link: "https://github.com/pxf-lab/uab",
   },
