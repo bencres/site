@@ -2,7 +2,7 @@ export const experiences = [
   {
     title: "Pipeline TD",
     company: "Pixel Foundry",
-    duration: "May 2025 - Present",
+    duration: "Nov 2025 - Present",
     description:
       "Developing the Pixel Foundry's photo-real effects and photogrammetry pipeline and the Universal Asset Browser.",
     tools: [
@@ -50,7 +50,7 @@ export const experiences = [
   {
     title: "Lead Artist",
     company: "The University of Texas at Dallas",
-    duration: "January 2023 - May 2023",
+    duration: "Jan 2023 - May 2023",
     description:
       "Lead artist on Death Bloom, for which I developed a variety of assets, tools, and shaders to meet the production needs of a realistic horror game, and managed a team of 13 artists.",
     tools: [
