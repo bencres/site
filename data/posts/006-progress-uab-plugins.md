@@ -135,7 +135,7 @@ class SendToUnreal(ContextActionPlugin):
     pass
 ```
 
-And now, finally, we can get to my implementaion (well, a very simplified version of it). You might notice that the above is a bit much, unless registries need a bunch of their own functionality (which I don't foresee), as the registries are basically just wrappers for a type of plugin. As such, I moved the registries directly into the abstract plugin.
+And now, finally, we can get to my implementaion (well, a very simplified version of it). You might notice that the above is a bit much, unless registries need a bunch of their own functionality (which I don't foresee), as the registries are basically just wrappers for a list of a specific type of plugin. As such, I moved the registries directly into the abstract plugin.
 
 ```python
 from abc import ABC, abstractmethod
