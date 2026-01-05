@@ -2,11 +2,12 @@ export const technicalArtProjects = [
   {
     title: "Pixel Foundry Pipeline",
     description:
-      "Developing the Pixel Foundry's photo-real effects and photogrammetry pipeline, working on the environment launcher, versioning system, and CI/CD pipeline.",
+      "Developing the Pixel Foundry's photo-real effects and photogrammetry pipeline, working on the environment launcher, production manager, and CI/CD pipeline.",
     tags: ["Python", "Houdini", "Nuke", "WIP"],
     links: [
       { url: "https://github.com/pxf-lab/pxf-pipeline", label: "GitHub", icon: "github" }
-    ]
+    ],
+    disabled: true
   },
   {
     title: "Universal Asset Browser",

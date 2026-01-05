@@ -31,57 +31,74 @@ export default function Projects() {
       <h2 className="text-3xl font-bold mb-8">Work</h2>
 
       <div className="grid md:grid-cols-2 gap-6">
-        {technicalArtProjects.map((project) => (
-          <div
-            key={project.title}
-            className="p-6 bg-card rounded-lg border border-border flex flex-col h-full hover:border-accent transition-all duration-150 ease-linear"
-          >
-            <div className="flex-1">
-              <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
-              <p className="text-muted-foreground mb-4">
-                {project.description}
-              </p>
-              <div className="flex flex-wrap gap-2 mb-6">
-                {project.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className={`px-3 py-1 text-xs font-medium rounded-full ${
-                      tag === "WIP"
-                        ? "bg-red-500/10 text-red-500"
-                        : "bg-accent/10 text-accent"
-                    }`}
-                  >
-                    {tag}
-                  </span>
-                ))}
+        {technicalArtProjects.map((project) => {
+          const isDisabled = project.disabled;
+          
+          return (
+            <div
+              key={project.title}
+              className="p-6 bg-card rounded-lg border border-border flex flex-col h-full hover:border-accent transition-all duration-150 ease-linear"
+            >
+              <div className="flex-1">
+                <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
+                <p className="text-muted-foreground mb-4">
+                  {project.description}
+                </p>
+                <div className="flex flex-wrap gap-2 mb-6">
+                  {project.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className={`px-3 py-1 text-xs font-medium rounded-full ${
+                        tag === "WIP"
+                          ? "bg-red-500/10 text-red-500"
+                          : "bg-accent/10 text-accent"
+                      }`}
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex gap-3">
+                {project.links.map((linkItem) => {
+                  const iconConfig =
+                    iconMap[linkItem.icon as keyof typeof iconMap] || {
+                      icon: ExternalLink,
+                      label: linkItem.label,
+                    };
+                  const Icon = iconConfig.icon;
+                  const isLinkDisabled = isDisabled && linkItem.icon === "github";
+
+                  if (isLinkDisabled) {
+                    return (
+                      <span
+                        key={linkItem.label}
+                        className="flex items-center gap-2 px-3 py-1.5 border border-border rounded-lg text-sm font-medium text-muted-foreground opacity-50 grayscale cursor-not-allowed"
+                      >
+                        <Icon size={16} />
+                        {linkItem.label}
+                      </span>
+                    );
+                  }
+
+                  return (
+                    <a
+                      key={linkItem.label}
+                      href={linkItem.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 px-3 py-1.5 border border-border rounded-lg text-sm font-medium text-muted-foreground hover:text-accent hover:border-accent hover:shadow-sm shadow-blue-500/50 hover:scale-102 transition-all duration-75 ease-linear"
+                    >
+                      <Icon size={16} />
+                      {linkItem.label}
+                    </a>
+                  );
+                })}
               </div>
             </div>
-
-            <div className="flex gap-3">
-              {project.links.map((linkItem) => {
-                const iconConfig =
-                  iconMap[linkItem.icon as keyof typeof iconMap] || {
-                    icon: ExternalLink,
-                    label: linkItem.label,
-                  };
-                const Icon = iconConfig.icon;
-
-                return (
-                  <a
-                    key={linkItem.label}
-                    href={linkItem.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-3 py-1.5 border border-border rounded-lg text-sm font-medium text-muted-foreground hover:text-accent hover:border-accent hover:shadow-sm shadow-blue-500/50 hover:scale-102 transition-all duration-75 ease-linear"
-                  >
-                    <Icon size={16} />
-                    {linkItem.label}
-                  </a>
-                );
-              })}
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </section>
   );
