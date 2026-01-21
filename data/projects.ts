@@ -1,5 +1,15 @@
 export const technicalArtProjects = [
   {
+    title: "Hytale Modding",
+    description:
+      "Full-stack developer for Hytale Modding, a community site for modding Hytale, hosting docs, guides, forums, jams, and partner web backends.",
+    tags: ["Typescript", "Python", "NextJS", "React", "Tailwind", "nginx", "Redis", "Docker", "FastAPI"],
+    links: [
+      { url: "https://github.com/HytaleModding/site", label: "GitHub", icon: "github" },
+      { url: "https://hytalemodding.dev/", label: "Live", icon: "link" }
+    ]
+  },
+  {
     title: "Pixel Foundry Pipeline",
     description:
       "Developing the Pixel Foundry's photo-real effects and photogrammetry pipeline, working on the environment launcher, production manager, and CI/CD pipeline.",

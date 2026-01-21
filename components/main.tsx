@@ -24,9 +24,9 @@ export default function Main({ posts }: MainProps) {
       <div>
         <Experience />
       </div>
-      <div>
+      {/* <div>
         <OpenSource />
-      </div>
+      </div> */}
       <div>
         <Blog posts={posts} />
       </div>

@@ -124,20 +124,20 @@ export default function CommandMenu() {
             }
           },
         },
-        {
-          label: "Open Source",
-          action: () => {
-            setOpen(false);
-            router.push("/#open-source");
-            if (pathname === "/") {
-              document
-                .getElementById("open-source")
-                ?.scrollIntoView({ behavior: "smooth" });
-            } else {
-              router.push("/#open-source");
-            }
-          },
-        },
+        // {
+        //   label: "Open Source",
+        //   action: () => {
+        //     setOpen(false);
+        //     router.push("/#open-source");
+        //     if (pathname === "/") {
+        //       document
+        //         .getElementById("open-source")
+        //         ?.scrollIntoView({ behavior: "smooth" });
+        //     } else {
+        //       router.push("/#open-source");
+        //     }
+        //   },
+        // },
         {
           label: "Blog",
           action: () => {
