@@ -1,5 +1,17 @@
 export const experiences = [
   {
+    title: "Full-Stack Engineer",
+    company: "Hytale Modding",
+    duration: "Jan 2026 - Present",
+    description:
+      "Working on the frontend of the main website and the fumadocs integration with Next.js, React.js, and Tailwind, authoring backends for multiple real-time partner projects with FastAPI, Redis, and Docker, and writing the forum site with nginx, flarum, Less.js, and Mithril.js.",
+    tools: [
+      "Typescript",
+      "Python",
+      "NextJS",
+    ]
+  },
+  {
     title: "Pipeline TD",
     company: "Pixel Foundry",
     duration: "Nov 2025 - Present",
@@ -17,7 +29,7 @@ export const experiences = [
     company: "Multimodal Interaction Lab",
     duration: "Jan 2025 - May 2025",
     description:
-      "Integrated novel VR haptics hardware with Unity and Meta's XR SDK.",
+      "Integrated novel VR haptics hardware with Unity and Meta's XR SDK. Third coauthor of the corresponding paper, accepted to CHI 2026.",
     tools: [
       "C#",
       "Unity",

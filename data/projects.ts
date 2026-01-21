@@ -2,7 +2,7 @@ export const technicalArtProjects = [
   {
     title: "Hytale Modding",
     description:
-      "Full-stack developer for Hytale Modding, a community site for modding Hytale, hosting docs, guides, forums, jams, and partner web backends.",
+      "Developing Hytale Modding, a community organization for modding Hytale, hosting docs, guides, forums, jams, and partner project backends.",
     tags: ["Typescript", "Python", "NextJS", "React", "Tailwind", "nginx", "Redis", "Docker", "FastAPI"],
     links: [
       { url: "https://github.com/HytaleModding/site", label: "GitHub", icon: "github" },
