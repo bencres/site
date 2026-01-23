@@ -8,7 +8,7 @@ export default function OpenSource() {
     <section id="open-source" className="mb-20 scroll-mt-24">
       <h2 className="text-3xl font-bold mb-8">Open Source</h2>
 
-      <div className="grid md:grid-cols-2 gap-6">
+      {/* <div className="grid md:grid-cols-2 gap-6">
         {openSource.map((project) => (
           <div
             key={project.title}
@@ -55,7 +55,7 @@ export default function OpenSource() {
             </div>
           </div>
         ))}
-      </div>
+      </div> */}
     </section>
   );
 }
