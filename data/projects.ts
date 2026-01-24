@@ -9,12 +9,13 @@ export const technicalArtProjects = [
     ]
   },
   {
-    title: "Grimhook",
+    title: "Hytale Modding",
     description:
-      "Technical artist on Grimhook at Unlimited Fries. Developed a variety of tools and shaders, like a fast Fourier transform ocean and a procedural hand-painted generator.",
-    tags: ["Python", "HLSL", "Unreal"],
+      "Developing Hytale Modding, a community organization of 6000+ developers for modding Hytale, hosting docs, guides, forums, and partner project backends.",
+    tags: ["Typescript", "Python", "NextJS", "React", "Tailwind", "nginx", "Redis", "Docker", "FastAPI"],
     links: [
-      { url: "https://store.steampowered.com/app/2667430/Grimhook/", label: "Steam", icon: "steam" }
+      { url: "https://github.com/HytaleModding/site", label: "GitHub", icon: "github" },
+      { url: "https://hytalemodding.dev/", label: "Live", icon: "link" }
     ]
   },
   {
@@ -28,13 +29,12 @@ export const technicalArtProjects = [
     disabled: true
   },
   {
-    title: "Hytale Modding",
+    title: "Grimhook",
     description:
-      "Developing Hytale Modding, a community organization of 5000+ developers for modding Hytale, hosting docs, guides, forums, and partner project backends.",
-    tags: ["Typescript", "Python", "NextJS", "React", "Tailwind", "nginx", "Redis", "Docker", "FastAPI"],
+      "Technical artist on Grimhook at Unlimited Fries. Developed a variety of tools and shaders, like a fast Fourier transform ocean and a procedural hand-painted generator.",
+    tags: ["Python", "HLSL", "Unreal"],
     links: [
-      { url: "https://github.com/HytaleModding/site", label: "GitHub", icon: "github" },
-      { url: "https://hytalemodding.dev/", label: "Live", icon: "link" }
+      { url: "https://store.steampowered.com/app/2667430/Grimhook/", label: "Steam", icon: "steam" }
     ]
   },
   {
