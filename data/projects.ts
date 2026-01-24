@@ -26,7 +26,8 @@ export const technicalArtProjects = [
     links: [
       { url: "https://github.com/pxf-lab/pxf-pipeline", label: "GitHub", icon: "github" }
     ],
-    disabled: true
+    disabled: true,
+    disabledLinkMessage: "Open source coming soon!"
   },
   {
     title: "Grimhook",

@@ -69,15 +69,20 @@ export default function Projects() {
                     };
                   const Icon = iconConfig.icon;
                   const isLinkDisabled = isDisabled && linkItem.icon === "github";
+                  const disabledMessage =
+                    project.disabledLinkMessage || "Link unavailable";
 
                   if (isLinkDisabled) {
                     return (
                       <span
                         key={linkItem.label}
-                        className="flex items-center gap-2 px-3 py-1.5 border border-border rounded-lg text-sm font-medium text-muted-foreground opacity-50 grayscale cursor-not-allowed"
+                        className="relative group flex items-center gap-2 px-3 py-1.5 border border-border rounded-lg text-sm font-medium text-muted-foreground opacity-50 grayscale cursor-not-allowed"
                       >
                         <Icon size={16} />
                         {linkItem.label}
+                        <span className="pointer-events-none absolute left-full top-1/2 z-10 ml-2 w-max -translate-y-1/2 whitespace-nowrap rounded-md border border-border bg-background px-2 py-1 text-xs text-foreground opacity-0 shadow-sm transition-opacity duration-150 group-hover:opacity-100">
+                          {disabledMessage}
+                        </span>
                       </span>
                     );
                   }
