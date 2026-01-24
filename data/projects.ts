@@ -1,25 +1,5 @@
 export const technicalArtProjects = [
   {
-    title: "Hytale Modding",
-    description:
-      "Developing Hytale Modding, a community organization of 5000+ developers for modding Hytale, hosting docs, guides, forums, and partner project backends.",
-    tags: ["Typescript", "Python", "NextJS", "React", "Tailwind", "nginx", "Redis", "Docker", "FastAPI"],
-    links: [
-      { url: "https://github.com/HytaleModding/site", label: "GitHub", icon: "github" },
-      { url: "https://hytalemodding.dev/", label: "Live", icon: "link" }
-    ]
-  },
-  {
-    title: "Pixel Foundry Pipeline",
-    description:
-      "Developing the Pixel Foundry's photo-real effects and photogrammetry pipeline, working on the environment launcher, production manager, and CI/CD pipeline.",
-    tags: ["Python", "Houdini", "Nuke", "WIP"],
-    links: [
-      { url: "https://github.com/pxf-lab/pxf-pipeline", label: "GitHub", icon: "github" }
-    ],
-    disabled: true
-  },
-  {
     title: "Universal Asset Browser",
     description:
       "Developing the Pixel Foundry's Universal Asset Browser, a tool for digital creators to unify asset access and management across content creation applications.",
@@ -35,6 +15,26 @@ export const technicalArtProjects = [
     tags: ["Python", "HLSL", "Unreal"],
     links: [
       { url: "https://store.steampowered.com/app/2667430/Grimhook/", label: "Steam", icon: "steam" }
+    ]
+  },
+  {
+    title: "Pixel Foundry Pipeline",
+    description:
+      "Developing the Pixel Foundry's photo-real effects and photogrammetry pipeline, working on the environment launcher, production manager, and CI/CD pipeline.",
+    tags: ["Python", "Houdini", "Nuke", "WIP"],
+    links: [
+      { url: "https://github.com/pxf-lab/pxf-pipeline", label: "GitHub", icon: "github" }
+    ],
+    disabled: true
+  },
+  {
+    title: "Hytale Modding",
+    description:
+      "Developing Hytale Modding, a community organization of 5000+ developers for modding Hytale, hosting docs, guides, forums, and partner project backends.",
+    tags: ["Typescript", "Python", "NextJS", "React", "Tailwind", "nginx", "Redis", "Docker", "FastAPI"],
+    links: [
+      { url: "https://github.com/HytaleModding/site", label: "GitHub", icon: "github" },
+      { url: "https://hytalemodding.dev/", label: "Live", icon: "link" }
     ]
   },
   {
