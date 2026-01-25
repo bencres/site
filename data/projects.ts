@@ -2,7 +2,7 @@ export const technicalArtProjects = [
   {
     title: "Universal Asset Browser",
     description:
-      "Developing the Pixel Foundry's Universal Asset Browser, a tool for digital creators to unify asset access and management across content creation applications.",
+      "Developing the Pixel Foundry's Universal Asset Browser, a tool for digital creators to unify asset access and usage across content creation applications.",
     tags: ["Python", "Houdini", "Unreal", "WIP"],
     links: [
       { url: "https://github.com/pxf-lab/uab", label: "GitHub", icon: "github" }
