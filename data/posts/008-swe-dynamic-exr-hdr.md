@@ -7,9 +7,7 @@ tags: ["software engineering", "qt", "optimization"]
 excerpt: "How I implemented dynamically loading EXR and HDR files for the delegate asset thumbnails in the Universal Asset Browser"
 ---
 
-# HDR/EXR Thumbnail Loading
-
-## Context
+# Context
 
 For rendering thousands of items on the screen, your only choice in QT is to use delegates (`QStyledItemDelegate`); widgets are too memory-costly to keep thousands at once alive. Delegates, however, are drawn during paint, which (in short) means that every time the user interacts with the view, delegates are re-rendered.
 
@@ -17,13 +15,13 @@ The problem is this: not every HDR or EXR file (or other heavy file types, but i
 
 As such, I implemented an asynchronous HDR/EXR thumbnail loading system. 
 
-## Implementation
+# Implementation
 
-### Architecture Overview
+## Architecture Overview
 
 A unified base class architecture with specialized loaders:
 
-#### Base Class: `ThumbnailLoaderBase`
+### Base Class: `ThumbnailLoaderBase`
 
 Abstract base class (`QThread`) providing:
 - Thread management: queue (`list[Any]`), mutex (`QMutex`), stop flag
@@ -33,7 +31,7 @@ Abstract base class (`QThread`) providing:
 
 Uses `QMutexLocker` for thread-safe queue access. The `run()` loop processes items, calls `_process_item()`, and emits batch/all-complete signals.
 
-#### Subclass 1: `NetworkThumbnailLoader`
+### Subclass 1: `NetworkThumbnailLoader`
 
 Extends `ThumbnailLoaderBase` for network thumbnail downloads:
 - Processes `StandardAsset` items
@@ -42,7 +40,7 @@ Extends `ThumbnailLoaderBase` for network thumbnail downloads:
 - Emits `thumbnail_ready(str, Path)` with asset_id and cached file path
 - Used by the presenter layer for batch processing cloud assets
 
-#### Subclass 2: `LocalImageLoader`
+### Subclass 2: `LocalImageLoader`
 
 Extends `ThumbnailLoaderBase` for local file processing:
 - Processes `(asset_id: str, path: Path, max_size: int)` tuples
@@ -52,9 +50,9 @@ Extends `ThumbnailLoaderBase` for local file processing:
 - Emits `thumbnail_loaded(str, QPixmap)` with asset_id and processed pixmap
 - Used by the UI layer for on-demand loading during paint
 
-### Layers
+## Layers
 
-#### Delegate Layer (`AssetDelegate`)
+### Delegate Layer (`AssetDelegate`)
 
 **Loading State Tracking:**
 - `_loading_assets: set[str]` — tracks assets currently loading
@@ -81,7 +79,7 @@ if suffix in (".hdr", ".exr"):
 - `_on_image_thumbnail_loaded()` — updates cache, removes from loading set, emits `thumbnail_ready`
 - `_get_loading_placeholder()` — creates/caches lightweight "Loading..." QPixmap
 
-#### View Layer (`BrowserView`)
+### View Layer (`BrowserView`)
 
 **Initialization:**
 - Creates `LocalImageLoader` instance in `__init__`
@@ -91,22 +89,32 @@ if suffix in (".hdr", ".exr"):
 **Update Handler:**
 - `_on_thumbnail_ready(asset_id)` — finds `QModelIndex` by iterating model, calls `self._grid.update(index)` to trigger repaint
 
-## Technical Challenges and Solutions
+# Data Flow
 
-### 1. **Challenge:** Thread Safety
+1. User scrolls → `paint()` called for visible items
+2. `_get_thumbnail()` checks cache → not found
+3. For HDR/EXR: adds to `_loading_assets`, queues load request, returns placeholder
+4. Background thread: `LocalImageLoader._process_item()` calls `load_hdri_thumbnail()`
+5. On completion: emits `thumbnail_loaded(asset_id, pixmap)`
+6. Main thread: `_on_image_thumbnail_loaded()` updates cache, emits `thumbnail_ready(asset_id)`
+7. View: `_on_thumbnail_ready()` finds index, calls `update(index)` → repaint with actual thumbnail
+
+# Technical Challenges and Solutions
+
+## 1. Challenge: Thread Safety
 
 - Qt signals/slots use queued connections for cross-thread communication
 - `QMutex` protects queue access
 - Cache updates happen on the main thread via signal handlers
 - `_loading_assets` set is only accessed from the main thread
 
-### 2. **Challenge:** Queue Management
+## 2. Challenge: Queue Management
 
 - `add_item()` allows incremental additions without replacing the queue
 - Supports concurrent requests during rapid scrolling
 - Thread-safe via mutex protection
 
-### 3. **Problem:** Houdini bundles an older Pillow without `Image.Resampling` (added in 9.1.0).
+## 3. Problem: Houdini bundles an older Pillow without `Image.Resampling` (added in 9.1.0).
 
 **Solution:** Use Lanczos resampling.
 
@@ -117,12 +125,13 @@ except AttributeError:
     resampling = Image.LANCZOS
 ```
 
-### 4. **Problem:** HDR files appeared darker in Houdini than in the standalone desktop app
+## 4. Problem: HDR files appeared darker in Houdini than in the standalone desktop app
 
 I think either because of a different `imageio` version or color space management, but I'm not sure about this one. Needs more research.
 
 **Solution:** Adaptive exposure based on median luminance:
 ```python
+# actual implementation
 luminance = 0.2126 * hdr_data[:, :, 0] + 0.7152 * hdr_data[:, :, 1] + 0.0722 * hdr_data[:, :, 2]
 median_lum = np.median(luminance[luminance > 0])
 if median_lum > 0:
@@ -133,7 +142,7 @@ if median_lum > 0:
 
 This normalizes brightness across different HDR files and environments, though minor differences persist. Will come back to this.
 
-### 5. **Problem:** Caching thousands of assets
+## 5. Problem: Caching thousands of assets
 
 I've implemented a simple [LRU cache](https://redis.io/glossary/lru-cache/) capped at 200, which is pretty arbitrary, but was chosen for:
 
@@ -147,12 +156,8 @@ And because given physical size constraints of the browser, it should be very ra
 
 *Side note*: `functools` has a built-in LRU cache in `functools.lru_cache`. Lesson learned to check if there's a built-in solution for data structures in the future. I'm sure their implementation is way more robust than mine.
 
-## Data Flow
+# Questions
 
-1. User scrolls → `paint()` called for visible items
-2. `_get_thumbnail()` checks cache → not found
-3. For HDR/EXR: adds to `_loading_assets`, queues load request, returns placeholder
-4. Background thread: `LocalImageLoader._process_item()` calls `load_hdri_thumbnail()`
-5. On completion: emits `thumbnail_loaded(asset_id, pixmap)`
-6. Main thread: `_on_image_thumbnail_loaded()` updates cache, emits `thumbnail_ready(asset_id)`
-7. View: `_on_thumbnail_ready()` finds index, calls `update(index)` → repaint with actual thumbnail
+1. Does Houdini apply anything to images with tonemapping, color spaces, etc. that would cause the dynamically rendered HDR/EXR's to look different? I'm confused because this process is very similar to my first implemenation that used widgets instead of delegates, and the coloration between the embedded Houdini version and the standalone desktop version was consistent.
+
+2. Is this how Nuke, Unreal, etc. render EXR thumbnail images? Is there a better way to accomplish this?

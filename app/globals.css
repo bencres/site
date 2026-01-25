@@ -181,13 +181,26 @@
     font-family: "Fira Code", monospace;
 }
 
-.prose h1,
-.prose h2,
-.prose h3 {
+.prose h1 {
     scroll-margin-top: 6rem;
     margin-top: 3rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+    font-size: 1.6rem;
+}
+.prose h2 {
+    scroll-margin-top: 6rem;
+    margin-top: 2.25rem;
     margin-bottom: 1rem;
     font-weight: 700;
+    font-size: 1.4rem;
+}
+.prose h3 {
+    scroll-margin-top: 6rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    font-size: 1.2rem;
 }
 
 .prose p {
