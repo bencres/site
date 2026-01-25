@@ -1,7 +1,7 @@
 ---
 title: "What I Learned from 3 Months of Building My First Large Application, and Why I Spent January Rebuilding it from Scratch"
 category: "tech art"
-date: "2025-12-31"
+date: "2026-01-24"
 id: "ta-0007"
 tags: ["software engineering", "python", "tech art", "uab", "design patterns"]
 excerpt: "Building a large application from the ground up is challenging. Here's what went wrong with my first attempt, and how I fixed it."
