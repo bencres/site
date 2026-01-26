@@ -15,13 +15,14 @@ The problem is this: not every HDR or EXR file (or other heavy file types, but i
 
 As such, I implemented an asynchronous HDR/EXR thumbnail loading system. 
 
+
 # Implementation
 
-## Architecture Overview
+Details about how this system is architected and works in the context of the Universal Asset Browser.
 
 A unified base class architecture with specialized loaders:
 
-### Base Class: `ThumbnailLoaderBase`
+## Base Class: `ThumbnailLoaderBase`
 
 Abstract base class (`QThread`) providing:
 - Thread management: queue (`list[Any]`), mutex (`QMutex`), stop flag
@@ -31,7 +32,7 @@ Abstract base class (`QThread`) providing:
 
 Uses `QMutexLocker` for thread-safe queue access. The `run()` loop processes items, calls `_process_item()`, and emits batch/all-complete signals.
 
-### Subclass 1: `NetworkThumbnailLoader`
+## Subclass 1: `NetworkThumbnailLoader`
 
 Extends `ThumbnailLoaderBase` for network thumbnail downloads:
 - Processes `StandardAsset` items
@@ -40,7 +41,7 @@ Extends `ThumbnailLoaderBase` for network thumbnail downloads:
 - Emits `thumbnail_ready(str, Path)` with asset_id and cached file path
 - Used by the presenter layer for batch processing cloud assets
 
-### Subclass 2: `LocalImageLoader`
+## Subclass 2: `LocalImageLoader`
 
 Extends `ThumbnailLoaderBase` for local file processing:
 - Processes `(asset_id: str, path: Path, max_size: int)` tuples
@@ -51,6 +52,8 @@ Extends `ThumbnailLoaderBase` for local file processing:
 - Used by the UI layer for on-demand loading during paint
 
 ## Layers
+
+The layers of this system ()
 
 ### Delegate Layer (`AssetDelegate`)
 
@@ -100,6 +103,8 @@ if suffix in (".hdr", ".exr"):
 7. View: `_on_thumbnail_ready()` finds index, calls `update(index)` → repaint with actual thumbnail
 
 # Technical Challenges and Solutions
+
+A brief discussion of challenges and problems I faced, and how I handled them.
 
 ## 1. Challenge: Thread Safety
 
@@ -161,3 +166,21 @@ And because given physical size constraints of the browser, it should be very ra
 1. Does Houdini apply anything to images with tonemapping, color spaces, etc. that would cause the dynamically rendered HDR/EXR's to look different? I'm confused because this process is very similar to my first implemenation that used widgets instead of delegates, and the coloration between the embedded Houdini version and the standalone desktop version was consistent.
 
 2. Is this how Nuke, Unreal, etc. render EXR thumbnail images? Is there a better way to accomplish this?
+
+3. Architecturally, does it make a meaningful difference to have implemented an interface for thumbnail loading, since there are only ever two ways to get a thumbnail (from disk or from network)?
+
+# Implementation Reference
+
+Quick reference for my implementation and some places I read about these concepts.
+
+## Universal Asset Browser
+
+1. [Delegates](https://github.com/pxf-lab/uab/blob/main/src/uab/ui/delegates.py)
+2. [Thumbnail loader interface, local implementation, and HDR/EXR conversion](https://github.com/pxf-lab/uab/blob/main/src/uab/ui/utils.py)
+3. [Network implementation and usage](https://github.com/pxf-lab/uab/blob/main/src/uab/presenters/tab_presenter.py)
+
+## PySide6 Documentation
+1. [QStyledItemDelegate](https://doc.qt.io/qtforpython-6/PySide6/QtWidgets/QStyledItemDelegate.html)
+2. [What is a mutex?](https://stackoverflow.com/a/34558/23048824) (this is my first time touching threading)
+3. [LRU Cache Concept](https://redis.io/glossary/lru-cache/) (this is also my first time implementing an LRU cache)
+4. [LRU Cache Implementation](https://www.geeksforgeeks.org/system-design/lru-cache-implementation/)
