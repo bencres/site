@@ -1,10 +1,10 @@
 ---
-title: "Dynamically Loading EXR and HDR Files During Paint"
+title: "Dynamically Loading EXR and HDR Files During QT's Paint"
 category: "swe"
 date: "2026-01-28"
 id: "swe-0001"
 tags: ["software engineering", "qt", "optimization"]
-excerpt: "How I implemented dynamically loading EXR and HDR files for the delegate asset thumbnails in the Universal Asset Browser"
+excerpt: "How I implemented dynamically loading EXR and HDR files for the asset thumbnails in the Universal Asset Browser."
 ---
 
 # Context
