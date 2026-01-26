@@ -119,18 +119,7 @@ A brief discussion of challenges and problems I faced, and how I handled them.
 - Supports concurrent requests during rapid scrolling
 - Thread-safe via mutex protection
 
-## 3. Problem: Houdini bundles an older Pillow without `Image.Resampling` (added in 9.1.0).
-
-**Solution:** Use Lanczos resampling.
-
-```python
-try:
-    resampling = Image.Resampling.LANCZOS
-except AttributeError:
-    resampling = Image.LANCZOS
-```
-
-## 4. Problem: HDR files appeared darker in Houdini than in the standalone desktop app
+## 3. Problem: HDR files appeared darker in Houdini than in the standalone desktop app
 
 I think either because of a different `imageio` version or color space management, but I'm not sure about this one. Needs more research.
 
@@ -147,7 +136,7 @@ if median_lum > 0:
 
 This normalizes brightness across different HDR files and environments, though minor differences persist. Will come back to this.
 
-## 5. Problem: Caching thousands of assets
+## 4. Problem: Caching thousands of assets
 
 I've implemented a simple [LRU cache](https://redis.io/glossary/lru-cache/) capped at 200, which is pretty arbitrary, but was chosen for:
 
