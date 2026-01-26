@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
+import { useViewTransitionRouter } from "@/lib/use-view-transition-router";
 import { Search, Github, Linkedin, Mail, Download } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import {
@@ -28,7 +29,7 @@ interface CommandGroupData {
 export default function CommandMenu() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const router = useRouter();
+  const router = useViewTransitionRouter();
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {

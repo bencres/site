@@ -251,3 +251,32 @@
 .prose blockquote p {
     margin: 0;
 }
+
+/* VIEW TRANSITIONS */
+::view-transition-old(root) {
+    animation: fade-out-blur 400ms ease-in-out;
+}
+
+::view-transition-new(root) {
+    animation: fade-in-blur 400ms ease-in-out;
+}
+
+@keyframes fade-out-blur {
+    to {
+        opacity: 0;
+        filter: blur(8px);
+    }
+}
+
+@keyframes fade-in-blur {
+    from {
+        opacity: 0;
+        filter: blur(8px);
+    }
+}
+
+/* Persistent header across transitions */
+/* Only apply to the main site header, not article headers */
+.site-header {
+    view-transition-name: site-header;
+}

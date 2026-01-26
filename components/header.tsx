@@ -1,19 +1,21 @@
 "use client";
 
-import Link from "next/link";
+import ViewTransitionLink from "@/components/view-transition-link";
 import { Github, Linkedin, Download, Mail } from "lucide-react";
 import CommandMenu from "@/components/command-menu";
 
 export default function Header() {
   return (
-    <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border">
+    <header
+      className="sticky top-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border site-header"
+    >
       <nav className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
-        <Link
+        <ViewTransitionLink
           href="/"
           className="text-xl font-bold text-accent hover:text-accent/80 transition-colors rounded-md p-0.5"
         >
           bencres.dev
-        </Link>
+        </ViewTransitionLink>
 
         <div className="flex items-center gap-6">
           <a

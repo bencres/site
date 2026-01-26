@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowRight } from "lucide-react";
-import Link from "next/link";
+import ViewTransitionLink from "@/components/view-transition-link";
 import type { PostMeta } from "@/lib/utils-server";
 import { formatReadableDate } from "@/lib/utils-client";
 
@@ -15,7 +15,7 @@ export default function Blog({ posts }: { posts: PostMeta[] }) {
             (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
           )
           .map((post) => (
-            <Link
+            <ViewTransitionLink
               key={post.slug}
               href={`/blog/${post.slug}`}
               className="
@@ -41,7 +41,7 @@ export default function Blog({ posts }: { posts: PostMeta[] }) {
                 size={18}
                 className="text-muted-foreground group-hover:text-accent transition-colors flex-shrink-0 ml-4"
               />
-            </Link>
+            </ViewTransitionLink>
           ))}
       </div>
     </section>
