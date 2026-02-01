@@ -9,16 +9,6 @@ export const technicalArtProjects = [
     ]
   },
   {
-    title: "Hytale Modding",
-    description:
-      "Developing Hytale Modding, a community organization of 6000+ developers for modding Hytale, hosting docs, guides, forums, and partner project backends.",
-    tags: ["Typescript", "Python", "NextJS", "React", "Tailwind", "nginx", "Redis", "Docker", "FastAPI"],
-    links: [
-      { url: "https://github.com/HytaleModding/site", label: "GitHub", icon: "github" },
-      { url: "https://hytalemodding.dev/", label: "Live", icon: "link" }
-    ]
-  },
-  {
     title: "Pixel Foundry Pipeline",
     description:
       "Developing the Pixel Foundry's photo-real effects and photogrammetry pipeline, working on the environment launcher, production manager, and CI/CD pipeline.",
@@ -28,6 +18,16 @@ export const technicalArtProjects = [
     ],
     disabled: true,
     disabledLinkMessage: "Open source coming soon!"
+  },
+  {
+    title: "Hytale Modding",
+    description:
+      "Developing Hytale Modding, a community organization of 8000+ developers for modding Hytale, hosting docs, guides, forums, game jams, and partner project backends.",
+    tags: ["Typescript", "Python", "NextJS", "React", "Tailwind", "nginx", "Redis", "Docker", "FastAPI"],
+    links: [
+      { url: "https://github.com/HytaleModding/site", label: "GitHub", icon: "github" },
+      { url: "https://hytalemodding.dev/", label: "Live", icon: "link" }
+    ]
   },
   {
     title: "Grimhook",
