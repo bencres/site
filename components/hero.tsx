@@ -10,7 +10,7 @@ export default function Hero() {
           <span className="font-semibold">Dallas, Texas</span>.
         </p>
         <p className="text-lg text-muted-foreground max-w-3xl leading-relaxed mt-4">
-          Currently a <strong>Pipeline TD</strong> at Pixel Foundry, a <strong>Full-Stack Engineer</strong> for Hytale Modding, and finishing my <strong>MFA in Game Development</strong>. 
+          Currently a <strong>Pipeline Technical Director</strong> at Pixel Foundry, a <strong>Full-Stack Engineer</strong> for Hytale Modding, and finishing my <strong>MFA in Game Development</strong>. 
         </p>
         <p className="text-lg text-muted-foreground max-w-3xl leading-relaxed mt-4">
           My expertise is in <span className="font-semibold">Python</span> {" "}
