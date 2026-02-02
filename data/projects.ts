@@ -38,9 +38,9 @@ export const technicalArtProjects = [
     disabledLinkMessage: "Open source coming soon!"
   },
   {
-    title: "Hytale Modding",
+    title: "HytaleModding",
     description:
-      "Developing Hytale Modding, a community organization of 8000+ developers for modding Hytale, hosting docs, guides, forums, game jams, and partner project backends.",
+      "Developing HytaleModding, a community organization of 8000+ developers for modding Hytale, hosting docs, guides, forums, game jams, and partner project backends.",
     tags: ["Typescript", "Python", "NextJS", "React", "Tailwind", "nginx", "Redis", "Docker", "FastAPI"],
     links: [
       { url: "https://github.com/HytaleModding/site", label: "GitHub", icon: "github" },

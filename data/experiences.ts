@@ -1,7 +1,7 @@
 export const experiences = [
   {
     title: "Full-Stack Engineer",
-    company: "Hytale Modding",
+    company: "HytaleModding",
     duration: "Jan 2026 - Present",
     description:
       "Working on the frontend of the main website and the fumadocs integration with Next.js, React.js, and Tailwind, authoring backends for multiple real-time partner projects with FastAPI, Redis, and Docker, and writing the forum site with nginx, flarum, Less.js, and Mithril.js.",
@@ -11,19 +11,7 @@ export const experiences = [
       "NextJS",
     ]
   },
-  {
-    title: "Pipeline TD",
-    company: "Pixel Foundry",
-    duration: "Nov 2025 - Present",
-    description:
-      "Developing the Pixel Foundry's photo-real effects and photogrammetry pipeline and the Universal Asset Browser.",
-    tools: [
-      "Python",
-      "Houdini",
-      "Nuke",
-      "GitHub Actions",
-    ],
-  },
+  
   {
     title: "VR Developer",
     company: "Multimodal Interaction Lab",
