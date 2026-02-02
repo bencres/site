@@ -11,7 +11,7 @@ export const technicalArtProjects = [
   {
     title: "vfxdirs",
     description:
-      "A Python library for easily accessing useful paths for common visual effects software on any operating system.",
+      "A Python library for easily accessing useful paths for visual effects software on any operating system. Implements common software packages but is easily extensible with others.",
     tags: ["Python", "WIP", "New"],
     links: [
       { url: "https://github.com/bencres/vfxdirs", label: "GitHub", icon: "github" }
