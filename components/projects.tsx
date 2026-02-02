@@ -51,6 +51,8 @@ export default function Projects() {
                       className={`px-3 py-1 text-xs font-medium rounded-full ${
                         tag === "WIP"
                           ? "bg-red-500/10 text-red-500"
+                          : tag === "New"
+                          ? "bg-sky-500/10 text-sky-700"
                           : "bg-accent/10 text-accent"
                       }`}
                     >
