@@ -6,7 +6,7 @@ export default function Hero() {
           Ben Cressman
         </h1>
         <p className="text-lg text-muted-foreground max-w-3xl leading-relaxed">
-          <strong>Software engineer</strong> based in{" "}
+          <strong>Technical director</strong> based in{" "}
           <span className="font-semibold">Dallas, Texas</span>.
         </p>
         <p className="text-lg text-muted-foreground max-w-3xl leading-relaxed mt-4">

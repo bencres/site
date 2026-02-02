@@ -3,16 +3,34 @@ export const technicalArtProjects = [
     title: "Universal Asset Browser",
     description:
       "Developing the Pixel Foundry's Universal Asset Browser, a tool for digital creators to unify asset access and usage across content creation applications.",
-    tags: ["Python", "Houdini", "Unreal", "WIP"],
+    tags: ["Python", "Houdini", "WIP"],
     links: [
       { url: "https://github.com/pxf-lab/uab", label: "GitHub", icon: "github" }
+    ]
+  },
+  {
+    title: "vfxdirs",
+    description:
+      "A Python library for easily accessing useful paths for common visual effects software on any operating system.",
+    tags: ["Python", "WIP"],
+    links: [
+      { url: "https://github.com/bencres/vfxdirs", label: "GitHub", icon: "github" }
+    ]
+  },
+  {
+    title: "Grimhook",
+    description:
+      "Technical artist on Grimhook at Unlimited Fries. Developed a variety of tools and shaders, like a fast Fourier transform ocean and a procedural hand-painted generator.",
+    tags: ["Python", "HLSL", "Unreal"],
+    links: [
+      { url: "https://store.steampowered.com/app/2667430/Grimhook/", label: "Steam", icon: "steam" }
     ]
   },
   {
     title: "Pixel Foundry Pipeline",
     description:
       "Developing the Pixel Foundry's photo-real effects and photogrammetry pipeline, working on the environment launcher, production manager, and CI/CD pipeline.",
-    tags: ["Python", "Houdini", "Nuke", "WIP"],
+    tags: ["Python", "Houdini", "Nuke"],
     links: [
       { url: "https://github.com/pxf-lab/pxf-pipeline", label: "GitHub", icon: "github" }
     ],
@@ -29,15 +47,7 @@ export const technicalArtProjects = [
       { url: "https://hytalemodding.dev/", label: "Live", icon: "link" }
     ]
   },
-  {
-    title: "Grimhook",
-    description:
-      "Technical artist on Grimhook at Unlimited Fries. Developed a variety of tools and shaders, like a fast Fourier transform ocean and a procedural hand-painted generator.",
-    tags: ["Python", "HLSL", "Unreal"],
-    links: [
-      { url: "https://store.steampowered.com/app/2667430/Grimhook/", label: "Steam", icon: "steam" }
-    ]
-  },
+  
   {
     title: "Death Bloom",
     description:
