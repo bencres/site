@@ -46,14 +46,14 @@ export default function Header() {
 
           <div className="flex gap-3">
             <a
-              href="mailto:ben@utdallas.edu"
+              href="mailto:hello@bencres.dev"
               className="text-muted-foreground hover:text-accent transition rounded-sm p-0.5"
               title="Send Email"
             >
               <Mail size={18} />
             </a>
             <a
-              href="/ben-cressman-tech-artist-resume.pdf"
+              href="/ben-cressman-software-engineer.pdf"
               target="_blank"
               rel="noopener noreferrer"
               className="text-muted-foreground hover:text-accent transition rounded-sm p-0.5"

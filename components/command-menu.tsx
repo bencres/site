@@ -58,7 +58,7 @@ export default function CommandMenu() {
           label: "Email",
           icon: Mail,
           action: () => {
-            window.location.href = "mailto:ben@utdallas.edu";
+            window.location.href = "mailto:hello@bencres.dev";
             setOpen(false);
           },
         },
@@ -66,7 +66,7 @@ export default function CommandMenu() {
           label: "Download Resume",
           icon: Download,
           action: () => {
-            window.open("/ben-cressman-tech-artist-resume.pdf", "_blank");
+            window.open("/ben-cressman-software-engineer.pdf", "_blank");
             setOpen(false);
           },
         },

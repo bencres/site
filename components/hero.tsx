@@ -23,10 +23,10 @@ export default function Hero() {
           Get in touch:{" "}
           <b>
             <a
-              href="mailto:ben@utdallas.edu"
+              href="mailto:hello@bencres.dev"
               className="text-blue-600 hover:text-blue-400 transition rounded-md"
             >
-              ben@utdallas.edu
+              hello@bencres.dev
             </a>
           </b>
         </p>
