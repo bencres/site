@@ -11,7 +11,23 @@ export const experiences = [
       "NextJS",
     ]
   },
-  
+  {
+    title: "Pipeline Technical Director",
+    company: "Pixel Foundry",
+    duration: "Aug 2025 - Present",
+    description:
+      "Developing the Pixel Foundry's photo-real effects and photogrammetry pipeline, working on the environment launcher, production manager, and CI/CD pipeline.",
+    tools: [
+      "Python",
+      "SQL",
+      "SQLite",
+      "Pytest",
+      "Houdini",
+      "Nuke",
+      "Maya",
+      "Unreal Engine",
+    ],
+  },
   {
     title: "VR Developer",
     company: "Multimodal Interaction Lab",
