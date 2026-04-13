@@ -27,9 +27,9 @@ export const technicalArtProjects = [
     ]
   },
   {
-    title: "Pixel Foundry Pipeline",
+    title: "Pixel Foundry Environment Manager",
     description:
-      "Developing the Pixel Foundry's photo-real effects and photogrammetry pipeline, working on the environment launcher, production manager, and CI/CD pipeline.",
+      "The Pixel Foundry's photo-real effects and photogrammetry environment manager. Integrated with Houdini for the Pixel Foundry's environment variable scheme.",
     tags: ["Python", "Houdini", "Nuke"],
     links: [
       { url: "https://github.com/pxf-lab/pxf-pipeline", label: "GitHub", icon: "github" }
@@ -40,7 +40,7 @@ export const technicalArtProjects = [
   {
     title: "HytaleModding",
     description:
-      "Developing HytaleModding, a community organization of 8000+ developers for modding Hytale, hosting docs, guides, forums, game jams, and partner project backends.",
+      "HytaleModding's main site, hosting a community organization of 10,000+ developers for modding Hytale, hosting docs, guides, forums, game jams, and partner project backends.",
     tags: ["Typescript", "Python", "NextJS", "React", "Tailwind", "nginx", "Redis", "Docker", "FastAPI"],
     links: [
       { url: "https://github.com/HytaleModding/site", label: "GitHub", icon: "github" },

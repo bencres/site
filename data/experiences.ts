@@ -1,22 +1,40 @@
 export const experiences = [
   {
-    title: "Full-Stack Engineer",
-    company: "HytaleModding",
-    duration: "Jan 2026 - Present",
+    title: "Software Engineer Level 2",
+    company: "The Axle Group",
+    duration: "March 2026 - Present",
     description:
-      "Working on the frontend of the main website and the fumadocs integration with Next.js, React.js, and Tailwind, authoring backends for multiple real-time partner projects with FastAPI, Redis, and Docker, and writing the forum site with nginx, flarum, Less.js, and Mithril.js.",
+      "Not quite sure yet... excited to find out!",
+    tools: [
+      "Python",
+      "Next.js",
+      "TypeScript",
+      "AWS",
+      "PostgreSQL",
+      "Docker",
+      "React.js",
+      "Tailwind CSS",
+      "Drizzle ORM",
+    ]
+  },
+  {
+    title: "Freelance Full-Stack Engineer",
+    company: "HytaleModding",
+    duration: "December 2025 - March 2026",
+    description:
+      "Shipped hytalemodding.dev as one of two front-end engineers using Typescript, Next.js, React.js, and Tailwind CSS. Shipped multiple server back-ends for real-time client projects using Python, FastAPI, Redis, and Docker.",
     tools: [
       "Typescript",
       "Python",
-      "NextJS",
+      "Next.js",
     ]
   },
   {
     title: "Pipeline Technical Director",
     company: "Pixel Foundry",
-    duration: "Aug 2025 - Present",
+    duration: "Aug 2025 - March 2026",
     description:
-      "Developing the Pixel Foundry's photo-real effects and photogrammetry pipeline, working on the environment launcher, production manager, and CI/CD pipeline.",
+      "Developed the Pixel Foundry's photo-real effects and photogrammetry pipeline, including the environment launcher and a variety of small scripts and tools.",
     tools: [
       "Python",
       "SQL",
@@ -45,7 +63,7 @@ export const experiences = [
     company: "The University of Texas at Dallas",
     duration: "Aug 2023 - May 2026",
     description:
-      "TA for Programming for Digital Artists, an introductory Python course. Wrote the Bass School's educational programming infrastructure to automate most testing, grading, and feedback, reducing server costs by 16x as compared to the previous system.",
+      "Wrote the Bass School's educational programming infrastructure to automate most testing, grading, and feedback, reducing server costs by 16x as compared to the previous system. Lectured an introductory Python course.",
     tools: [
       "Python",
       "GitHub Actions",
