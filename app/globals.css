@@ -274,9 +274,3 @@
         filter: blur(8px);
     }
 }
-
-/* Persistent header across transitions */
-/* Only apply to the main site header, not article headers */
-.site-header {
-    view-transition-name: site-header;
-}

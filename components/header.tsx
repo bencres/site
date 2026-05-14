@@ -7,7 +7,7 @@ import CommandMenu from "@/components/command-menu";
 export default function Header() {
   return (
     <header
-      className="sticky top-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border site-header"
+      className="sticky top-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border"
     >
       <nav className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
         <ViewTransitionLink
@@ -41,6 +41,13 @@ export default function Header() {
           >
             Blog
           </a>
+
+          {/* <a
+            href="/#snippets"
+            className="hidden md:block text-sm hover:text-accent transition rounded-md p-0.5"
+          >
+            Snippets
+          </a> */}
 
           <CommandMenu />
 
