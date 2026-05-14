@@ -18,7 +18,7 @@ export const experiences = [
     ]
   },
   {
-    title: "Freelance Full-Stack Engineer",
+    title: "Freelance Full-Stack Developer",
     company: "HytaleModding",
     duration: "December 2025 - March 2026",
     description:
