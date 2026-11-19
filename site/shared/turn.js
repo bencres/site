@@ -128,7 +128,7 @@ const MASKS = SHAPES.map((s) =>
 const TONES = {
   blue: { band: '7f9fbf', rim: '5f86ad', bandO: 0.16, rimO: 0.38, gran: '.27  0 0 0 0 .4  0 0 0 0 .56', granO: 0.45 },
   wet: { band: 'b9a27f', rim: '8f7656', bandO: 0.1, rimO: 0.26, gran: '.42  0 0 0 0 .34  0 0 0 0 .25', granO: 0.3 },
-  faint: { band: 'b9a27f', rim: '8f7656', bandO: 0.024, rimO: 0.065, gran: '.42  0 0 0 0 .34  0 0 0 0 .25', granO: 0.07 },
+  faint: { band: 'b9a27f', rim: '8f7656', bandO: 0.032, rimO: 0.085, gran: '.42  0 0 0 0 .34  0 0 0 0 .25', granO: 0.09 },
 };
 const tide = (s, k, t = TONES.blue) => `<svg viewBox='0 0 200 200' preserveAspectRatio='xMidYMid meet'>
 <filter id='tw${k}' x='-25%' y='-25%' width='150%' height='150%'>${noise(s)}</filter>
