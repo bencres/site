@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <link rel="icon" href="../shared/favicon.svg" type="image/svg+xml">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hello — Ben Cressman</title>
+  <meta name="description" content="Ben Cressman's corner of the internet. Ask him something.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..700,50;1,9..144,300..700,100&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap">
+  <link rel="stylesheet" href="../shared/base.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="paper">
+  <main class="stage">
+    <figure class="portrait">
+      <canvas id="me" aria-hidden="true" width="420" height="480"></canvas>
+      <figcaption class="portrait-note"><span class="arrow" aria-hidden="true">↖</span> that's me. say hi.</figcaption>
+    </figure>
+
+    <section class="talk" aria-labelledby="hello">
+      <h1 id="hello">Hello.</h1>
+      <p class="iam">I'm <span data-c="name"></span>.</p>
+      <div class="intro" data-c="intro"></div>
+
+      <p class="prompt" aria-hidden="true">ask me something <span class="squiggle">⤵</span></p>
+      <div class="chips" role="group" aria-label="Questions you can ask"></div>
+
+      <div class="log" aria-live="polite"></div>
+
+      <footer class="foot">
+        <span data-c="name"></span> · drawn by hand, with code ·
+        <a data-c="mail"></a>
+      </footer>
+    </section>
+  </main>
+
+  <script src="../shared/vendor/rive.js"></script>
+  <script type="module" src="main.js"></script>
+  <script type="module" src="../shared/switcher.js"></script>
+</body>
+</html>

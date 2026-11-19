@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <link rel="icon" href="../shared/favicon.svg" type="image/svg+xml">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ben Cressman · Sketchbook</title>
+  <meta name="description" content="A personal site, inked and watercolored.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Caveat:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/base.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="paper">
+  <aside class="side">
+    <a class="name" href="#top">
+      <canvas class="name-wash" aria-hidden="true"></canvas>
+      <span id="name"></span>
+    </a>
+    <nav class="side-nav" aria-label="Sections">
+      <ul class="primary">
+        <li><a href="#top" aria-current="page">Home</a></li>
+        <li><a href="#writing">Writing</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#now">Now</a></li>
+      </ul>
+      <ul class="muted" id="elsewhere-nav"></ul>
+    </nav>
+  </aside>
+
+  <main id="top">
+    <figure class="hero">
+      <canvas id="hero" aria-hidden="true"></canvas>
+      <figcaption>psst — the bird is friendly</figcaption>
+    </figure>
+    <section class="intro" id="intro"></section>
+    <div id="sections"></div>
+    <footer>
+      <p class="sign">inked &amp; painted, a little crookedly</p>
+    </footer>
+  </main>
+
+  <script src="../shared/vendor/rive.js"></script>
+  <script type="module" src="main.js"></script>
+  <script type="module" src="../shared/switcher.js"></script>
+</body>
+</html>

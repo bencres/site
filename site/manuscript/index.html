@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <link rel="icon" href="../shared/favicon.svg" type="image/svg+xml">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ben Cressman · Manuscript</title>
+  <meta name="description" content="A personal site written as a travel book still in progress: chapters, a hand-drawn map of the road so far, and the ink still wet on the last line.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&family=La+Belle+Aurore&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/base.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="paper">
+  <div class="light" aria-hidden="true"></div>
+  <article class="leaf" id="top">
+    <a class="ribbon" id="ribbon" href="#" hidden><span class="visually-hidden">Back to your place</span></a>
+    <p class="dateline hand" id="dateline"></p>
+
+    <header class="title-page">
+      <figure class="frontis">
+        <canvas id="frontis" aria-hidden="true"></canvas>
+      </figure>
+      <div class="titles">
+        <p class="struck hand" aria-hidden="true"><s>My Notebook</s></p>
+        <p class="struck hand" aria-hidden="true"><s>Some Things I Made</s></p>
+        <h1>Down the Road <em>and Back Again</em></h1>
+        <p class="sub">being a record of where I have been, and what I made there</p>
+        <p class="by">by <span id="name"></span></p>
+        <p class="tag" id="tagline"></p>
+      </div>
+      <nav class="contents" aria-label="Contents">
+        <p class="contents-head">Contents</p>
+        <ol id="contents"></ol>
+      </nav>
+    </header>
+
+    <main id="chapters"></main>
+
+    <footer class="coda">
+      <p class="last" id="last"><span class="pen">That is the road so far. The rest is still being <span class="wet">written</span></span></p>
+      <figure class="coda-fig">
+        <canvas id="coda" aria-hidden="true"></canvas>
+        <div class="board hand">
+          <p>Callers welcome on any business</p>
+          <a id="post" href="#"></a>
+        </div>
+        <span class="sig hand" aria-hidden="true" id="sig"></span>
+      </figure>
+      <p class="colophon"><span id="written"></span> <a href="#top">Back to the title page&nbsp;↑</a></p>
+    </footer>
+  </article>
+
+  <script src="../shared/vendor/rive.js"></script>
+  <script type="module" src="main.js"></script>
+  <script type="module" src="../shared/switcher.js"></script>
+</body>
+</html>

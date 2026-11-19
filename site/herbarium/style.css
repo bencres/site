@@ -1,0 +1,129 @@
+:root {
+  --felt: #25302a;
+  --paper: #f3ead5;
+  --ink: #3b2f27;
+  --ink-2: #6e5e4c;
+  --ink-3: #9b8a72;
+  --rubric: #8f2f24;
+  --fell: 'IM Fell English', 'Iowan Old Style', Georgia, serif;
+  --fell-sc: 'IM Fell English SC', 'IM Fell English', Georgia, serif;
+  --hand: 'Cedarville Cursive', 'Snell Roundhand', cursive;
+  --type: 'Special Elite', 'American Typewriter', monospace;
+  --grain: 0.22;
+}
+html { background: var(--felt); }
+body {
+  min-height: 100svh; color: var(--ink); font-family: var(--fell);
+  background:
+    radial-gradient(120% 90% at 50% 40%, #2e3b33 0%, var(--felt) 55%, #1b231e 100%);
+}
+
+.stage {
+  min-height: 100svh; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 18px 12px 64px; gap: 10px;
+}
+
+/* ---------- the book: one canvas, HTML laid onto the right-hand page in artboard units */
+.book {
+  --W: 1400; --H: 920; --u: calc(100cqw / var(--W));
+  position: relative; container-type: inline-size;
+  width: min(96vw, calc((100svh - 104px) * 1400 / 920), 1360px);
+  aspect-ratio: 1400 / 920;
+}
+.book canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.page, .label { position: absolute; transition: opacity 0.16s ease; }
+.out { opacity: 0 !important; }
+
+.page {
+  left: calc(772 / var(--W) * 100%); top: calc(64 / var(--H) * 100%);
+  width: calc(520 / var(--W) * 100%); height: calc(800 / var(--H) * 100%);
+  display: flex; flex-direction: column;
+  font-size: calc(var(--u) * 18.5); line-height: 1.42; color: var(--ink);
+  pointer-events: none;
+}
+.page a, .page button { pointer-events: auto; }
+.runhead {
+  display: flex; justify-content: space-between; font-family: var(--fell-sc); letter-spacing: 0.08em;
+  font-size: 0.78em; color: var(--ink-3); border-bottom: 1px solid color-mix(in srgb, var(--ink-3) 45%, transparent);
+  padding-bottom: 0.35em; margin-bottom: 1.6em;
+}
+.page-body { flex: 1; }
+.folio { text-align: center; font-size: 0.85em; color: var(--ink-3); margin-top: 0.6em; }
+
+.page h1 { font-weight: 400; font-style: italic; font-size: 2.7em; line-height: 1; margin: 0.15em 0 0.1em; letter-spacing: -0.01em; }
+.page h2 { font-weight: 400; font-style: italic; font-size: 2.1em; line-height: 1.05; margin: 0 0 0.35em; }
+.kicker { font-family: var(--fell-sc); letter-spacing: 0.14em; color: var(--rubric); font-size: 0.8em; margin: 0; }
+.tagline { font-style: italic; color: var(--ink-2); font-size: 1.12em; margin: 0 0 1em; }
+.note { font-style: italic; color: var(--ink-2); font-size: 0.92em; margin: 0 0 1.1em; padding-left: 0.9em; border-left: 1px solid color-mix(in srgb, var(--rubric) 50%, transparent); }
+.page p { margin: 0 0 0.8em; }
+.dropcap { display: flow-root; }
+.dropcap::first-letter {
+  float: left; font-size: 3.35em; line-height: 0.8; padding: 0.06em 0.1em 0 0; color: var(--rubric); font-family: var(--fell);
+}
+.page ul { list-style: none; margin: 0; padding: 0; }
+.page li { margin: 0 0 0.45em; padding-left: 1.1em; position: relative; }
+.page li::before { content: '❧'; position: absolute; left: 0; top: 0.05em; color: var(--rubric); font-size: 0.8em; }
+.page .meta { color: var(--ink-2); font-style: italic; }
+.page .date { font-family: var(--fell-sc); color: var(--ink-3); font-size: 0.86em; letter-spacing: 0.04em; margin-left: 0.35em; }
+
+.page a {
+  color: var(--ink); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.16em;
+  text-decoration-color: color-mix(in srgb, var(--rubric) 55%, transparent);
+}
+.page a:hover { color: var(--rubric); text-decoration-style: wavy; }
+.page a:focus-visible, .page button:focus-visible, .turn:focus-visible { outline: 2px dashed var(--rubric); outline-offset: 3px; }
+
+/* contents, inked by hand */
+.toc { margin: 0.4em 0 0; padding: 0; list-style: none; }
+.toc li { padding: 0; margin: 0 0 0.12em; }
+.toc li::before { content: none; }
+.toc button {
+  all: unset; cursor: pointer; display: flex; align-items: baseline; gap: 0.4em; width: 100%;
+  font-family: var(--hand); font-size: 1.12em; color: #2c2620; line-height: 1.55;
+}
+.toc .num { font-family: var(--fell-sc); color: var(--rubric); font-size: 0.78em; width: 1.6em; }
+.toc .dots { flex: 1; border-bottom: 1.5px dotted color-mix(in srgb, var(--ink-3) 70%, transparent); transform: translateY(-0.3em); }
+.toc .pg { font-family: var(--fell); font-size: 0.86em; color: var(--ink-2); }
+.toc button:hover { color: var(--rubric); }
+.toc button:hover .dots { border-bottom-color: var(--rubric); }
+
+/* the specimen label inside the card on the left page */
+.label {
+  left: calc(466 / var(--W) * 100%); top: calc(788 / var(--H) * 100%);
+  width: calc(172 / var(--W) * 100%); height: calc(52 / var(--H) * 100%);
+  margin: 0; font-size: calc(var(--u) * 12.5); line-height: 1.25; color: var(--ink);
+  display: flex; flex-direction: column; justify-content: center; pointer-events: none;
+}
+.label .no { font-family: var(--type); font-size: 0.86em; color: var(--ink-2); letter-spacing: 0.02em; }
+.label .latin { font-family: var(--hand); font-size: 1.2em; line-height: 1.15; }
+.label .sec { font-family: var(--type); font-size: 0.82em; color: var(--rubric); }
+
+/* ---------- turning controls under the book */
+.turns { display: flex; align-items: center; gap: 18px; color: #d9cfb8; font-family: var(--fell); }
+.turn {
+  all: unset; cursor: pointer; font-style: italic; font-size: 17px; padding: 6px 10px; border-radius: 4px; color: #e7dcc4;
+  transition: color 0.2s, background 0.2s;
+}
+.turn:hover { background: rgba(243, 234, 213, 0.08); color: #fff8e8; }
+.turn[disabled] { opacity: 0.3; cursor: default; background: none; }
+.where { font-family: var(--fell-sc); letter-spacing: 0.12em; font-size: 14px; color: #a99f88; min-width: 9em; text-align: center; }
+
+/* ---------- phones: one leaf at a time; the plate above, its page below */
+@media (max-width: 760px) {
+  .stage { justify-content: flex-start; padding: 12px 10px 76px; gap: 0; }
+  .book { --W: 700; width: 100%; aspect-ratio: auto; }
+  .book canvas { position: relative; inset: auto; display: block; width: 100%; height: auto; aspect-ratio: 700 / 920; }
+  .label { display: none; }
+  .page {
+    position: relative; left: auto; top: auto; width: 100%; height: auto; min-height: 60svh;
+    font-size: 17px; pointer-events: auto; padding: 22px 22px 18px;
+    background: linear-gradient(90deg, #ece1c6, var(--paper) 8%, #f5eddb 70%, #ede2c8);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35); border-radius: 2px 4px 4px 2px; margin-top: -2px;
+  }
+  .page .caption { display: block; }
+  .turns { position: fixed; left: 0; right: 0; bottom: 0; justify-content: space-between; padding: 8px 10px 52px; background: linear-gradient(transparent, rgba(20, 26, 22, 0.92) 40%); }
+  .turn { font-size: 15px; }
+  .where { min-width: 0; font-size: 12px; }
+}
+.page .caption { display: none; font-family: var(--type); font-size: 0.8em; color: var(--ink-2); margin: 0 0 1em; }
+.page .caption em { font-family: var(--hand); font-style: normal; font-size: 1.25em; color: var(--ink); }

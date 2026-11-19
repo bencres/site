@@ -1,0 +1,125 @@
+:root {
+  --paper: #fbf8f1;
+  --ink: #1f1c1a;
+  --soft: #6b665f;
+  --faint: #9d978d;
+  --link: #22589e;
+  --link-line: rgba(34, 88, 158, 0.36);
+  --col: 34rem;
+  --grain: 0.28;
+  --hand: 'Caveat', 'Bradley Hand', cursive;
+}
+
+/* the paper warms a touch through the afternoon and dims, like lamplight, at night */
+:root[data-time='golden'] { --paper: #fbf6eb; }
+:root[data-time='dusk'] { --paper: #f9f3ea; --grain: 0.3; }
+:root[data-time='night'] { --paper: #f4efe5; --grain: 0.32; --soft: #635e57; }
+:root[data-season='winter'][data-time='day'],
+:root[data-season='winter'][data-time='morning'] { --paper: #fafaf6; }
+
+html { background: var(--paper); scroll-behavior: smooth; transition: background-color 2s; }
+body {
+  color: var(--ink);
+  background: var(--paper);
+  font: 400 17px/1.7 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+  font-feature-settings: 'ss01', 'cv11';
+  transition: background-color 2s;
+}
+
+a { color: var(--link); text-decoration: underline; text-decoration-color: var(--link-line); text-decoration-thickness: 1px; text-underline-offset: 3px; transition: text-decoration-color 0.2s; }
+a:hover { text-decoration-color: currentColor; text-decoration-style: wavy; }
+a:focus-visible { outline: 2px dashed var(--link); outline-offset: 3px; border-radius: 2px; }
+
+.page { max-width: var(--col); margin: 0 auto; padding: 34px 20px 120px; }
+
+/* ---- masthead: the name and the sections, at the top of the page like a title strip */
+.masthead {
+  display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between;
+  gap: 6px 22px; font-size: 15px; line-height: 1.6;
+}
+.name {
+  position: relative; display: inline-block; padding: 2px 6px; margin-left: -6px;
+  font-weight: 600; font-size: 16px; color: var(--ink); text-decoration: none; letter-spacing: -0.01em;
+}
+.name:hover { text-decoration: none; }
+.name > span:last-child { position: relative; }
+.name-wash { position: absolute; inset: -8px -14px -7px -11px; pointer-events: none; }
+.name-wash svg { width: 100%; height: 100%; mix-blend-mode: multiply; animation: swipe 0.75s cubic-bezier(0.3, 0.7, 0.2, 1) 0.35s both; }
+@keyframes swipe { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+
+.masthead nav { display: flex; flex-wrap: wrap; gap: 2px 18px; }
+.masthead nav a { color: var(--soft); text-decoration: none; position: relative; }
+.masthead nav a:hover { color: var(--ink); text-decoration: underline wavy var(--faint); text-decoration-thickness: 1px; text-underline-offset: 4px; }
+
+/* ---- hero */
+.hero { position: relative; margin: 14px -92px 30px; }
+.hero canvas { width: 100%; aspect-ratio: 900 / 360; height: auto; }
+.hero figcaption {
+  position: absolute; left: 96px; right: 70px; bottom: -6px;
+  display: flex; justify-content: space-between; align-items: baseline; pointer-events: none;
+  font: 500 17px/1 var(--hand); color: var(--faint);
+}
+.dated { margin-left: auto; transform: rotate(-2deg); pointer-events: auto; cursor: default; white-space: nowrap; }
+.hint { opacity: 0; transform: rotate(1.5deg); transition: opacity 0.6s; }
+.hero:hover .hint { opacity: 1; transition-delay: 2.5s; }
+
+/* ---- reading column */
+.intro { margin-bottom: 60px; }
+.intro p { margin: 0 0 1.05em; }
+
+.block { margin: 0 0 54px; scroll-margin-top: 24px; }
+.block h2 {
+  position: relative; isolation: isolate;
+  display: flex; align-items: baseline; gap: 12px;
+  margin: 0 0 12px; font-size: 18px; font-weight: 600; letter-spacing: -0.01em;
+}
+.block h2 small { font-size: 13px; font-weight: 400; color: var(--faint); }
+
+.swatch-wrap {
+  position: absolute; z-index: -1; left: -24px; top: 50%; width: 130px; height: 52px;
+  transform: translateY(-50%); pointer-events: none;
+  opacity: 1; transition: opacity 1.6s ease 0.2s;
+}
+.swatch-wrap svg { width: 100%; height: 100%; mix-blend-mode: multiply; opacity: 0; transform-origin: 28% 55%; }
+.swatch-wrap .bloom { transform-box: fill-box; transform-origin: center; transform: scale(0.3); }
+/* wet: the swatch floods in a touch past its size, then dries back lighter */
+.wet .swatch-wrap { opacity: 0.84; transition-delay: 1s; }
+.wet .swatch-wrap svg { animation: flood 1.5s cubic-bezier(0.2, 0.8, 0.3, 1) both; }
+.wet .swatch-wrap .bloom { animation: spread 2.4s cubic-bezier(0.15, 0.7, 0.3, 1) 0.25s both; }
+@keyframes flood {
+  0% { opacity: 0; transform: scale(0.42, 0.6); }
+  35% { opacity: 1; transform: scale(1.03, 1.06); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes spread { from { transform: scale(0.3); } to { transform: scale(1.12, 1.08); } }
+/* hovering a heading wets its swatch again, briefly */
+.wet:hover .swatch-wrap { opacity: 1; transition: opacity 0.35s; }
+.still .swatch-wrap svg, .still .swatch-wrap .bloom { animation: none; opacity: 1; transform: none; }
+
+.dash { list-style: none; margin: 0; padding: 0 0 0 1.1em; }
+.dash li { position: relative; margin: 0 0 0.45em; }
+.dash li::before { content: '–'; position: absolute; left: -1.1em; color: var(--soft); }
+.dash .date { color: var(--faint); font-size: 14px; white-space: nowrap; }
+.dash .star { color: #c99a2e; font-size: 13px; display: inline-block; transition: transform 0.5s cubic-bezier(0.3, 1.6, 0.5, 1); }
+.dash li:hover .star { transform: rotate(72deg) scale(1.2); }
+
+footer { margin-top: 84px; }
+.sign { margin: 0 0 6px; font: 500 22px/1.2 var(--hand); color: var(--soft); transform: rotate(-1.5deg); transform-origin: left; }
+.colophon { margin: 0; font-size: 13px; color: var(--faint); }
+
+/* ---- narrow screens */
+@media (max-width: 860px) {
+  .hero { margin-left: -20px; margin-right: -20px; }
+  .hero figcaption { left: 24px; right: 22px; }
+}
+@media (max-width: 640px) {
+  body { font-size: 16px; }
+  .page { padding: 22px 18px 110px; }
+  .masthead { gap: 4px 14px; }
+  .masthead nav { gap: 2px 14px; font-size: 14.5px; }
+  .hero { margin: 10px -18px 26px; }
+  .hero canvas { aspect-ratio: 1.7; }
+  .hero figcaption { left: 18px; right: 18px; bottom: -8px; font-size: 16px; }
+  .hint { display: none; }
+  .swatch-wrap { left: -16px; }
+}

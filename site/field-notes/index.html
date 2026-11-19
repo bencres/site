@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <link rel="icon" href="../shared/favicon.svg" type="image/svg+xml">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ben Cressman · Field notes</title>
+  <meta name="description" content="A personal site kept like a naturalist's field journal: ink, watercolor and notes in the margin.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Kalam:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/base.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="paper">
+  <!-- shared filters for the marginal watercolors -->
+  <svg class="defs" width="0" height="0" aria-hidden="true" focusable="false">
+    <filter id="fn-edge" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency=".07" numOctaves="2" seed="7"/>
+      <feDisplacementMap in="SourceGraphic" scale="3.2" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="fn-wet" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="2.6"/>
+    </filter>
+    <radialGradient id="fn-glow">
+      <stop offset="0" stop-color="#f7d266" stop-opacity=".55"/>
+      <stop offset=".45" stop-color="#f4c84a" stop-opacity=".2"/>
+      <stop offset="1" stop-color="#f4c84a" stop-opacity="0"/>
+    </radialGradient>
+  </svg>
+
+  <div class="page" id="top">
+    <header class="masthead">
+      <a class="name" href="#top" id="name"></a>
+      <nav aria-label="Sections">
+        <a href="#now">now</a>
+        <a href="#work">work</a>
+        <a href="#projects">projects</a>
+        <a href="#writing">writing</a>
+        <a href="#elsewhere">elsewhere</a>
+      </nav>
+      <div class="mast-rule" id="mast-rule"></div>
+    </header>
+
+    <figure class="vignette">
+      <canvas id="hero" aria-hidden="true"></canvas>
+      <figcaption class="whisper">the rabbit is shy; the gate creaks</figcaption>
+    </figure>
+
+    <p class="entry" id="entry"></p>
+
+    <main>
+      <section class="intro" id="intro"></section>
+      <div id="sections"></div>
+    </main>
+
+    <footer class="colophon" id="colophon"></footer>
+  </div>
+
+  <script src="../shared/vendor/rive.js"></script>
+  <script type="module" src="main.js"></script>
+  <script type="module" src="../shared/switcher.js"></script>
+</body>
+</html>

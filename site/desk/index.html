@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <link rel="icon" href="../shared/favicon.svg" type="image/svg+xml">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ben Cressman — on my desk</title>
+  <meta name="description" content="Everything I want to share, laid out on a hand-drawn desk.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Fraunces:ital,opsz,wght@0,9..144,400;1,9..144,500;1,9..144,600&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,500;1,7..72,400&display=swap">
+  <link rel="stylesheet" href="../shared/base.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="paper">
+  <header class="intro">
+    <h1 id="name"></h1>
+    <p class="tagline" id="tagline"></p>
+  </header>
+
+  <main>
+    <figure class="desk">
+      <canvas id="desk" aria-hidden="true"></canvas>
+      <figcaption class="caption" id="caption" aria-live="polite"></figcaption>
+    </figure>
+
+    <nav class="tags" id="tags" aria-label="What's on the desk"></nav>
+  </main>
+
+  <footer class="foot" id="foot"></footer>
+
+  <div class="scrim" id="scrim" hidden></div>
+  <div class="sheet-wrap" id="sheet-wrap" hidden>
+    <section class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title" tabindex="-1">
+      <button class="close" id="close" aria-label="Put it back">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 6.2c4.2 3.6 8.4 7.6 12.6 11.9M18.3 5.6C13.9 9.4 9.8 13.6 5.9 18.4"/></svg>
+      </button>
+      <div class="sheet-body" id="sheet-body"></div>
+    </section>
+  </div>
+
+  <script src="../shared/vendor/rive.js"></script>
+  <script type="module" src="main.js"></script>
+  <script type="module" src="../shared/switcher.js"></script>
+</body>
+</html>

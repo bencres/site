@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <link rel="icon" href="../shared/favicon.svg" type="image/svg+xml">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ben Cressman · Shire II</title>
+  <meta name="description" content="A personal site: a round green door in a grassy hill, with a signpost at the gate pointing the way round, in ink and watercolor.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/base.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="paper">
+  <div class="col">
+    <header id="top"><h1 class="visually-hidden" id="name"></h1></header>
+
+    <figure class="hill">
+      <canvas id="hill" aria-hidden="true"></canvas>
+      <nav class="signpost" id="signpost" aria-label="Sections"></nav>
+      <figcaption class="sign" id="sign"><span id="sign-text"></span></figcaption>
+    </figure>
+
+    <main>
+      <section class="intro" id="intro"></section>
+      <div id="rooms"></div>
+    </main>
+
+    <footer class="leaving" id="callers">
+      <figure class="gate">
+        <canvas id="gate" aria-hidden="true"></canvas>
+        <div class="board">
+          <p>Callers welcome on any business</p>
+          <a id="post" href="#"></a>
+        </div>
+      </figure>
+      <p class="colophon"><span id="painted"></span> <a class="arm back" id="back" href="#signpost"><span>back to the signpost&nbsp;↑</span></a></p>
+    </footer>
+  </div>
+
+  <aside class="almanac" id="almanac" aria-label="Preview a season and time">
+    <details id="almanac-box" open>
+    <summary>season &amp; time</summary>
+    <label><span>season <b id="season-word"></b></span><input type="range" id="season-dial" min="0" max="3" step="0.01"></label>
+    <label><span>time <b id="time-word"></b></span><input type="range" id="time-dial" min="0" max="4" step="0.01"></label>
+    <button type="button" id="almanac-now">back to now</button>
+    </details>
+  </aside>
+
+  <script src="../shared/vendor/rive.js"></script>
+  <script type="module" src="main.js"></script>
+  <script type="module" src="../shared/switcher.js"></script>
+</body>
+</html>

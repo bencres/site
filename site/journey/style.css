@@ -1,0 +1,168 @@
+:root {
+  --paper: #ebe0c6;
+  --sheet: #f3ead5;
+  --ink: #221c17;
+  --soft: #5f5345;
+  --faint: #8f8270;
+  --red: #c3392a;
+  --red-deep: #9d2b1f;
+  --grain: 0.32;
+}
+
+html { background: var(--paper); }
+body {
+  color: var(--ink);
+  font: 400 19px/1.6 'EB Garamond', ui-serif, Georgia, serif;
+  font-variant-numeric: oldstyle-nums;
+  background:
+    radial-gradient(ellipse at 50% 30%, transparent 40%, rgba(120, 88, 40, 0.16) 100%),
+    var(--paper);
+  background-attachment: fixed;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+::selection { background: rgba(195, 57, 42, 0.2); }
+.hand { font-family: 'Macondo', cursive; }
+
+a { color: var(--ink); text-decoration: underline; text-decoration-color: rgba(195, 57, 42, 0.45); text-decoration-thickness: 1px; text-underline-offset: 3px; transition: color 0.2s, text-decoration-color 0.2s; }
+a:hover { color: var(--red-deep); text-decoration-color: currentColor; }
+a:focus-visible, button:focus-visible, li:focus-visible { outline: 2px dashed var(--red); outline-offset: 3px; border-radius: 2px; }
+
+/* ---- head */
+.head { max-width: 760px; margin: 0 auto; padding: 26px 24px 4px; text-align: center; }
+.kicker { margin: 0; font: 400 18px/1 'Macondo', cursive; letter-spacing: 0.02em; }
+.kicker a { color: var(--red); text-decoration: none; }
+.head h1 { margin: 6px 0 4px; font: 400 clamp(32px, 4vw, 46px)/1.05 'Macondo', cursive; letter-spacing: -0.005em; }
+.intro { margin: 0 auto; max-width: 600px; color: var(--soft); font-style: italic; }
+
+/* ---- the map: canvas and its lettering share one coordinate space */
+.atlas { margin: 14px auto 0; padding: 0 16px; max-width: min(1760px, calc((100vh - 40px) * var(--ar-n, 1.8))); }
+.map-scroll { position: relative; }
+.map {
+  position: relative; width: 100%;
+  aspect-ratio: var(--ar, 1.8);
+  filter: drop-shadow(0 1px 1px rgba(40, 24, 8, 0.25)) drop-shadow(0 14px 22px rgba(40, 24, 8, 0.18));
+}
+.map canvas, .map .overlay { position: absolute; inset: 0; width: 100%; height: 100%; }
+.overlay { pointer-events: none; overflow: visible; }
+.overlay .hit { pointer-events: all; cursor: pointer; fill: transparent; }
+.overlay .lbl { pointer-events: all; cursor: pointer; }
+.atlas figcaption { margin: 10px auto 0; text-align: center; color: var(--faint); font-style: italic; font-size: 16px; }
+@media (min-width: 901px) { .atlas figcaption .narrow { display: none; } }
+
+/* labels are lettered in as the road reaches them */
+.overlay text { font-family: 'Macondo', cursive; }
+.lbl { fill: var(--red); transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1); transform-box: fill-box; transform-origin: 50% 100%; }
+.lbl .halo { fill: none; stroke: var(--sheet); stroke-width: 5; stroke-linejoin: round; opacity: 0; transition: opacity 0.6s 0.2s; }
+.lbl.on .halo { opacity: 0.85; }
+.lbl .ink {
+  fill-opacity: 0; stroke: var(--red); stroke-width: 0.7; stroke-dasharray: 160; stroke-dashoffset: 160;
+  paint-order: stroke;
+}
+.lbl.on .ink { animation: letter 1s cubic-bezier(0.3, 0.1, 0.3, 1) forwards; }
+.lbl.hot { transform: translateY(-5px) scale(1.04); }
+.lbl .now { font-size: 17px; }
+.lbl .ink.now { fill: var(--red-deep); stroke: var(--red-deep); }
+@keyframes letter {
+  0% { stroke-dashoffset: 160; fill-opacity: 0; }
+  30% { fill-opacity: 0.35; }
+  100% { stroke-dashoffset: 0; fill-opacity: 1; stroke-width: 0; }
+}
+.ink-lbl { fill: var(--ink); opacity: 0; transition: opacity 1.2s ease; }
+.ink-lbl.on { opacity: 1; }
+.red-lbl { fill: var(--red); opacity: 0; transition: opacity 1s ease; }
+.red-lbl.on { opacity: 1; }
+
+/* ---- the note card */
+.card {
+  position: absolute; z-index: 5; width: 270px; padding: 14px 18px 14px;
+  background: #fbf6e8;
+  border: 1.5px solid var(--ink);
+  border-radius: 14px 3px 16px 4px / 4px 16px 3px 14px;
+  box-shadow: 3px 4px 0 rgba(34, 28, 23, 0.12), 0 12px 26px rgba(40, 24, 8, 0.18);
+  font-size: 16px; line-height: 1.45;
+  transform: rotate(var(--tilt, -0.8deg));
+  opacity: 0; transition: opacity 0.18s ease, transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.card[hidden] { display: block; visibility: hidden; }
+.card.on { opacity: 1; }
+/* a hover card is only a glance; click or tap a place to pin it and use its link */
+.card { pointer-events: none; }
+.card.pinned { pointer-events: auto; }
+.card::before {
+  /* a pin of red sealing wax */
+  content: ''; position: absolute; top: -7px; left: 50%; width: 14px; height: 14px; margin-left: -7px;
+  border-radius: 50% 46% 52% 48%; background: radial-gradient(circle at 35% 35%, #e0604c, var(--red) 55%, var(--red-deep));
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+.card p { margin: 0; }
+.card-kind { font: 400 13px/1 'Macondo', cursive; color: var(--faint); letter-spacing: 0.06em; text-transform: lowercase; }
+.card-title { margin: 6px 0 2px; font: 400 25px/1.05 'Macondo', cursive; color: var(--red); }
+.card-role { color: var(--soft); font-style: italic; }
+.card-when { font: 400 15px/1.3 'Macondo', cursive; color: var(--ink); margin-top: 2px !important; }
+.card-note { margin-top: 8px !important; }
+.card-link { display: inline-block; margin-top: 8px; font: 400 16px/1 'Macondo', cursive; color: var(--red-deep); }
+.card-link[hidden] { display: none; }
+
+/* ---- the list */
+.road { max-width: 860px; margin: 56px auto 0; padding: 0 24px; }
+.road h2 { margin: 0 0 6px; text-align: center; font: 400 36px/1.1 'Macondo', cursive; }
+.road h2::after {
+  content: ''; display: block; width: 140px; height: 10px; margin: 8px auto 0;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 140 10'><path d='M2 5 h18 m8 0 h14 m8 0 h18 m8 0 h14 m8 0 h16 m8 0 h16' stroke='%23c3392a' stroke-width='2' stroke-linecap='round' fill='none'/></svg>") center / contain no-repeat;
+}
+.stops { list-style: none; margin: 26px 0 0; padding: 0; position: relative; counter-reset: stop; }
+/* the dashed road runs down the list too */
+.stops::before {
+  content: ''; position: absolute; left: 21px; top: 18px; bottom: 30px; width: 2px;
+  background: repeating-linear-gradient(var(--red) 0 9px, transparent 9px 15px);
+  opacity: 0.8;
+}
+.stop {
+  position: relative; display: grid; grid-template-columns: 44px 1fr; column-gap: 18px;
+  padding: 12px 12px 14px 0; border-radius: 6px; counter-increment: stop;
+  transition: background-color 0.2s;
+}
+.stop:hover, .stop:focus-within, .stop.hot { background: rgba(195, 57, 42, 0.06); }
+.stop .glyph { grid-row: span 4; width: 44px; height: 44px; position: relative; z-index: 1; }
+.stop .glyph svg { width: 44px; height: 44px; display: block; overflow: visible; }
+.stop h3 { margin: 0; font: 400 26px/1.15 'Macondo', cursive; color: var(--red); }
+.stop h3 a { color: inherit; text-decoration-color: rgba(195, 57, 42, 0.35); }
+.stop .meta { margin: 2px 0 0; color: var(--soft); font-size: 17px; }
+.stop .meta .when { font-family: 'Macondo', cursive; color: var(--ink); font-size: 16px; }
+.stop .note { margin: 6px 0 0; }
+.stop .show {
+  justify-self: start; margin-top: 6px; padding: 0; border: 0; background: none; cursor: pointer;
+  font: 400 15px/1.2 'Macondo', cursive; color: var(--red-deep); text-decoration: underline dotted; text-underline-offset: 3px;
+}
+.stop.now h3::after { content: ' · here I am now'; font-size: 17px; color: var(--red-deep); }
+
+/* ---- foot */
+.foot { max-width: 760px; margin: 56px auto 0; padding: 26px 24px 90px; text-align: center; color: var(--soft); }
+.foot p { margin: 0; }
+.elsewhere { list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 18px; margin: 12px 0 0; padding: 0; font-family: 'Macondo', cursive; }
+
+/* ---- small screens: the map keeps its size and pans sideways */
+@media (max-width: 900px) {
+  body { font-size: 18px; }
+  .head { padding-top: 28px; }
+  .atlas { padding: 0; }
+  .map-scroll {
+    overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain;
+    scrollbar-width: thin; scrollbar-color: rgba(34, 28, 23, 0.3) transparent;
+    padding: 0 12px 10px;
+  }
+  .map { width: 980px; }
+  .atlas figcaption { padding: 0 16px; }
+  .atlas figcaption .wide { display: none; }
+  .card { width: 240px; }
+  .road { margin-top: 40px; padding: 0 16px; }
+  .stop { grid-template-columns: 36px 1fr; column-gap: 12px; }
+  .stop .glyph, .stop .glyph svg { width: 36px; height: 36px; }
+  .stops::before { left: 17px; }
+  .stop h3 { font-size: 23px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lbl .ink { animation: none !important; fill-opacity: 1; stroke-width: 0; stroke-dashoffset: 0; }
+}

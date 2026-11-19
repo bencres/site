@@ -1,0 +1,14 @@
+{
+  "name": "personal-rive-site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:rive": "node scripts/build-rive.mjs",
+    "vendor": "node scripts/vendor.mjs",
+    "build": "npm run vendor && npm run build:rive",
+    "serve": "npx --yes serve site -l 4173"
+  },
+  "devDependencies": {
+    "@rive-app/webgl2": "2.51.0"
+  }
+}

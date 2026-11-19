@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ben Cressman · harbor</title>
+  <meta name="description" content="Ben Cressman — sketches, software & small things.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/base.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="paper">
+  <header class="byline">
+    <h1 id="name"></h1>
+    <p id="tagline"></p>
+  </header>
+
+  <main>
+    <figure class="sketch" id="sketch">
+      <div class="frame">
+        <canvas id="art" aria-hidden="true"></canvas>
+        <canvas id="leaders" aria-hidden="true"></canvas>
+        <figcaption class="scribble">the boathouse · nov ’26</figcaption>
+      </div>
+      <nav class="notes" id="notes" aria-label="Sections"></nav>
+    </figure>
+  </main>
+
+  <aside class="card" id="card" role="dialog" aria-modal="false" aria-labelledby="card-title" hidden>
+    <button class="close" id="close" aria-label="Close">×</button>
+    <h2 id="card-title"></h2>
+    <div id="card-body"></div>
+  </aside>
+
+  <script src="../shared/vendor/rive.js"></script>
+  <script type="module" src="main.js"></script>
+  <script type="module" src="../shared/switcher.js"></script>
+</body>
+</html>

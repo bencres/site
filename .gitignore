@@ -1,0 +1,3 @@
+node_modules/
+rive/*/build/
+.DS_Store

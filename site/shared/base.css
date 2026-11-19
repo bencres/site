@@ -1,0 +1,45 @@
+/* Shared reset + paper texture. Each variant layers its own look on top. */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body { margin: 0; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
+img, canvas, svg { display: block; max-width: 100%; }
+a { color: inherit; }
+canvas[aria-hidden] { pointer-events: auto; }
+
+/* fibrous paper grain, generated in an SVG filter so nothing is downloaded */
+.paper::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 100;
+  opacity: var(--grain, 0.35);
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='320'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .45  0 0 0 0 .38  0 0 0 0 .3  0 0 0 .55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+.visually-hidden {
+  position: absolute !important; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap;
+}
+
+/* little floating switcher between the five drafts */
+.variant-switch {
+  position: fixed; right: 12px; bottom: 12px; z-index: 200;
+  display: flex; gap: 4px; padding: 4px; border-radius: 999px;
+  background: rgba(30, 28, 26, 0.72); backdrop-filter: blur(6px);
+  font: 500 11px/1 ui-sans-serif, system-ui, sans-serif;
+  opacity: 0.4; transition: opacity 0.25s;
+  max-width: calc(100vw - 24px); overflow-x: auto; scrollbar-width: none;
+}
+.variant-switch:hover, .variant-switch:focus-within { opacity: 1; }
+.variant-switch a {
+  color: #f3eee6; text-decoration: none; padding: 6px 7px; flex: none; border-radius: 999px; opacity: 0.7;
+}
+.variant-switch a:hover, .variant-switch a[aria-current] { opacity: 1; background: rgba(255,255,255,0.14); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}

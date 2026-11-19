@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <link rel="icon" href="../shared/favicon.svg" type="image/svg+xml">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ben Cressman · margins</title>
+  <meta name="description" content="Ben Cressman's corner of the internet.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500;1,600&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/base.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="paper">
+  <main id="page">
+    <header class="hero">
+      <div class="hero-text">
+        <h1><span class="hi">Hi, I’m</span> <span class="name" id="name"></span>
+          <canvas class="swash" id="swash" aria-hidden="true"></canvas>
+        </h1>
+        <p class="tagline" id="tagline"></p>
+        <div class="intro" id="intro"></div>
+      </div>
+      <figure class="dandelion" aria-hidden="true">
+        <canvas id="dandelion"></canvas>
+        <figcaption class="note">make a wish</figcaption>
+      </figure>
+    </header>
+    <div class="sections" id="sections"></div>
+    <footer class="colophon">drawn by hand, with a little help from code &amp; <a href="https://rive.app">Rive</a>.</footer>
+  </main>
+  <script src="../shared/vendor/rive.js"></script>
+  <script type="module" src="main.js"></script>
+  <script type="module" src="../shared/switcher.js"></script>
+</body>
+</html>

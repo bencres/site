@@ -1,0 +1,163 @@
+.seasons {
+  /* the palette is interpolated from the year by main.js; these are midwinter */
+  --bg: #f3f5f6;
+  --ink: #26323b;
+  --dim: #5f6d78;
+  --faint: #93a1ac;
+  --rule: rgba(38, 50, 59, 0.08);
+  --red: #b8432f;
+  --shadow: #9db6cc;
+  --ground: #9db6cc;
+  --ground-a: 0;
+  --grain-hue: 170deg;
+  --grain-sat: 0.4;
+  background: var(--bg);
+  color: var(--ink);
+  font: 300 16.5px/1.75 'Geist', ui-sans-serif, system-ui, sans-serif;
+  min-height: 100vh;
+}
+.seasons.paper::before { --grain: 0.16; filter: hue-rotate(var(--grain-hue)) saturate(var(--grain-sat)); }
+
+.woods { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+.woods canvas { position: absolute; pointer-events: auto; }
+/* a breath of ground colour along the bottom ties the two stands together once the snow goes */
+.woods::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 12vh;
+  background: linear-gradient(to top, color-mix(in srgb, var(--ground) 38%, transparent), transparent);
+  opacity: var(--ground-a);
+}
+#stand { left: 0; bottom: 0; height: 100vh; width: min(51vh, 34vw); }
+#maple { right: 0; top: 0; width: min(42vw, 600px); aspect-ratio: 640 / 560; }
+#fir { right: 0; bottom: 0; width: min(34vw, 470px); aspect-ratio: 520 / 620; }
+#sun { right: 16vw; top: 2vh; width: min(26vw, 340px); aspect-ratio: 1; pointer-events: none; }
+#weather { inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2; }
+
+.col {
+  position: relative;
+  z-index: 1;
+  max-width: 34rem;
+  margin: 0 auto;
+  padding: 18vh 24px 26vh;
+  pointer-events: none;
+}
+.col a, .col p, .col li, .col h1, .col h2 { pointer-events: auto; }
+
+.hero { margin-bottom: 2.4rem; }
+.seal {
+  display: inline-grid; place-items: center;
+  width: 2.1rem; height: 2.1rem; margin: 0 0 1.4rem;
+  font: 500 0.74rem/1 'Geist', sans-serif; letter-spacing: 0.06em;
+  color: #fbf1ec; background: var(--red); border-radius: 3px;
+  box-shadow: inset 0 0 0 2px rgba(255,255,255,.14);
+  transform: rotate(-3deg);
+  animation: stamp 0.9s cubic-bezier(.2,1.4,.4,1) 2.4s both;
+  transition: background-color .6s;
+}
+@keyframes stamp { from { opacity: 0; transform: rotate(-3deg) scale(1.6); } 60% { opacity: 1; } to { transform: rotate(-3deg) scale(1); } }
+h1 {
+  font: 400 clamp(2.8rem, 8vw, 4.2rem)/1 'Instrument Serif', serif;
+  letter-spacing: -0.01em; margin: 0 0 0.7rem;
+}
+.tagline { color: var(--dim); margin: 0; font: italic 400 1.35rem/1.3 'Instrument Serif', serif; }
+.almanac { color: var(--faint); margin: 0.9rem 0 0; font-size: 0.86rem; letter-spacing: 0.01em; }
+.almanac em { font: italic 400 1.05rem/1.3 'Instrument Serif', serif; color: var(--dim); }
+.col { text-shadow: 0 0 18px var(--bg), 0 0 6px var(--bg), 0 0 2px var(--bg); }
+
+a { color: var(--ink); text-decoration: none; background: linear-gradient(var(--faint), var(--faint)) 0 100% / 100% 1px no-repeat; transition: color .3s, background-image .3s; }
+a:hover { color: var(--red); background-image: linear-gradient(var(--red), var(--red)); }
+a:focus-visible { outline: 1px dashed var(--red); outline-offset: 3px; }
+
+canvas.divider { width: 168px; height: 28px; margin: 3.2rem 0 1rem -14px; display: block; }
+h2 {
+  font: 500 0.76rem/1 'Geist', sans-serif; text-transform: uppercase; letter-spacing: 0.22em;
+  color: var(--dim); margin: 0 0 1.2rem;
+}
+.meta { color: var(--faint); font-size: 0.85rem; margin: -0.6rem 0 0.8rem; }
+ul { list-style: none; padding: 0; margin: 0; }
+.plain li { padding-left: 1.1rem; position: relative; margin: 0.3rem 0; }
+.plain li::before { content: '*'; position: absolute; left: 0.1rem; top: 0.05em; color: var(--shadow); font-weight: 500; }
+.rows li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.25rem 0.7rem; padding: 0.45rem 0; border-bottom: 1px solid var(--rule); }
+.rows .role { color: var(--dim); }
+.rows .when { margin-left: auto; color: var(--faint); font-size: 0.85rem; font-variant-numeric: tabular-nums; }
+.star { color: var(--red); font-size: 0.8rem; }
+.links { display: flex; flex-wrap: wrap; gap: 0.4rem 1.4rem; }
+footer { margin-top: 2rem; color: var(--faint); font-size: 0.85rem; }
+
+/* ---------------------------------------------------------------- the year slider */
+.almanac-panel {
+  position: fixed; left: 14px; bottom: 14px; z-index: 150;
+  width: 300px; padding: 10px 14px 8px;
+  color: var(--ink);
+  background: color-mix(in srgb, var(--bg) 82%, white);
+  border: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+  border-radius: 6px 10px 8px 12px / 10px 6px 12px 8px; /* a slightly hand-cut card */
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--ink) 10%, transparent), 0 10px 30px -18px color-mix(in srgb, var(--ink) 40%, transparent);
+  font: 400 12px/1.3 'Geist', sans-serif;
+  backdrop-filter: blur(6px);
+  transition: background-color .6s, border-color .6s;
+}
+.almanac-panel .row { display: flex; align-items: baseline; gap: 8px; }
+.almanac-panel .when { flex: 1; font: italic 400 1.05rem/1.2 'Instrument Serif', serif; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.almanac-panel .season { color: var(--dim); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; }
+.almanac-panel button {
+  appearance: none; border: 0; background: none; padding: 2px 4px; margin: 0;
+  color: var(--dim); font: 500 11px/1 'Geist', sans-serif; letter-spacing: 0.04em; cursor: pointer;
+  border-radius: 3px;
+}
+.almanac-panel button:hover { color: var(--red); }
+.almanac-panel button:focus-visible { outline: 1px dashed var(--red); outline-offset: 2px; }
+.almanac-panel .play { font-size: 12px; }
+.almanac-panel .today[hidden] { display: none; }
+.almanac-panel .today { text-decoration: underline dotted; text-underline-offset: 3px; }
+
+.glyphs { display: flex; justify-content: space-between; padding: 6px 2px 0; color: var(--dim); }
+.glyphs svg { width: 13px; height: 13px; display: block; fill: none; stroke: currentColor; stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round; opacity: 0.55; transition: opacity .3s, color .3s; }
+.glyphs svg.on { opacity: 1; color: var(--red); }
+
+.track { position: relative; height: 30px; margin: 0; }
+/* the wobbly ink track is drawn by main.js into this svg */
+.track .rail { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+.track .rail .ink { fill: none; stroke: var(--ink); stroke-width: 1.3; stroke-linecap: round; opacity: 0.75; }
+.track .rail .bleed { fill: none; stroke: var(--ink); stroke-width: 3.5; stroke-linecap: round; opacity: 0.08; }
+.track .rail .tick { stroke: var(--ink); stroke-width: 1; opacity: 0.5; }
+.track .rail .todayMark { fill: var(--red); }
+.track input[type=range] {
+  -webkit-appearance: none; appearance: none;
+  position: absolute; left: 0; right: 0; top: 0; width: 100%; height: 30px; margin: 0;
+  background: transparent; cursor: ew-resize;
+}
+.track input[type=range]:focus { outline: none; }
+.track input[type=range]::-webkit-slider-runnable-track { height: 30px; background: transparent; }
+.track input[type=range]::-moz-range-track { height: 30px; background: transparent; }
+.track input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 14px; height: 14px; margin-top: 8px;
+  border-radius: 50% 46% 52% 48% / 48% 52% 46% 54%;
+  background: var(--bg); border: 1.6px solid var(--ink);
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--red) 70%, transparent), 0 0 0 4px color-mix(in srgb, var(--red) 0%, transparent);
+  transition: box-shadow .2s;
+}
+.track input[type=range]::-moz-range-thumb {
+  width: 12px; height: 12px;
+  border-radius: 50% 46% 52% 48% / 48% 52% 46% 54%;
+  background: var(--bg); border: 1.6px solid var(--ink);
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--red) 70%, transparent);
+}
+.track input[type=range]:focus-visible::-webkit-slider-thumb { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--red) 70%, transparent), 0 0 0 4px color-mix(in srgb, var(--red) 28%, transparent); }
+.track input[type=range]:focus-visible::-moz-range-thumb { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--red) 70%, transparent), 0 0 0 4px color-mix(in srgb, var(--red) 28%, transparent); }
+.months { display: flex; justify-content: space-between; padding: 0 3px; color: var(--faint); font-size: 9.5px; letter-spacing: 0.04em; font-variant-numeric: tabular-nums; }
+.months span { width: 1em; text-align: center; }
+
+@media (max-width: 900px) {
+  #stand { width: 36vw; height: auto; aspect-ratio: 460 / 900; opacity: 0.38; left: -12vw; }
+  #fir { width: 52vw; opacity: 0.45; right: -8vw; }
+  #maple { width: 82vw; right: -12vw; top: -4vw; }
+  #sun { right: 30vw; width: 44vw; }
+}
+@media (max-width: 640px) {
+  .seasons { font-size: 15.5px; }
+  .col { padding-top: 30vh; padding-bottom: 32vh; }
+  .rows .when { margin-left: 0; width: 100%; }
+  .almanac-panel { left: 10px; right: 10px; bottom: 52px; width: auto; padding: 8px 12px 6px; }
+  .almanac-panel .when { font-size: 1rem; }
+}

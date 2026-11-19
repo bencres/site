@@ -1,0 +1,142 @@
+:root {
+  --paper: #f8f2e4;
+  --ink: #2b231c;
+  --soft: #6e6152;
+  --faint: #a2937f;
+  --link: #2f6a45;
+  --link-line: rgba(47, 106, 69, 0.35);
+  --brass: #c99a2e;
+  --col: 37rem;
+  --grain: 0.3;
+}
+/* the paper warms and dims a little with the hour */
+[data-time='morning'] { --paper: #f9f4e8; }
+[data-time='afternoon'] { --paper: #f8f0de; }
+[data-time='dusk'] { --paper: #f5ecdc; --grain: 0.34; }
+[data-time='night'] { --paper: #f0e9dc; --grain: 0.38; --soft: #645a4e; }
+[data-season='winter'] { --link: #2f5f62; --link-line: rgba(47, 95, 98, 0.35); }
+[data-season='autumn'] { --link: #6a5a24; --link-line: rgba(140, 100, 30, 0.38); }
+
+html { background: var(--paper); scroll-behavior: smooth; transition: background-color 2s; }
+body {
+  color: var(--ink);
+  background: var(--paper);
+  font: 400 19px/1.62 'Alegreya', ui-serif, Georgia, serif;
+  transition: background-color 2s;
+}
+::selection { background: rgba(233, 185, 58, 0.35); }
+
+a { color: var(--link); text-decoration: underline; text-decoration-color: var(--link-line); text-decoration-thickness: 1px; text-underline-offset: 3px; transition: text-decoration-color 0.2s; }
+a:hover { text-decoration-color: currentColor; text-decoration-style: wavy; }
+a:focus-visible { outline: 2px dashed var(--link); outline-offset: 3px; border-radius: 2px; }
+
+.col { max-width: var(--col); margin: 0 auto; padding: 30px 20px 90px; }
+
+/* ---- the porch: name and the hall of rooms, part of the column */
+.porch { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 22px; }
+.name { position: relative; isolation: isolate; font-weight: 700; font-size: 22px; letter-spacing: 0.005em; color: var(--ink); text-decoration: none; padding: 2px 4px; margin-left: -4px; }
+.name:hover { text-decoration: none; }
+.name .wash { inset: -12px -22px -12px -18px; }
+.hall { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 17px; }
+.hall a { position: relative; color: var(--ink); text-decoration: none; }
+/* a little brass knob turns up beside the room you are about to open */
+.hall a::before {
+  content: ''; position: absolute; left: 50%; top: -7px; width: 6px; height: 6px; margin-left: -3px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #f3d77d, var(--brass) 60%, #8c6a1c);
+  box-shadow: 0 0 0 1px rgba(43, 35, 28, 0.55);
+  transform: scale(0); transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.hall a:hover::before, .hall a:focus-visible::before { transform: scale(1); }
+.hall a:hover { text-decoration: none; }
+
+/* ---- the hill */
+.hill { margin: 14px -90px 4px; position: relative; }
+.hill canvas { width: 100%; aspect-ratio: 900 / 400; height: auto; }
+.sign {
+  margin: -6px 0 0 calc(90px + 4%);
+  font: 600 22px/1.2 'Caveat', cursive; color: var(--soft);
+  transform: rotate(-1.4deg); transform-origin: left;
+  animation: write 0.9s 0.5s cubic-bezier(0.5, 0, 0.3, 1) both;
+}
+@keyframes write { from { clip-path: inset(-10px 100% -10px -10px); } to { clip-path: inset(-10px -10px -10px -10px); } }
+
+/* ---- reading */
+main { margin-top: 30px; }
+.intro p { margin: 0 0 1em; }
+.intro { margin-bottom: 58px; }
+
+.room-block { margin: 0 0 52px; scroll-margin-top: 24px; }
+.room-block h2 {
+  position: relative; isolation: isolate;
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 12px;
+  margin: 0 0 12px; font-size: 22px; font-weight: 700; letter-spacing: 0.005em;
+}
+.room-block h2 .room { font: 500 19px/1 'Caveat', cursive; color: var(--faint); transform: rotate(-2deg) translateY(-1px); }
+.room-block h2 small { flex-basis: 100%; font-size: 14px; font-weight: 400; font-style: italic; color: var(--faint); margin-top: -2px; }
+.room-block h2 .wash { left: -30px; top: -14px; width: 150px; height: 64px; }
+
+/* a watercolor wash: blooms in, then dries a shade lighter */
+.wash {
+  position: absolute; z-index: -1; pointer-events: none;
+  background: center / 100% 100% no-repeat; mix-blend-mode: multiply;
+  opacity: 0;
+}
+.bloomed .wash { animation: bloom 1.6s cubic-bezier(0.2, 0.75, 0.25, 1) both; }
+.porch.bloomed .wash { animation-delay: 0.15s; }
+@keyframes bloom {
+  0% { opacity: 0; transform: scale(0.45, 0.6); clip-path: circle(12% at 42% 55%); }
+  30% { opacity: 1; }
+  100% { opacity: 0.86; transform: none; clip-path: circle(80% at 42% 55%); }
+}
+.name:hover .wash { animation: bloom-again 0.9s cubic-bezier(0.2, 0.75, 0.25, 1) both; }
+@keyframes bloom-again { 0% { opacity: 0.86; transform: scale(0.93, 0.85); } 100% { opacity: 0.86; transform: none; } }
+
+/* lists, with little round brass knobs for bullets */
+.knobs { list-style: none; margin: 0; padding: 0 0 0 1.25em; }
+.knobs li { position: relative; margin: 0 0 0.42em; }
+.knobs li::before {
+  content: ''; position: absolute; left: -1.05em; top: 0.68em; width: 7px; height: 7px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #f0d27a, var(--brass) 62%, #8a6a1e);
+  box-shadow: 0 0 0 1px rgba(43, 35, 28, 0.6);
+  opacity: 0.85;
+}
+.knobs .when { color: var(--faint); font-size: 15px; font-style: italic; white-space: nowrap; }
+.knobs .star { color: var(--brass); font-size: 14px; }
+.knobs.inline { display: flex; flex-wrap: wrap; gap: 4px 36px; padding-left: 1.25em; }
+
+/* ---- leaving by the gate */
+.leaving { margin-top: 80px; }
+.gate { position: relative; margin: 0 -30px; container-type: inline-size; }
+.gate canvas { width: 100%; aspect-ratio: 600 / 210; height: auto; }
+.board {
+  position: absolute; left: 6.6%; top: 20%; width: 37.6%; height: 39%;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.1em;
+  text-align: center; transform: rotate(-1.1deg);
+  font-family: 'Caveat', cursive; color: #3a2f25; line-height: 1.05;
+}
+.board p { margin: 0; font-size: clamp(14px, 3.9cqw, 25px); font-weight: 600; }
+.board a { font-size: clamp(13px, 3.5cqw, 22px); font-weight: 500; }
+.colophon { margin: 18px 0 0; font-size: 15px; font-style: italic; color: var(--soft); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 16px; }
+.colophon a { font-style: normal; }
+
+/* ---- narrower screens */
+@media (max-width: 860px) {
+  .hill { margin: 12px -20px 4px; }
+  .sign { margin-left: 4%; }
+}
+@media (max-width: 520px) {
+  body { font-size: 17.5px; }
+  .col { padding: 22px 16px 96px; }
+  .name { font-size: 21px; }
+  .hall { gap: 2px 14px; font-size: 16px; }
+  /* the painting bleeds off both sides of a phone, so the door gets more room */
+  .hill { margin: 10px -16px 2px; overflow: hidden; }
+  .hill canvas { width: 118%; max-width: none; margin-left: -12%; }
+  .sign { font-size: 19px; margin: 2px 0 0 2px; }
+  .gate { margin: 0 -16px; }
+  .room-block h2 .wash { left: -22px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wash, .bloomed .wash { opacity: 0.86; animation: none; }
+  .sign { animation: none; }
+}

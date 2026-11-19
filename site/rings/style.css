@@ -1,0 +1,99 @@
+:root {
+  --paper: #f3eedf;
+  --ink: #3b2a1e;
+  --ink-2: #6f5a48;
+  --ink-3: #a3907c;
+  --moss: #4e6b3a;
+  --serif: 'Cormorant Garamond', 'Iowan Old Style', Georgia, serif;
+  --sc: 'Cormorant SC', 'Cormorant Garamond', Georgia, serif;
+  --hand: 'Kalam', 'Bradley Hand', cursive;
+  --grain: 0.3;
+}
+html { background: var(--paper); }
+body { color: var(--ink); font: 500 20px/1.5 var(--serif); }
+::selection { background: #e6cf98; }
+a { color: var(--ink); text-decoration-color: color-mix(in srgb, var(--ink) 40%, transparent); text-underline-offset: 0.18em; }
+a:hover { color: var(--moss); text-decoration-color: var(--moss); }
+a:focus-visible, button:focus-visible { outline: 1.5px dashed var(--moss); outline-offset: 3px; }
+
+/* ---------- the plate: a printed specimen sheet with a double rule */
+.plate {
+  max-width: 1320px; margin: clamp(10px, 2.5vw, 28px) auto; padding: clamp(18px, 3vw, 36px);
+  border: 1px solid color-mix(in srgb, var(--ink) 55%, transparent);
+  outline: 3px double color-mix(in srgb, var(--ink) 35%, transparent); outline-offset: -9px;
+  min-height: calc(100vh - 2 * clamp(10px, 2.5vw, 28px));
+  display: flex; flex-direction: column;
+}
+.plate-head, .plate-foot {
+  display: flex; align-items: center; gap: 16px; font: 500 15px/1 var(--sc); letter-spacing: 0.14em; color: var(--ink-2);
+}
+.plate-head i { font: italic 500 17px/1 var(--serif); letter-spacing: 0.02em; }
+.plate-head .rule { flex: 1; height: 1px; background: color-mix(in srgb, var(--ink) 30%, transparent); }
+.plate-foot { justify-content: space-between; padding-right: 200px; margin-top: auto; padding-top: 18px; font-size: 13px; color: var(--ink-3); }
+
+.plate-body {
+  flex: 1; display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
+  gap: clamp(16px, 3vw, 48px); align-items: center; padding: 8px 0;
+}
+
+/* ---------- the specimen + its hand-lettered labels */
+.specimen { margin: 0 auto; position: relative; width: min(100% - 2 * clamp(0px, 8vw, 112px), calc(100vh - 140px), 780px); aspect-ratio: 1; }
+.specimen canvas { width: 100%; height: 100%; }
+.specimen canvas.over-band { cursor: pointer; }
+.labels { position: absolute; inset: 0; pointer-events: none; }
+.label {
+  position: absolute; transform: translate(4px, -58%); white-space: nowrap;
+  font: 400 clamp(15px, 1.5vw, 19px)/1.1 var(--hand); color: var(--ink-2);
+  transition: color 0.3s, transform 0.3s;
+}
+.label.left { transform: translate(calc(-100% - 4px), -58%); text-align: right; }
+.label b { font-weight: 400; font-family: var(--serif); font-style: italic; font-size: 1.15em; color: var(--ink); margin-right: 6px; }
+.label.on { color: var(--ink); }
+.label.on b { color: var(--moss); }
+
+/* ---------- legend column */
+.legend h1 { font: 600 clamp(30px, 3.2vw, 42px)/1 var(--sc); letter-spacing: 0.04em; margin: 0 0 6px; }
+.binomial { margin: 0 0 22px; color: var(--ink-2); font-size: 19px; }
+.key-title { font: 500 14px/1 var(--sc); letter-spacing: 0.16em; color: var(--ink-3); margin: 0 0 6px; }
+.key { list-style: none; margin: 0 0 22px; padding: 0; border-top: 1px solid color-mix(in srgb, var(--ink) 18%, transparent); }
+.key li { border-bottom: 1px solid color-mix(in srgb, var(--ink) 18%, transparent); }
+.key button {
+  all: unset; box-sizing: border-box; width: 100%; cursor: pointer; display: grid; grid-template-columns: 1.6em 1fr auto;
+  align-items: baseline; padding: 5px 4px; font: 500 19px/1.3 var(--serif); color: var(--ink); transition: background 0.2s;
+}
+.key button i { color: var(--ink-3); }
+.key button small { font: 400 14px/1 var(--hand); color: var(--ink-3); }
+.key button:hover, .key button.on { background: color-mix(in srgb, var(--moss) 9%, transparent); }
+.key button[aria-pressed='true'] i { color: var(--moss); }
+
+/* the specimen label card */
+.card {
+  position: relative; padding: 16px 18px 14px; background: #fbf8ef;
+  border: 1px solid color-mix(in srgb, var(--ink) 50%, transparent);
+  box-shadow: 0 0 0 4px #fbf8ef, 0 0 0 5px color-mix(in srgb, var(--ink) 25%, transparent), 3px 6px 18px -8px rgba(59, 42, 30, 0.35);
+  transform: rotate(-0.6deg); min-height: 180px;
+}
+.card.fresh { animation: settle 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.2); }
+@keyframes settle { from { opacity: 0; transform: translateY(8px) rotate(1.2deg); } }
+.card header { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid color-mix(in srgb, var(--ink) 30%, transparent); padding-bottom: 6px; margin-bottom: 10px; }
+.card h3 { margin: 0; font: 600 22px/1.1 var(--sc); letter-spacing: 0.04em; }
+.card header span { font: 400 14px/1 var(--hand); color: var(--ink-3); }
+.card p { margin: 0 0 8px; font-size: 19px; line-height: 1.45; }
+.card ul { margin: 0; padding: 0; list-style: none; }
+.card li { margin: 0 0 4px; padding-left: 14px; position: relative; font-size: 19px; line-height: 1.35; }
+.card li::before { content: '·'; position: absolute; left: 2px; color: var(--ink-3); }
+.card .meta { color: var(--ink-2); font-style: italic; }
+.card .hint { font: 300 17px/1.35 var(--hand); color: var(--ink-2); margin-top: 8px; }
+
+@media (max-width: 900px) {
+  .plate-body { grid-template-columns: 1fr; }
+  .specimen { width: min(100%, 560px); }
+  .label b { margin: 0; }
+  .label { font-size: 0; transform: translate(-50%, -50%); }
+  .label.left { transform: translate(-50%, -50%); }
+  .label b { font-size: 20px; margin: 0; }
+}
+@media (max-width: 520px) {
+  .plate-head span:last-child { display: none; }
+  .plate-foot { flex-direction: column; align-items: flex-start; gap: 6px; }
+}

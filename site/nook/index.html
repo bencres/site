@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <link rel="icon" href="../shared/favicon.svg" type="image/svg+xml">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ben Cressman · nook</title>
+  <meta name="description" content="Ben Cressman's corner of the internet: a small lit house on a rainy evening.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..600,100;1,9..144,300..600,100&family=Crimson+Pro:ital,wght@0,400;0,500;1,400&family=Caveat:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/base.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="paper">
+  <main class="page">
+    <figure class="house" id="house">
+      <canvas id="art" aria-hidden="true"></canvas>
+      <figcaption>
+        <span class="cap" id="cap">no. 10, a rainy evening</span>
+        <span class="hint" id="hint">each window is a page · the lamp switches off · the cat is called Maud</span>
+      </figcaption>
+    </figure>
+
+    <div class="notes">
+      <header class="hello">
+        <p class="eyebrow">come in out of the rain</p>
+        <h1 id="name"></h1>
+        <p class="tagline" id="tagline"></p>
+        <div class="intro" id="intro"></div>
+      </header>
+      <div id="sections"></div>
+      <footer class="colophon">
+        painted in code with <a href="https://rive.app">Rive</a>. the rain is real; the house is not.
+      </footer>
+    </div>
+  </main>
+  <script src="../shared/vendor/rive.js"></script>
+  <script type="module" src="main.js"></script>
+  <script type="module" src="../shared/switcher.js"></script>
+</body>
+</html>
