@@ -47,10 +47,10 @@ export const content = {
 
   writing: [
     { title: "Dynamically loading EXR and HDR files during Qt's paint", date: 'Jan 2026', url: 'blog/008-swe-dynamic-exr-hdr/', local: true },
-    { title: 'What I learned from 3 months of building my first large application, and why I spent January rebuilding it from scratch', date: 'Jan 2026', url: 'https://bencres.dev/blog/007-progress-uab-refactor', starred: true },
-    { title: 'Universal Asset Browser: plugins, external libraries, and the registry pattern', date: 'Dec 2025', url: 'https://bencres.dev/blog/006-progress-uab-plugins', starred: true },
-    { title: 'Pixel Foundry pipeline: beginnings of the environment/production manager', date: 'Dec 2025', url: 'https://bencres.dev/blog/00a-pipeline-pxf-prod-manager' },
-    { title: 'Universal Asset Browser: assets as objects', date: 'Dec 2025', url: 'https://bencres.dev/blog/005-progress-uab-assets-as-objects' },
+    { title: 'What I learned from 3 months of building my first large application, and why I spent January rebuilding it from scratch', date: 'Jan 2026', url: 'blog/007-progress-uab-refactor/', local: true, starred: true },
+    { title: 'Universal Asset Browser: plugins, external libraries, and the registry pattern', date: 'Dec 2025', url: 'blog/006-progress-uab-plugins/', local: true, starred: true },
+    { title: 'Pixel Foundry pipeline: beginnings of the environment/production manager', date: 'Dec 2025', url: 'blog/00a-pipeline-pxf-prod-manager/', local: true },
+    { title: 'Universal Asset Browser: assets as objects', date: 'Dec 2025', url: 'blog/005-progress-uab-assets-as-objects/', local: true },
     { title: 'Universal Asset Browser: GUI enhancements, launcher shenanigans, and a new server/client model', date: 'Nov 2025', url: 'https://bencres.dev/blog/004-progress-uab-gui-enhancements' },
     { title: 'Universal Asset Browser: browser resize algorithm', date: 'Nov 2025', url: 'https://bencres.dev/blog/003-progress-uab-resize-algorithm' },
     { title: 'Universal Asset Browser: Houdini integration', date: 'Nov 2025', url: 'https://bencres.dev/blog/002-progress-uab-houdini-integration' },

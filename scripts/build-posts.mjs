@@ -3,6 +3,7 @@
 // in inks. Front matter is the bencres.dev format plus two optional fields:
 //   sketch:  the artboard in site/riv/sketches.riv drawn above the post
 //   caption: a hand-lettered line under the sketch
+//   turn:    the transition into the post (and back): bloom, burn, ink, brush or lamp
 import { readdirSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { join, resolve, basename } from 'node:path';
 import { Marked } from 'marked';
@@ -61,7 +62,7 @@ function page({ slug, meta, html }) {
     ? `<figure class="sketch"><canvas id="sketch" data-artboard="${esc(meta.sketch)}" aria-hidden="true"></canvas>${meta.caption ? `<figcaption>${esc(meta.caption)}</figcaption>` : ''}</figure>`
     : '';
   return `<!doctype html>
-<html lang="en">
+<html lang="en" data-turn="${esc(meta.turn || 'bloom')}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">

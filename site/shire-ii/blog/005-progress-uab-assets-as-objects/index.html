@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en" data-turn="brush">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Universal Asset Browser Progress Update: Assets as Objects · Ben Cressman</title>
+  <meta name="description" content="Refactoring the application to use the new Asset object and its subclasses, rather than passing dictionaries around.">
+  <link rel="icon" href="../../../shared/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Caveat:wght@500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../shared/base.css">
+  <link rel="stylesheet" href="../../../shared/turn.css">
+  <link rel="stylesheet" href="../../post.css">
+  <script src="../../../shared/turn.js"></script>
+</head>
+<body class="paper">
+  <div class="col">
+    <nav class="trail"><a href="../../#writing" class="home">← back to the bookshelves</a></nav>
+    
+    <header class="title">
+      <p class="kicker">from the bookshelves · <time datetime="2025-12-11">December 11, 2025</time></p>
+      <h1>Universal Asset Browser Progress Update: Assets as Objects</h1>
+      <p class="excerpt">Refactoring the application to use the new Asset object and its subclasses, rather than passing dictionaries around.</p>
+      <ul class="tags" aria-label="Tags"><li>software engineering</li><li>python</li><li>tech art</li><li>uab</li></ul>
+    </header>
+    <article class="prose">
+<p>This week, the Universal Asset Browser was refactored to use proper object-oriented design for assets, moving away from the dictionary-based approach that had been used throughout the application. This change sets the foundation for better type safety, more maintainable code, and support for features like LODs (Levels of Detail) and asset collections.</p>
+<h2 id="the-old-approach-dictionaries-everywhere">The Old Approach: Dictionaries Everywhere</h2>
+<p>Previously, assets were represented as dictionaries throughout the application. When an asset was fetched from the database, it was returned as a dictionary with keys like <code>id</code>, <code>name</code>, <code>path</code>, <code>file_type</code>, <code>description</code>, <code>tags</code>, etc. This dictionary was then passed around between the server, presenter, and GUI layers, with each layer accessing values using dictionary keys.</p>
+<p>While this worked, it had several drawbacks:</p>
+<ol>
+<li><strong>No type safety</strong>: There was no way to guarantee that a dictionary contained the expected keys, or that those keys had the correct types.</li>
+<li><strong>No encapsulation</strong>: Any part of the codebase could modify the dictionary in unexpected ways.</li>
+<li><strong>No helper methods</strong>: Common operations like getting a display name or checking if an asset was an HDRI required repetitive dictionary access patterns scattered throughout the code.</li>
+<li><strong>Difficult to extend</strong>: Adding new asset types or behaviors meant modifying dictionary access code in multiple places.</li>
+</ol>
+<h2 id="the-new-approach-asset-objects-and-subclasses">The New Approach: Asset Objects and Subclasses</h2>
+<p>The new design centers around a base <code>Asset</code> class that encapsulates all asset data and provides helper methods for common operations. Asset types are represented as subclasses, allowing for type-specific behavior while maintaining a common interface.</p>
+<h3 id="base-asset-class">Base Asset Class</h3>
+<p>The <code>Asset</code> base class stores all the core asset data that was previously in dictionaries:</p>
+<pre class="ink-code"><code class="hljs language-python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Asset</span>:
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, <span class="hljs-built_in">id</span>, name, path, file_type, description=<span class="hljs-literal">None</span>, 
+                 tags=<span class="hljs-literal">None</span>, author=<span class="hljs-literal">None</span>, creation_date=<span class="hljs-literal">None</span>, date_added=<span class="hljs-literal">None</span></span>):
+        <span class="hljs-variable language_">self</span>.<span class="hljs-built_in">id</span> = <span class="hljs-built_in">id</span>
+        <span class="hljs-variable language_">self</span>.name = name
+        <span class="hljs-variable language_">self</span>.path = path
+        <span class="hljs-variable language_">self</span>.file_type = file_type
+        <span class="hljs-variable language_">self</span>.description = description <span class="hljs-keyword">or</span> <span class="hljs-string">&quot;&quot;</span>
+        <span class="hljs-variable language_">self</span>.tags = tags <span class="hljs-keyword">or</span> []
+        <span class="hljs-variable language_">self</span>.author = author
+        <span class="hljs-variable language_">self</span>.creation_date = creation_date
+        <span class="hljs-variable language_">self</span>.date_added = date_added</code></pre>
+<p>This immediately provides better structure than dictionaries, but the real power comes from the helper methods.</p>
+<h3 id="helper-methods">Helper Methods</h3>
+<p>Helper methods encapsulate common operations that were previously scattered throughout the codebase. For example:</p>
+<ul>
+<li><code>get_display_name()</code>: Returns a human-readable name, falling back to the filename if no name is set.</li>
+<li><code>to_dict()</code>: Converts the asset to a dictionary for serialization (useful for API responses).</li>
+<li><code>from_dict()</code>: Class method to create an asset from a dictionary (useful for deserializing database results).</li>
+</ul>
+<p>These methods eliminate repetitive code and provide a single source of truth for asset operations. Instead of writing <code>asset_dict.get(&#39;name&#39;) or os.path.basename(asset_dict.get(&#39;path&#39;, &#39;&#39;))</code> in multiple places, the code now uses <code>asset.get_display_name()</code>.</p>
+<h3 id="asset-subclasses">Asset Subclasses</h3>
+<p>Different asset types have different behaviors and requirements. HDRI assets, for example, might need LOD support, while material assets might need texture mapping information to support LOD&#39;s with collections of individual textures, which may need to support artistic texture variants (material, material_rusted, material_painted, etc.). Subclasses allow <code>Asset</code> to be extended with type-specific functionality. This design makes it easy to add new asset types in the future (materials, models, animations) without modifying existing code. Each asset type can have its own specialized methods while still being usable anywhere an <code>Asset</code> is expected.</p>
+<h2 id="lod-support">LOD Support</h2>
+<p>One of the key motivations for this refactoring was to properly support LODs (Levels of Detail) for assets. In the dictionary-based approach, LOD information would have been just another key-value pair, with no way to enforce relationships between LODs of the same asset or validate LOD values.</p>
+<p>With the object-oriented approach, LOD support is built into the asset hierarchy:</p>
+<ol>
+<li><strong>LOD as a property</strong>: Assets that support LODs (like HDRIs) can have an <code>lod</code> property that stores the LOD level.</li>
+<li><strong>LOD validation</strong>: The <code>HDRIAsset</code> class can validate that LOD values are valid (&quot;low&quot;, &quot;medium&quot;, &quot;high&quot;, or &quot;LOD0&quot;, &quot;LOD1&quot;, etc.).</li>
+<li><strong>LOD collections</strong>: <code>Texture</code> objects support collections of LOD&#39;s, which will soon be extended to support variants of textures as well.</li>
+</ol>
+<p>For now, LODs are stored as a simple property, but the architecture is in place to support more sophisticated LOD management as the feature evolves.</p>
+<h2 id="migration-challenges">Migration Challenges</h2>
+<p>Refactoring from dictionaries to objects across the entire codebase was a significant undertaking. The main challenges were:</p>
+<ol>
+<li><p><strong>API compatibility</strong>: The server&#39;s REST API still needs to return JSON (dictionaries), so assets need to be serializable. The <code>to_dict()</code> method handles this, but it required careful attention to ensure all necessary fields are included.</p>
+</li>
+<li><p><strong>Database layer</strong>: The database layer returns dictionaries from SQL queries. The <code>from_dict()</code> class method handles conversion, but had to be verified to ensure it works correctly with all the different query results throughout the application, and the </p>
+</li>
+<li><p><strong>Type checking</strong>: Python&#39;s dynamic typing means there&#39;s no compile-time type checking, but using classes instead of dictionaries makes the code more self-documenting and easier to reason about.</p>
+</li>
+<li><p><strong>Backward compatibility</strong>: During the transition, all asset-accessing parts of the codebase still expected dictionaries. All dictionary access patterns needed to be updated to use the new object interface.</p>
+</li>
+</ol>
+<h2 id="next-steps">Next Steps</h2>
+<p>With the object model in place, the next steps I&#39;m considering are:</p>
+<ol>
+<li><p><strong>Collections</strong>: As mentioned in the previous update, collections will group related assets, for LOD&#39;s, texture variants, and materials. </p>
+</li>
+<li><p><strong>PolyHaven support</strong>: With collections implemented, PolyHaven support can begin.</p>
+</li>
+<li><p><strong>Type-specific behaviors</strong>: As support is added for materials and models, their subclasses can implement type-specific methods (e.g., <code>MaterialAsset.get_texture_maps()</code> or <code>ModelAsset.get_mesh_info()</code>).</p>
+</li>
+</ol>
+<p>This refactoring represents a significant improvement in code quality and maintainability, and it sets the foundation for planned features.</p>
+
+    </article>
+    <footer class="end">
+      <p><a href="../../#writing" class="home">← back to the bookshelves</a></p>
+      <p class="write">Thoughts on this one? <a href="mailto:hello@bencres.dev?subject=Universal%20Asset%20Browser%20Progress%20Update%3A%20Assets%20as%20Objects">Write to me</a>.</p>
+    </footer>
+  </div>
+  <script src="../../../shared/vendor/rive.js"></script>
+  <script type="module" src="../../post.js"></script>
+</body>
+</html>
