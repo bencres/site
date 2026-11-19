@@ -68,9 +68,11 @@ const ARMS = [
   { id: 'callers', title: 'Post', sub: 'at the gate', react: 'post', dir: 'r' },
 ];
 const TILT = [-2.2, 1.6, -1.1, 2.2, -2.6, 5.5];
-// on a phone the post stands at the left edge of the painting, so every arm points right
+// on a phone the post stands at the left edge of the painting, and on narrow screens there's
+// no room left of the post, so every arm points right
 const phone = matchMedia('(max-width: 600px)');
-const dirOf = (i) => (phone.matches ? 'r' : ARMS[i].dir);
+const narrow = matchMedia('(max-width: 860px)');
+const dirOf = (i) => (narrow.matches ? 'r' : ARMS[i].dir);
 const signpost = $('#signpost');
 const foot = h('span', { class: 'upright', 'aria-hidden': 'true' });
 foot.innerHTML = upright({ w: 26, h: 262, seed: 7 });
@@ -174,6 +176,10 @@ const hill = mount($('#hill'), {
   },
 });
 const gate = mount($('#gate'), { src: 'shire-ii', artboard: 'Gate', fit: 'fill', onLoad: () => setAll(gate) });
+narrow.addEventListener('change', () => {
+  arms.forEach((a, i) => { a.classList.toggle('l', dirOf(i) === 'l'); a.classList.toggle('r', dirOf(i) === 'r'); });
+  paintArms(state.season);
+});
 phone.addEventListener('change', () => {
   hill.set('bare', phone.matches);
   hill.setLayout(...frame());
@@ -314,8 +320,6 @@ $('#almanac-now').addEventListener('click', () => {
 });
 showDials(state);
 if (previewing || urlPreview) $('#almanac').classList.add('moved');
-// on a phone the almanac folds away until asked for, so it never sits on the text
-if (phone.matches) $('#almanac-box').open = false;
 
 // once the page has arrived (and any #section in the URL is in place), the signpost's jumps glide
 addEventListener('load', () => requestAnimationFrame(() => document.documentElement.classList.add('settled')));

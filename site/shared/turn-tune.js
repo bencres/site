@@ -63,10 +63,12 @@ if (T) {
       localStorage.setItem('turn:tune-open', card.open ? '1' : '0');
     } catch {}
   });
-  document.body.append(card);
+  // at the foot of the page on narrow screens it sits just above the season & time card
   const almanac = document.getElementById('almanac');
+  if (almanac) almanac.before(card);
+  else document.body.append(card);
   if (almanac) {
-    const place = () => (card.style.bottom = `${almanac.getBoundingClientRect().height + parseFloat(getComputedStyle(almanac).bottom) + 10}px`);
+    const place = () => (card.style.bottom = getComputedStyle(almanac).position !== 'fixed' ? '' : `${almanac.getBoundingClientRect().height + parseFloat(getComputedStyle(almanac).bottom) + 10}px`);
     new ResizeObserver(place).observe(almanac);
     place();
   }

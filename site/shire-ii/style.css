@@ -210,6 +210,9 @@ main { margin-top: 30px; }
 
 /* ---- narrower screens */
 @media (max-width: 860px) {
+  /* the hour's halo reaches past the screen's edges here; on phones that would widen
+     the page (they zoom out to fit it), so clip it at the sides */
+  .hill, .gate { overflow-x: clip; }
   .hill { margin: 12px -20px 4px; }
   .sign { margin-left: 4%; }
   .m-spatter { left: auto; right: -8px; top: -34px; }
@@ -283,9 +286,13 @@ main { margin-top: 30px; }
   visibility: hidden;
 }
 .almanac.moved button { visibility: visible; }
-@media (max-width: 600px) {
-  .almanac { left: 8px; right: auto; bottom: 52px; width: auto; min-width: 0; padding: 6px 10px; font-size: 15px; }
-  .almanac details[open] { width: 176px; }
+/* below ~1100px the margin is too narrow to hold the cards beside the column, so
+   they settle at the foot of the page instead of floating over the text */
+@media (max-width: 1100px) {
+  .almanac { position: static; margin: 8px auto 40px; transform: none; }
+}
+/* without a wide margin, the blot comes in beside the heading instead of past the page's edge */
+@media (max-width: 860px) {
   .m-blot { right: -4px; top: -40px; width: 40px; }
 }
 
