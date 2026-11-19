@@ -56,7 +56,7 @@ addEventListener('pagereveal', (e) => {
   const style = document.createElement('style');
   style.textContent = css;
   document.head.append(style);
-  const els = layers.map(([vtName, svg]) => overlay(vtName, svg));
+  const els = layers.map(([vtName, svg, res]) => overlay(vtName, svg, res));
   e.viewTransition.finished.finally(() => {
     style.remove();
     els.forEach((el) => el.remove());
@@ -87,6 +87,7 @@ const MASKS = SHAPES.map((s) =>
 const TONES = {
   blue: { band: '7f9fbf', rim: '5f86ad', bandO: 0.16, rimO: 0.38, gran: '.27  0 0 0 0 .4  0 0 0 0 .56', granO: 0.45 },
   wet: { band: 'b9a27f', rim: '8f7656', bandO: 0.1, rimO: 0.26, gran: '.42  0 0 0 0 .34  0 0 0 0 .25', granO: 0.3 },
+  faint: { band: 'b9a27f', rim: '8f7656', bandO: 0.05, rimO: 0.14, gran: '.42  0 0 0 0 .34  0 0 0 0 .25', granO: 0.16 },
 };
 const tide = (s, k, t = TONES.blue) => `<svg viewBox='0 0 200 200' preserveAspectRatio='xMidYMid meet'>
 <filter id='tw${k}' x='-25%' y='-25%' width='150%' height='150%'>${noise(s)}</filter>
@@ -168,6 +169,9 @@ const RECIPES = {
   downpour: {
     dur: 1000,
     land: 0.07,
+    edge: 'faint',
+    // nineteen rims: captured small (40% of the screen) and scaled, to stay light
+    edgeRes: 0.4,
     plan: ({ W, H, M, x, y, r }) => [
       { x, y, t: 0, size: 0.1 * M, end: 4.8 * M },
       ...Array.from({ length: 18 }, () => ({
@@ -293,16 +297,19 @@ function compose(recipe, drops, W, H) {
     const wet = recipe.edge ? tide(shape, k, TONES[recipe.edge]) : recipe.pigment ? pigment(shape, k, PIGMENTS[i % PIGMENTS.length]) : null;
     if (!wet) return;
     const name = `turn-o${k}`;
-    layers.push([name, wet]);
-    const s = (v) => (v / m).toFixed(4);
+    const res = recipe.edgeRes || 1;
+    layers.push([name, wet, res]);
+    const s = (v) => (v / (m * res)).toFixed(4);
     // pigment shows as soon as it lands and soon dries clear; a tide line dries later
-    const dryFrom = recipe.edge ? Math.max(landed + 0.15, 0.5) : landed + 0.06;
+    const dryFrom = recipe.edge === 'faint' ? landed + 0.06 : recipe.edge ? Math.max(landed + 0.15, 0.5) : landed + 0.06;
+    // a faint rim is only seen as its drop lands, then it's gone
+    const dryTo = recipe.edge === 'faint' ? Math.min(1, landed + 0.3) : 1;
     css += `@keyframes turn-s${k} {
   0%, ${pct(d.t)} { scale: 0; animation-timing-function: cubic-bezier(0.2, 0.7, 0.4, 1); }
   ${pct(landed)} { scale: ${s(d.size)}; animation-timing-function: cubic-bezier(0.45, 0, 0.7, 1); }
   100% { scale: ${s(d.end)}; }
 }
-@keyframes turn-f${k} { 0%, ${pct(d.t)} { opacity: 0; } ${pct(d.t + 0.02)} { opacity: 1; } ${pct(dryFrom)} { opacity: 1; } 100% { opacity: 0; } }
+@keyframes turn-f${k} { 0%, ${pct(d.t)} { opacity: 0; } ${pct(d.t + 0.02)} { opacity: 1; } ${pct(dryFrom)} { opacity: 1; } ${pct(dryTo)}, 100% { opacity: 0; } }
 ::view-transition-group(${name}) { animation: none; }
 ::view-transition-new(${name}) {
   translate: ${px(d.x - W / 2)} ${px(d.y - H / 2)};
@@ -323,9 +330,14 @@ function compose(recipe, drops, W, H) {
 
 // a layer drawn over both pages for the length of the transition, captured under
 // its own view-transition-name (see turn.css)
-function overlay(name, svg) {
+function overlay(name, svg, res = 1) {
   const el = document.createElement('div');
   el.className = 'turn-fx';
+  // a smaller capture, still centred on the screen
+  if (res < 1) {
+    const size = Math.min(innerWidth, innerHeight) * res;
+    Object.assign(el.style, { inset: 'auto', width: `${size}px`, height: `${size}px`, left: `${(innerWidth - size) / 2}px`, top: `${(innerHeight - size) / 2}px` });
+  }
   el.style.viewTransitionName = name;
   el.setAttribute('aria-hidden', 'true');
   el.innerHTML = svg;
