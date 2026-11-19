@@ -11,6 +11,7 @@
 // <head>, before the page is first revealed; turn.css holds the fixed parts.
 const AT = 'turn:at';
 const EFFECT = 'turn:effect';
+const INK = 'turn:ink';
 
 addEventListener('click', (e) => {
   const a = e.target.closest?.('a[href]');
@@ -32,26 +33,48 @@ addEventListener('pageswap', (e) => {
   if (!e.viewTransition) return;
   try {
     sessionStorage.setItem(EFFECT, document.documentElement.dataset.turn || '');
+    sessionStorage.setItem(INK, JSON.stringify(inked()));
   } catch {}
 });
+
+// Where a page has something on screen (text, headings, pictures, the signpost),
+// as fractions of the screen. Rain aims for these on both pages: a drop on bare
+// paper changes nothing, and reads as a circle growing rather than a page turning.
+function inked() {
+  const W = innerWidth, H = innerHeight;
+  const out = [];
+  for (const el of document.querySelectorAll('h1, h2, h3, h4, p, li, pre, figure, img, canvas, .arm, .badge, .sign, .trail')) {
+    const b = el.getBoundingClientRect();
+    if (b.width < 8 || b.height < 6 || b.bottom <= 0 || b.top >= H || b.right <= 0 || b.left >= W) continue;
+    out.push([Math.max(0, b.left) / W, Math.max(0, b.top) / H, Math.min(W, b.right) / W, Math.min(H, b.bottom) / H].map((v) => +v.toFixed(4)));
+    if (out.length >= 90) break;
+  }
+  return out;
+}
 
 addEventListener('pagereveal', (e) => {
   if (!e.viewTransition) return;
   let at = { x: 0.5, y: 0.35 };
   let left = '';
+  let ink = [];
   try {
     at = JSON.parse(sessionStorage.getItem(AT)) || at;
     left = sessionStorage.getItem(EFFECT) || '';
-    sessionStorage.removeItem(AT);
-    sessionStorage.removeItem(EFFECT);
+    ink = JSON.parse(sessionStorage.getItem(INK)) || [];
+    for (const k of [AT, EFFECT, INK]) sessionStorage.removeItem(k);
   } catch {}
+  ink = ink.concat(inked());
   const own = document.documentElement.dataset.turn;
   const name = RECIPES[own] ? own : RECIPES[left] ? left : 'drops';
   e.viewTransition.types.add(name);
 
   const W = innerWidth, H = innerHeight;
   const recipe = RECIPES[name];
-  const drops = recipe.plan({ W, H, M: Math.max(W, H), m: Math.min(W, H), x: at.x * W, y: at.y * H, r: Math.random });
+  const r = Math.random;
+  const spot = onInk(ink, W, H, r);
+  const drops = recipe.plan({ W, H, M: Math.max(W, H), m: Math.min(W, H), x: at.x * W, y: at.y * H, r, spot });
+  // a drop that still lands on bare paper on both pages gets no rim: it's invisible, not a circle
+  for (const d of drops) d.inked = inside(ink, d.x / W, d.y / H);
   const { css, layers } = compose(recipe, drops, W, H);
   const style = document.createElement('style');
   style.textContent = css;
@@ -62,6 +85,24 @@ addEventListener('pagereveal', (e) => {
     els.forEach((el) => el.remove());
   });
 });
+
+// a point somewhere on either page's content, bigger blocks more likely; if neither
+// page reported any, anywhere on the screen. `across` (0–1) narrows it to one band
+// of the screen, for rain that crosses the page
+function onInk(rects, W, H, r) {
+  return (across) => {
+    const pool = across == null ? rects : rects.filter(([x0, , x1]) => x1 >= across - 0.12 && x0 <= across + 0.12);
+    if (!pool.length) return { x: (across ?? r()) * W, y: r() * H };
+    const weights = pool.map(([x0, y0, x1, y1]) => Math.sqrt((x1 - x0) * (y1 - y0)));
+    let pick = r() * weights.reduce((a, b) => a + b, 0);
+    let i = 0;
+    while (i < pool.length - 1 && (pick -= weights[i]) > 0) i++;
+    const [x0, y0, x1, y1] = pool[i];
+    const x = across == null ? x0 + r() * (x1 - x0) : Math.min(x1, Math.max(x0, across + (r() - 0.5) * 0.08));
+    return { x: x * W, y: (y0 + r() * (y1 - y0)) * H };
+  };
+}
+const inside = (rects, x, y) => rects.some(([x0, y0, x1, y1]) => x >= x0 - 0.02 && x <= x1 + 0.02 && y >= y0 - 0.02 && y <= y1 + 0.02);
 
 // ---------- the drops' shapes
 
@@ -147,10 +188,10 @@ const RECIPES = {
   rain: {
     dur: 1500,
     land: 0.07,
-    plan: ({ W, H, M, x, y, r }) => [
+    plan: ({ W, H, M, x, y, r, spot }) => [
       { x, y, t: 0, size: 0.12 * M, end: 4.8 * M },
       ...Array.from({ length: 9 }, (_, i) => ({
-        x: r() * W, y: r() * H, t: 0.04 + (i / 9) * 0.4 + r() * 0.04, size: (0.05 + r() * 0.05) * M, end: (1.3 + r() * 0.9) * M,
+        ...spot(), t: 0.04 + (i / 9) * 0.4 + r() * 0.04, size: (0.05 + r() * 0.05) * M, end: (1.3 + r() * 0.9) * M,
       })),
     ],
   },
@@ -158,10 +199,10 @@ const RECIPES = {
   shower: {
     dur: 1000,
     land: 0.08,
-    plan: ({ W, H, M, x, y, r }) => [
+    plan: ({ W, H, M, x, y, r, spot }) => [
       { x, y, t: 0, size: 0.12 * M, end: 4.8 * M },
       ...Array.from({ length: 7 }, (_, i) => ({
-        x: r() * W, y: r() * H, t: 0.03 + (i / 7) * 0.26 + r() * 0.03, size: (0.05 + r() * 0.05) * M, end: (1.4 + r() * 0.9) * M,
+        ...spot(), t: 0.03 + (i / 7) * 0.26 + r() * 0.03, size: (0.05 + r() * 0.05) * M, end: (1.4 + r() * 0.9) * M,
       })),
     ],
   },
@@ -172,10 +213,10 @@ const RECIPES = {
     edge: 'faint',
     // nineteen rims: captured small (40% of the screen) and scaled, to stay light
     edgeRes: 0.4,
-    plan: ({ W, H, M, x, y, r }) => [
+    plan: ({ W, H, M, x, y, r, spot }) => [
       { x, y, t: 0, size: 0.1 * M, end: 4.8 * M },
       ...Array.from({ length: 18 }, () => ({
-        x: r() * W, y: r() * H, t: 0.02 + r() * 0.22, size: (0.035 + r() * 0.04) * M, end: (1.1 + r() * 0.8) * M,
+        ...spot(), t: 0.02 + r() * 0.22, size: (0.035 + r() * 0.04) * M, end: (1.1 + r() * 0.8) * M,
       })),
     ],
   },
@@ -183,10 +224,10 @@ const RECIPES = {
   patter: {
     dur: 2200,
     land: 0.06,
-    plan: ({ W, H, M, x, y, r }) => [
+    plan: ({ W, H, M, x, y, r, spot }) => [
       { x, y, t: 0, size: 0.1 * M, end: 4.8 * M },
       ...Array.from({ length: 9 }, (_, i) => ({
-        x: r() * W, y: r() * H, t: 0.06 + (i / 9) * 0.58 + r() * 0.02, size: (0.05 + r() * 0.04) * M, end: (1.2 + r() * 0.8) * M,
+        ...spot(), t: 0.06 + (i / 9) * 0.58 + r() * 0.02, size: (0.05 + r() * 0.04) * M, end: (1.2 + r() * 0.8) * M,
       })),
     ],
   },
@@ -194,10 +235,10 @@ const RECIPES = {
   gathering: {
     dur: 1800,
     land: 0.07,
-    plan: ({ W, H, M, x, y, r }) => [
+    plan: ({ W, H, M, x, y, r, spot }) => [
       { x, y, t: 0, size: 0.1 * M, end: 4.8 * M },
       ...Array.from({ length: 14 }, (_, i) => ({
-        x: r() * W, y: r() * H, t: 0.06 + 0.56 * Math.sqrt((i + 1) / 14) + r() * 0.015, size: (0.045 + r() * 0.045) * M, end: (1.2 + r() * 0.8) * M,
+        ...spot(), t: 0.06 + 0.56 * Math.sqrt((i + 1) / 14) + r() * 0.015, size: (0.045 + r() * 0.045) * M, end: (1.2 + r() * 0.8) * M,
       })),
     ],
   },
@@ -205,13 +246,13 @@ const RECIPES = {
   sweep: {
     dur: 1400,
     land: 0.07,
-    plan: ({ W, H, M, x, y, r }) => {
+    plan: ({ W, H, M, x, y, r, spot }) => {
       const fromLeft = x < W / 2;
       return [
         { x, y, t: 0, size: 0.11 * M, end: 4.8 * M },
         ...Array.from({ length: 12 }, (_, i) => {
           const u = (i + r() * 0.8) / 12; // how far across the page this drop is
-          return { x: (fromLeft ? u : 1 - u) * W, y: r() * H, t: 0.03 + u * 0.42, size: (0.05 + r() * 0.04) * M, end: (1.3 + r() * 0.8) * M };
+          return { ...spot(fromLeft ? u : 1 - u), t: 0.03 + u * 0.42, size: (0.05 + r() * 0.04) * M, end: (1.3 + r() * 0.8) * M };
         }),
       ];
     },
@@ -333,7 +374,7 @@ function compose(recipe, drops, W, H) {
 
     // a layer that rides on the drop: captured filling the screen (the drop is 60%
     // of the short side there), then moved onto the drop and scaled with it
-    const wet = recipe.edge ? tide(shape, k, TONES[recipe.edge]) : recipe.pigment ? pigment(shape, k, PIGMENTS[i % PIGMENTS.length]) : null;
+    const wet = recipe.edge ? (d.inked || i === 0 ? tide(shape, k, TONES[recipe.edge]) : null) : recipe.pigment ? pigment(shape, k, PIGMENTS[i % PIGMENTS.length]) : null;
     if (!wet) return;
     const name = `turn-o${k}`;
     const res = recipe.edgeRes || 1;
