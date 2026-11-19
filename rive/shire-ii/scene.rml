@@ -22536,13 +22536,13 @@
 <Artboard defaultStateMachineId="0:534" styleId="0:533" width="600" height="210" x="960" y="0" clip="true" name="Gate" id="0:532">
 <LayoutComponentStyle name="Style" id="0:533"/>
 
-<Shape x="532" y="120" name="hit" id="0:625">
+<Shape x="532" y="120" name="hit" id="0:621">
 <Rectangle width="80" height="90" originX="0.5" originY="0.5" name="R"/>
 <Fill name="Fill">
 <SolidColor colorValue="00000000" name="C"/>
 </Fill>
 </Shape>
-<Node name="lit" id="0:590" opacity="0">
+<Node name="lit" id="0:586" opacity="0">
 <Shape name="flame" x="476" y="101">
 <Ellipse width="6" height="10" originX="0.5" originY="0.5" name="E"/>
 <Fill name="Fill">
@@ -22565,13 +22565,13 @@
 <Rectangle x="300" y="105" width="620" height="230" originX="0.5" originY="0.5" name="r"/>
 <Fill name="Fill">
 <LinearGradient startX="0" startY="0" endX="0" endY="210" name="G">
-<GradientStop colorValue="00F4E3B0" position="0" id="0:587"/>
-<GradientStop colorValue="00F4E3B0" position="0.94" id="0:588"/>
-<GradientStop colorValue="00F4E3B0" position="1" id="0:589"/>
+<GradientStop colorValue="00F4E3B0" position="0" id="0:583"/>
+<GradientStop colorValue="00F4E3B0" position="0.94" id="0:584"/>
+<GradientStop colorValue="00F4E3B0" position="1" id="0:585"/>
 </LinearGradient>
 </Fill>
 </Shape>
-<Node name="snow" id="0:586" opacity="0">
+<Node name="snow" id="0:582" opacity="0">
 <Shape name="snow">
 <PointsPath isClosed="true" isClockwise="true" name="Path">
 <CubicMirroredVertex x="10" y="190" rotation="-0.086" distance="15.055"/>
@@ -22719,8 +22719,8 @@
 </Fill>
 </Shape>
 </Node>
-<Node name="flowers" id="0:584">
-<Node name="flowers in" id="0:585" x="300" y="186" opacity="0" scaleX="0.85" scaleY="0.85">
+<Node name="flowers" id="0:580">
+<Node name="flowers in" id="0:581" x="300" y="186" opacity="0" scaleX="0.85" scaleY="0.85">
 <Node name="flowers in body" x="-300" y="-186">
 <Shape name="ink">
 <PointsPath isClockwise="true" name="Path">
@@ -23101,344 +23101,70 @@
 </Node>
 </Node>
 </Node>
-<Node name="ground in" id="0:583" x="300" y="200" opacity="0">
+<Node name="ground in" id="0:579" x="300" y="200" opacity="0">
 <Node name="ground in body" x="-300" y="-200">
-<Solo name="ground ink" activeComponentId="0:577" id="0:576">
-<Node name="cel0" id="0:577">
 <Shape name="ink">
 <PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="16.297" y="197.704" rotation="0.005" distance="2.936"/>
-<CubicMirroredVertex x="33.914" y="197.786" rotation="-0.002" distance="6.003"/>
-<CubicMirroredVertex x="52.315" y="197.629" rotation="-0.009" distance="3.067"/>
+<CubicMirroredVertex x="39.701" y="198.268" rotation="-0.039" distance="3.691"/>
+<CubicMirroredVertex x="61.829" y="197.402" rotation="0.005" distance="7.341"/>
+<CubicMirroredVertex x="83.744" y="198.491" rotation="0.05" distance="3.657"/>
 </PointsPath>
 <PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="92.083" y="197.759" rotation="0.037" distance="2.997"/>
-<CubicMirroredVertex x="110.056" y="198.423" rotation="-0.012" distance="5.929"/>
-<CubicMirroredVertex x="127.657" y="197.341" rotation="-0.061" distance="2.939"/>
+<CubicMirroredVertex x="150.223" y="198.169" rotation="-0.002" distance="3.611"/>
+<CubicMirroredVertex x="171.89" y="198.135" rotation="-0.02" distance="7.298"/>
+<CubicMirroredVertex x="194.002" y="197.302" rotation="-0.038" distance="3.688"/>
 </PointsPath>
 <PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="167.744" y="198.356" rotation="-0.031" distance="2.985"/>
-<CubicMirroredVertex x="185.648" y="197.806" rotation="-0.011" distance="5.996"/>
-<CubicMirroredVertex x="203.718" y="197.949" rotation="0.008" distance="3.012"/>
+<CubicMirroredVertex x="329.922" y="198.084" rotation="-0.02" distance="3.705"/>
+<CubicMirroredVertex x="352.15" y="197.635" rotation="-0.004" distance="7.382"/>
+<CubicMirroredVertex x="374.213" y="197.901" rotation="0.012" distance="3.677"/>
 </PointsPath>
 <PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="246.387" y="198.116" rotation="-0.041" distance="3.127"/>
-<CubicMirroredVertex x="265.133" y="197.343" rotation="-0.003" distance="6.128"/>
-<CubicMirroredVertex x="283.155" y="198.018" rotation="0.037" distance="3.006"/>
+<CubicMirroredVertex x="451.879" y="198.205" rotation="0.018" distance="3.666"/>
+<CubicMirroredVertex x="473.872" y="198.605" rotation="-0.019" distance="7.379"/>
+<CubicMirroredVertex x="496.146" y="197.351" rotation="-0.056" distance="3.718"/>
 </PointsPath>
 <PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="314.951" y="197.684" rotation="0.024" distance="2.95"/>
-<CubicMirroredVertex x="332.649" y="198.104" rotation="0.028" distance="5.962"/>
-<CubicMirroredVertex x="350.712" y="198.695" rotation="0.033" distance="3.012"/>
+<CubicMirroredVertex x="92.085" y="195.836" rotation="-1.987" distance="1.61"/>
+<CubicMirroredVertex x="88.179" y="187" rotation="-1.987" distance="1.61"/>
 </PointsPath>
 <PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="383.095" y="197.642" rotation="0.04" distance="3.084"/>
-<CubicMirroredVertex x="401.586" y="198.381" rotation="0.008" distance="5.989"/>
-<CubicMirroredVertex x="419.026" y="197.916" rotation="-0.027" distance="2.908"/>
+<CubicMirroredVertex x="93.897" y="195.77" rotation="-1.581" distance="1.792"/>
+<CubicMirroredVertex x="93.79" y="185.019" rotation="-1.581" distance="1.792"/>
 </PointsPath>
 <PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="444.108" y="198.232" rotation="-0.008" distance="2.935"/>
-<CubicMirroredVertex x="461.716" y="198.085" rotation="0.018" distance="5.961"/>
-<CubicMirroredVertex x="479.869" y="198.871" rotation="0.043" distance="3.028"/>
+<CubicMirroredVertex x="96.03" y="196.024" rotation="-1.123" distance="1.445"/>
+<CubicMirroredVertex x="99.783" y="188.206" rotation="-1.123" distance="1.445"/>
 </PointsPath>
 <PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="504.937" y="198.169" rotation="-0.051" distance="3.051"/>
-<CubicMirroredVertex x="523.22" y="197.241" rotation="-0.019" distance="6.079"/>
-<CubicMirroredVertex x="541.402" y="197.462" rotation="0.012" distance="3.031"/>
+<CubicMirroredVertex x="284.107" y="196.2" rotation="-1.99" distance="1.625"/>
+<CubicMirroredVertex x="280.142" y="187.294" rotation="-1.99" distance="1.625"/>
 </PointsPath>
 <PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="69.618" y="196.263" rotation="-1.891" distance="1.749"/>
-<CubicMirroredVertex x="66.317" y="186.303" rotation="-1.891" distance="1.749"/>
+<CubicMirroredVertex x="285.711" y="195.824" rotation="-1.524" distance="1.766"/>
+<CubicMirroredVertex x="286.203" y="185.24" rotation="-1.524" distance="1.766"/>
 </PointsPath>
 <PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="71.937" y="195.677" rotation="-1.559" distance="1.953"/>
-<CubicMirroredVertex x="72.071" y="183.962" rotation="-1.559" distance="1.953"/>
+<CubicMirroredVertex x="288.206" y="195.811" rotation="-1.126" distance="1.48"/>
+<CubicMirroredVertex x="292.025" y="187.796" rotation="-1.126" distance="1.48"/>
 </PointsPath>
 <PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="74.35" y="196.143" rotation="-1.232" distance="1.636"/>
-<CubicMirroredVertex x="77.616" y="186.888" rotation="-1.232" distance="1.636"/>
+<CubicMirroredVertex x="520.028" y="196.123" rotation="-1.981" distance="1.686"/>
+<CubicMirroredVertex x="515.994" y="186.844" rotation="-1.981" distance="1.686"/>
 </PointsPath>
 <PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="220.38" y="196.194" rotation="-1.979" distance="1.882"/>
-<CubicMirroredVertex x="215.895" y="185.833" rotation="-1.979" distance="1.882"/>
+<CubicMirroredVertex x="521.772" y="195.939" rotation="-1.526" distance="1.819"/>
+<CubicMirroredVertex x="522.263" y="185.038" rotation="-1.526" distance="1.819"/>
 </PointsPath>
 <PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="222.357" y="195.935" rotation="-1.592" distance="2.05"/>
-<CubicMirroredVertex x="222.091" y="183.64" rotation="-1.592" distance="2.05"/>
+<CubicMirroredVertex x="523.753" y="196.018" rotation="-1.077" distance="1.519"/>
+<CubicMirroredVertex x="528.072" y="187.99" rotation="-1.077" distance="1.519"/>
 </PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="224.218" y="196.057" rotation="-1.17" distance="1.645"/>
-<CubicMirroredVertex x="228.07" y="186.969" rotation="-1.17" distance="1.645"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="283.884" y="196.217" rotation="-1.897" distance="1.84"/>
-<CubicMirroredVertex x="280.352" y="185.759" rotation="-1.897" distance="1.84"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="286.316" y="195.829" rotation="-1.619" distance="1.988"/>
-<CubicMirroredVertex x="285.743" y="183.917" rotation="-1.619" distance="1.988"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="288.377" y="195.783" rotation="-1.176" distance="1.574"/>
-<CubicMirroredVertex x="292.007" y="187.066" rotation="-1.176" distance="1.574"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="485.849" y="195.831" rotation="-1.933" distance="1.755"/>
-<CubicMirroredVertex x="482.116" y="185.986" rotation="-1.933" distance="1.755"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="488.336" y="196.055" rotation="-1.568" distance="1.948"/>
-<CubicMirroredVertex x="488.37" y="184.367" rotation="-1.568" distance="1.948"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="489.728" y="196.282" rotation="-1.126" distance="1.676"/>
-<CubicMirroredVertex x="494.053" y="187.203" rotation="-1.126" distance="1.676"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="573.864" y="196.348" rotation="-1.933" distance="1.891"/>
-<CubicMirroredVertex x="569.845" y="185.738" rotation="-1.933" distance="1.891"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="576.053" y="195.61" rotation="-1.581" distance="1.889"/>
-<CubicMirroredVertex x="575.932" y="184.274" rotation="-1.581" distance="1.889"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="577.904" y="196.376" rotation="-1.171" distance="1.631"/>
-<CubicMirroredVertex x="581.709" y="187.361" rotation="-1.171" distance="1.631"/>
-</PointsPath>
-<Stroke thickness="1.5" cap="round" join="round" name="Stroke">
+<Stroke thickness="1.4" cap="round" join="round" name="Stroke">
 <SolidColor colorValue="FF2B231C" name="C"/>
 <TargetEffect targetId="0:538" name="Use"/>
 </Stroke>
 </Shape>
-</Node>
-<Node name="cel1" id="0:578">
-<Shape name="ink">
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="15.653" y="197.966" rotation="0.027" distance="3.066"/>
-<CubicMirroredVertex x="34.044" y="198.468" rotation="0.005" distance="6.075"/>
-<CubicMirroredVertex x="52.105" y="198.157" rotation="-0.017" distance="3.011"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="71.72" y="197.697" rotation="0.016" distance="3.009"/>
-<CubicMirroredVertex x="89.772" y="197.993" rotation="0.008" distance="5.991"/>
-<CubicMirroredVertex x="107.662" y="197.995" rotation="0" distance="2.982"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="152.133" y="198.163" rotation="-0.026" distance="2.953"/>
-<CubicMirroredVertex x="169.847" y="197.698" rotation="-0.02" distance="5.871"/>
-<CubicMirroredVertex x="187.353" y="197.457" rotation="-0.014" distance="2.918"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="214.935" y="198.219" rotation="0.026" distance="2.908"/>
-<CubicMirroredVertex x="232.376" y="198.678" rotation="-0.009" distance="5.91"/>
-<CubicMirroredVertex x="250.394" y="197.889" rotation="-0.044" distance="3.006"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="270.139" y="197.618" rotation="0.03" distance="2.993"/>
-<CubicMirroredVertex x="288.09" y="198.16" rotation="-0.009" distance="5.989"/>
-<CubicMirroredVertex x="306.068" y="197.3" rotation="-0.048" distance="3"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="347.655" y="197.6" rotation="0.057" distance="2.947"/>
-<CubicMirroredVertex x="365.305" y="198.61" rotation="0.015" distance="5.943"/>
-<CubicMirroredVertex x="383.311" y="198.136" rotation="-0.026" distance="3.002"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="408.973" y="197.708" rotation="0.02" distance="2.999"/>
-<CubicMirroredVertex x="426.96" y="198.061" rotation="0.009" distance="6.038"/>
-<CubicMirroredVertex x="445.197" y="198.035" rotation="-0.001" distance="3.04"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="472.214" y="197.718" rotation="0.079" distance="3.06"/>
-<CubicMirroredVertex x="490.514" y="199.169" rotation="-0.01" distance="5.982"/>
-<CubicMirroredVertex x="508.102" y="197.362" rotation="-0.102" distance="2.947"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="536.469" y="198.362" rotation="-0.006" distance="2.971"/>
-<CubicMirroredVertex x="554.293" y="198.262" rotation="-0.022" distance="6.101"/>
-<CubicMirroredVertex x="573.068" y="197.561" rotation="-0.037" distance="3.131"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="69.663" y="195.964" rotation="-1.931" distance="1.713"/>
-<CubicMirroredVertex x="66.042" y="186.344" rotation="-1.931" distance="1.713"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="71.789" y="195.929" rotation="-1.55" distance="2.042"/>
-<CubicMirroredVertex x="72.048" y="183.679" rotation="-1.55" distance="2.042"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="73.751" y="196.275" rotation="-1.169" distance="1.731"/>
-<CubicMirroredVertex x="77.812" y="186.716" rotation="-1.169" distance="1.731"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="220.09" y="195.985" rotation="-2.002" distance="1.767"/>
-<CubicMirroredVertex x="215.66" y="186.352" rotation="-2.002" distance="1.767"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="221.667" y="195.769" rotation="-1.539" distance="2.02"/>
-<CubicMirroredVertex x="222.053" y="183.654" rotation="-1.539" distance="2.02"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="224.001" y="196.018" rotation="-1.157" distance="1.596"/>
-<CubicMirroredVertex x="227.852" y="187.25" rotation="-1.157" distance="1.596"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="283.971" y="195.616" rotation="-1.927" distance="1.752"/>
-<CubicMirroredVertex x="280.303" y="185.762" rotation="-1.927" distance="1.752"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="286.197" y="196.028" rotation="-1.559" distance="1.966"/>
-<CubicMirroredVertex x="286.34" y="184.232" rotation="-1.559" distance="1.966"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="287.877" y="196.281" rotation="-1.159" distance="1.666"/>
-<CubicMirroredVertex x="291.877" y="187.119" rotation="-1.159" distance="1.666"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="486.097" y="195.918" rotation="-1.948" distance="1.836"/>
-<CubicMirroredVertex x="482.038" y="185.675" rotation="-1.948" distance="1.836"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="488.269" y="195.714" rotation="-1.624" distance="1.941"/>
-<CubicMirroredVertex x="487.655" y="184.083" rotation="-1.624" distance="1.941"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="489.637" y="195.627" rotation="-1.118" distance="1.546"/>
-<CubicMirroredVertex x="493.695" y="187.284" rotation="-1.118" distance="1.546"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="574.312" y="195.911" rotation="-1.973" distance="1.771"/>
-<CubicMirroredVertex x="570.152" y="186.13" rotation="-1.973" distance="1.771"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="576.255" y="196.191" rotation="-1.572" distance="2.073"/>
-<CubicMirroredVertex x="576.235" y="183.752" rotation="-1.572" distance="2.073"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="578.151" y="195.658" rotation="-1.168" distance="1.639"/>
-<CubicMirroredVertex x="582.007" y="186.613" rotation="-1.168" distance="1.639"/>
-</PointsPath>
-<Stroke thickness="1.5" cap="round" join="round" name="Stroke">
-<SolidColor colorValue="FF2B231C" name="C"/>
-<TargetEffect targetId="0:538" name="Use"/>
-</Stroke>
-</Shape>
-</Node>
-<Node name="cel2" id="0:579">
-<Shape name="ink">
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="16.195" y="197.688" rotation="0.015" distance="2.913"/>
-<CubicMirroredVertex x="33.67" y="197.953" rotation="0.008" distance="5.979"/>
-<CubicMirroredVertex x="52.07" y="197.977" rotation="0.001" distance="3.067"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="67.845" y="197.756" rotation="0.031" distance="2.998"/>
-<CubicMirroredVertex x="85.821" y="198.322" rotation="-0.002" distance="6.005"/>
-<CubicMirroredVertex x="103.876" y="197.685" rotation="-0.035" distance="3.011"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="125.949" y="198.322" rotation="-0.049" distance="3.013"/>
-<CubicMirroredVertex x="144.007" y="197.443" rotation="-0.002" distance="6.121"/>
-<CubicMirroredVertex x="162.675" y="198.259" rotation="0.044" distance="3.114"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="191.816" y="197.637" rotation="0.039" distance="3.11"/>
-<CubicMirroredVertex x="210.459" y="198.362" rotation="0.034" distance="6.079"/>
-<CubicMirroredVertex x="228.269" y="198.889" rotation="0.03" distance="2.97"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="243.933" y="198.37" rotation="0.018" distance="3.006"/>
-<CubicMirroredVertex x="261.966" y="198.693" rotation="0.021" distance="5.991"/>
-<CubicMirroredVertex x="279.869" y="199.134" rotation="0.025" distance="2.985"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="319.996" y="197.986" rotation="-0.036" distance="3.076"/>
-<CubicMirroredVertex x="338.439" y="197.326" rotation="-0.022" distance="6.02"/>
-<CubicMirroredVertex x="356.105" y="197.201" rotation="-0.007" distance="2.944"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="395.313" y="197.877" rotation="0.012" distance="2.992"/>
-<CubicMirroredVertex x="413.264" y="198.091" rotation="0.017" distance="5.984"/>
-<CubicMirroredVertex x="431.214" y="198.471" rotation="0.021" distance="2.992"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="464.634" y="198.265" rotation="0.003" distance="2.972"/>
-<CubicMirroredVertex x="482.468" y="198.325" rotation="0.002" distance="6.043"/>
-<CubicMirroredVertex x="500.893" y="198.335" rotation="0.001" distance="3.071"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="527.803" y="198.36" rotation="-0.054" distance="2.965"/>
-<CubicMirroredVertex x="545.569" y="197.408" rotation="0.003" distance="5.98"/>
-<CubicMirroredVertex x="563.683" y="198.482" rotation="0.059" distance="3.024"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="69.811" y="196.373" rotation="-1.914" distance="1.848"/>
-<CubicMirroredVertex x="66.081" y="185.93" rotation="-1.914" distance="1.848"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="72.354" y="196.336" rotation="-1.623" distance="2.031"/>
-<CubicMirroredVertex x="71.715" y="184.17" rotation="-1.623" distance="2.031"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="73.975" y="195.92" rotation="-1.14" distance="1.661"/>
-<CubicMirroredVertex x="78.137" y="186.865" rotation="-1.14" distance="1.661"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="220.272" y="196.342" rotation="-1.941" distance="1.847"/>
-<CubicMirroredVertex x="216.263" y="186.013" rotation="-1.941" distance="1.847"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="222.101" y="196.004" rotation="-1.596" distance="2.044"/>
-<CubicMirroredVertex x="221.795" y="183.741" rotation="-1.596" distance="2.044"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="223.736" y="196" rotation="-1.085" distance="1.643"/>
-<CubicMirroredVertex x="228.336" y="187.28" rotation="-1.085" distance="1.643"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="283.812" y="196.359" rotation="-1.895" distance="1.873"/>
-<CubicMirroredVertex x="280.23" y="185.704" rotation="-1.895" distance="1.873"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="286.026" y="196.231" rotation="-1.554" distance="1.993"/>
-<CubicMirroredVertex x="286.222" y="184.275" rotation="-1.554" distance="1.993"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="288.08" y="195.845" rotation="-1.201" distance="1.645"/>
-<CubicMirroredVertex x="291.652" y="186.643" rotation="-1.201" distance="1.645"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="485.911" y="195.842" rotation="-1.97" distance="1.839"/>
-<CubicMirroredVertex x="481.625" y="185.674" rotation="-1.97" distance="1.839"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="487.857" y="195.642" rotation="-1.586" distance="1.971"/>
-<CubicMirroredVertex x="487.679" y="183.816" rotation="-1.586" distance="1.971"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="489.959" y="195.638" rotation="-1.113" distance="1.535"/>
-<CubicMirroredVertex x="494.028" y="187.375" rotation="-1.113" distance="1.535"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="573.943" y="196.376" rotation="-1.944" distance="1.811"/>
-<CubicMirroredVertex x="569.98" y="186.26" rotation="-1.944" distance="1.811"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="576.178" y="195.616" rotation="-1.598" distance="1.918"/>
-<CubicMirroredVertex x="575.864" y="184.112" rotation="-1.598" distance="1.918"/>
-</PointsPath>
-<PointsPath isClockwise="true" name="Path">
-<CubicMirroredVertex x="578.266" y="195.615" rotation="-1.131" distance="1.545"/>
-<CubicMirroredVertex x="582.214" y="187.231" rotation="-1.131" distance="1.545"/>
-</PointsPath>
-<Stroke thickness="1.5" cap="round" join="round" name="Stroke">
-<SolidColor colorValue="FF2B231C" name="C"/>
-<TargetEffect targetId="0:538" name="Use"/>
-</Stroke>
-</Shape>
-</Node>
-</Solo>
 <Node name="paint">
 <Shape x="0" y="0" name="grain">
 <Ellipse x="334.51" y="203.433" width="1.791" height="1.791" originX="0.5" originY="0.5" name="d"/>
@@ -23515,7 +23241,7 @@
 <CubicMirroredVertex x="98.213" y="201.907" rotation="-3.079" distance="15.923"/>
 </PointsPath>
 <Fill name="Fill" fillRule="clockwise">
-<SolidColor colorValue="2DB3AD58" name="C" id="0:582"/>
+<SolidColor colorValue="2DB3AD58" name="C" id="0:578"/>
 <Feather strength="3.115" name="F"/>
 </Fill>
 </Shape>
@@ -23532,10 +23258,10 @@
 <CubicMirroredVertex x="31.851" y="203.708" rotation="-3.069" distance="21.091"/>
 </PointsPath>
 <Fill name="Fill">
-<SolidColor colorValue="40B3AD58" name="C" id="0:580"/>
+<SolidColor colorValue="40B3AD58" name="C" id="0:576"/>
 </Fill>
 <Stroke thickness="1.3" cap="round" join="round" name="Rim">
-<SolidColor colorValue="3B817D3F" name="C" id="0:581"/>
+<SolidColor colorValue="3B817D3F" name="C" id="0:577"/>
 </Stroke>
 </Shape>
 </Node>
@@ -25308,222 +25034,222 @@
 <StateMachineNumber name="season" id="0:535" value="2"/>
 <StateMachineNumber name="time" id="0:536" value="1"/>
 <StateMachineBool name="still" id="0:537" value="0"/>
-<StateMachineTrigger name="close" id="0:611"/>
-<StateMachineTrigger name="post" id="0:619"/>
-<StateMachineListenerSingle targetId="0:625" listenerTypeValue="enter" name="enter" id="0:626">
-<ListenerTriggerChange inputId="0:619"/>
+<StateMachineTrigger name="close" id="0:607"/>
+<StateMachineTrigger name="post" id="0:615"/>
+<StateMachineListenerSingle targetId="0:621" listenerTypeValue="enter" name="enter" id="0:622">
+<ListenerTriggerChange inputId="0:615"/>
 </StateMachineListenerSingle>
-<StateMachineLayer name="intro" id="0:631">
+<StateMachineLayer name="intro" id="0:627">
 <AnyState x="100" y="-120"/>
 <ExitState x="500" y="-120"/>
 <EntryState x="0" y="0">
-<StateTransition stateToId="0:629"/>
+<StateTransition stateToId="0:625"/>
 </EntryState>
-<AnimationState x="200" y="0" animationId="0:627" id="0:629">
-<StateTransition stateToId="0:630">
+<AnimationState x="200" y="0" animationId="0:623" id="0:625">
+<StateTransition stateToId="0:626">
 <TransitionBoolCondition inputId="0:537" opValue="equal"/>
 </StateTransition>
-<StateTransition stateToId="0:630" enableExitTime="true" exitTimeIsPercetange="true" exitTime="100"/>
+<StateTransition stateToId="0:626" enableExitTime="true" exitTimeIsPercetange="true" exitTime="100"/>
 </AnimationState>
-<AnimationState x="400" y="0" animationId="0:628" id="0:630"/>
+<AnimationState x="400" y="0" animationId="0:624" id="0:626"/>
 </StateMachineLayer>
-<StateMachineLayer name="season" id="0:599">
+<StateMachineLayer name="season" id="0:595">
 <AnyState x="100" y="-160"/>
 <ExitState x="600" y="-160"/>
 <EntryState x="0" y="0">
-<StateTransition stateToId="0:595">
+<StateTransition stateToId="0:591">
 <TransitionNumberCondition inputId="0:535" opValue="equal" value="0"/>
 </StateTransition>
-<StateTransition stateToId="0:596">
+<StateTransition stateToId="0:592">
 <TransitionNumberCondition inputId="0:535" opValue="equal" value="1"/>
 </StateTransition>
-<StateTransition stateToId="0:597">
+<StateTransition stateToId="0:593">
 <TransitionNumberCondition inputId="0:535" opValue="equal" value="2"/>
 </StateTransition>
-<StateTransition stateToId="0:598">
+<StateTransition stateToId="0:594">
 <TransitionNumberCondition inputId="0:535" opValue="equal" value="3"/>
 </StateTransition>
 </EntryState>
-<AnimationState x="200" y="120" animationId="0:591" id="0:595">
-<StateTransition stateToId="0:596" duration="1600">
+<AnimationState x="200" y="120" animationId="0:587" id="0:591">
+<StateTransition stateToId="0:592" duration="1600">
 <TransitionNumberCondition inputId="0:535" opValue="equal" value="1"/>
 </StateTransition>
-<StateTransition stateToId="0:597" duration="1600">
+<StateTransition stateToId="0:593" duration="1600">
 <TransitionNumberCondition inputId="0:535" opValue="equal" value="2"/>
 </StateTransition>
-<StateTransition stateToId="0:598" duration="1600">
+<StateTransition stateToId="0:594" duration="1600">
 <TransitionNumberCondition inputId="0:535" opValue="equal" value="3"/>
 </StateTransition>
 </AnimationState>
-<AnimationState x="320" y="120" animationId="0:592" id="0:596">
-<StateTransition stateToId="0:595" duration="1600">
+<AnimationState x="320" y="120" animationId="0:588" id="0:592">
+<StateTransition stateToId="0:591" duration="1600">
 <TransitionNumberCondition inputId="0:535" opValue="equal" value="0"/>
 </StateTransition>
-<StateTransition stateToId="0:597" duration="1600">
+<StateTransition stateToId="0:593" duration="1600">
 <TransitionNumberCondition inputId="0:535" opValue="equal" value="2"/>
 </StateTransition>
-<StateTransition stateToId="0:598" duration="1600">
+<StateTransition stateToId="0:594" duration="1600">
 <TransitionNumberCondition inputId="0:535" opValue="equal" value="3"/>
 </StateTransition>
 </AnimationState>
-<AnimationState x="440" y="120" animationId="0:593" id="0:597">
-<StateTransition stateToId="0:595" duration="1600">
+<AnimationState x="440" y="120" animationId="0:589" id="0:593">
+<StateTransition stateToId="0:591" duration="1600">
 <TransitionNumberCondition inputId="0:535" opValue="equal" value="0"/>
 </StateTransition>
-<StateTransition stateToId="0:596" duration="1600">
+<StateTransition stateToId="0:592" duration="1600">
 <TransitionNumberCondition inputId="0:535" opValue="equal" value="1"/>
 </StateTransition>
-<StateTransition stateToId="0:598" duration="1600">
+<StateTransition stateToId="0:594" duration="1600">
 <TransitionNumberCondition inputId="0:535" opValue="equal" value="3"/>
 </StateTransition>
 </AnimationState>
-<AnimationState x="560" y="120" animationId="0:594" id="0:598">
-<StateTransition stateToId="0:595" duration="1600">
+<AnimationState x="560" y="120" animationId="0:590" id="0:594">
+<StateTransition stateToId="0:591" duration="1600">
 <TransitionNumberCondition inputId="0:535" opValue="equal" value="0"/>
 </StateTransition>
-<StateTransition stateToId="0:596" duration="1600">
+<StateTransition stateToId="0:592" duration="1600">
 <TransitionNumberCondition inputId="0:535" opValue="equal" value="1"/>
 </StateTransition>
-<StateTransition stateToId="0:597" duration="1600">
+<StateTransition stateToId="0:593" duration="1600">
 <TransitionNumberCondition inputId="0:535" opValue="equal" value="2"/>
 </StateTransition>
 </AnimationState>
 </StateMachineLayer>
-<StateMachineLayer name="time" id="0:610">
+<StateMachineLayer name="time" id="0:606">
 <AnyState x="100" y="-160"/>
 <ExitState x="600" y="-160"/>
 <EntryState x="0" y="0">
+<StateTransition stateToId="0:601">
+<TransitionNumberCondition inputId="0:536" opValue="equal" value="0"/>
+</StateTransition>
+<StateTransition stateToId="0:602">
+<TransitionNumberCondition inputId="0:536" opValue="equal" value="1"/>
+</StateTransition>
+<StateTransition stateToId="0:603">
+<TransitionNumberCondition inputId="0:536" opValue="equal" value="2"/>
+</StateTransition>
+<StateTransition stateToId="0:604">
+<TransitionNumberCondition inputId="0:536" opValue="equal" value="3"/>
+</StateTransition>
 <StateTransition stateToId="0:605">
-<TransitionNumberCondition inputId="0:536" opValue="equal" value="0"/>
-</StateTransition>
-<StateTransition stateToId="0:606">
-<TransitionNumberCondition inputId="0:536" opValue="equal" value="1"/>
-</StateTransition>
-<StateTransition stateToId="0:607">
-<TransitionNumberCondition inputId="0:536" opValue="equal" value="2"/>
-</StateTransition>
-<StateTransition stateToId="0:608">
-<TransitionNumberCondition inputId="0:536" opValue="equal" value="3"/>
-</StateTransition>
-<StateTransition stateToId="0:609">
 <TransitionNumberCondition inputId="0:536" opValue="equal" value="4"/>
 </StateTransition>
 </EntryState>
-<AnimationState x="200" y="120" animationId="0:600" id="0:605">
-<StateTransition stateToId="0:606" duration="1600">
+<AnimationState x="200" y="120" animationId="0:596" id="0:601">
+<StateTransition stateToId="0:602" duration="1600">
 <TransitionNumberCondition inputId="0:536" opValue="equal" value="1"/>
 </StateTransition>
-<StateTransition stateToId="0:607" duration="1600">
+<StateTransition stateToId="0:603" duration="1600">
 <TransitionNumberCondition inputId="0:536" opValue="equal" value="2"/>
 </StateTransition>
-<StateTransition stateToId="0:608" duration="1600">
+<StateTransition stateToId="0:604" duration="1600">
 <TransitionNumberCondition inputId="0:536" opValue="equal" value="3"/>
 </StateTransition>
-<StateTransition stateToId="0:609" duration="1600">
+<StateTransition stateToId="0:605" duration="1600">
 <TransitionNumberCondition inputId="0:536" opValue="equal" value="4"/>
 </StateTransition>
 </AnimationState>
-<AnimationState x="320" y="120" animationId="0:601" id="0:606">
-<StateTransition stateToId="0:605" duration="1600">
+<AnimationState x="320" y="120" animationId="0:597" id="0:602">
+<StateTransition stateToId="0:601" duration="1600">
 <TransitionNumberCondition inputId="0:536" opValue="equal" value="0"/>
 </StateTransition>
-<StateTransition stateToId="0:607" duration="1600">
+<StateTransition stateToId="0:603" duration="1600">
 <TransitionNumberCondition inputId="0:536" opValue="equal" value="2"/>
 </StateTransition>
-<StateTransition stateToId="0:608" duration="1600">
+<StateTransition stateToId="0:604" duration="1600">
 <TransitionNumberCondition inputId="0:536" opValue="equal" value="3"/>
 </StateTransition>
-<StateTransition stateToId="0:609" duration="1600">
+<StateTransition stateToId="0:605" duration="1600">
 <TransitionNumberCondition inputId="0:536" opValue="equal" value="4"/>
 </StateTransition>
 </AnimationState>
-<AnimationState x="440" y="120" animationId="0:602" id="0:607">
-<StateTransition stateToId="0:605" duration="1600">
+<AnimationState x="440" y="120" animationId="0:598" id="0:603">
+<StateTransition stateToId="0:601" duration="1600">
 <TransitionNumberCondition inputId="0:536" opValue="equal" value="0"/>
 </StateTransition>
-<StateTransition stateToId="0:606" duration="1600">
+<StateTransition stateToId="0:602" duration="1600">
 <TransitionNumberCondition inputId="0:536" opValue="equal" value="1"/>
 </StateTransition>
-<StateTransition stateToId="0:608" duration="1600">
+<StateTransition stateToId="0:604" duration="1600">
 <TransitionNumberCondition inputId="0:536" opValue="equal" value="3"/>
 </StateTransition>
-<StateTransition stateToId="0:609" duration="1600">
+<StateTransition stateToId="0:605" duration="1600">
 <TransitionNumberCondition inputId="0:536" opValue="equal" value="4"/>
 </StateTransition>
 </AnimationState>
-<AnimationState x="560" y="120" animationId="0:603" id="0:608">
-<StateTransition stateToId="0:605" duration="1600">
+<AnimationState x="560" y="120" animationId="0:599" id="0:604">
+<StateTransition stateToId="0:601" duration="1600">
 <TransitionNumberCondition inputId="0:536" opValue="equal" value="0"/>
 </StateTransition>
-<StateTransition stateToId="0:606" duration="1600">
+<StateTransition stateToId="0:602" duration="1600">
 <TransitionNumberCondition inputId="0:536" opValue="equal" value="1"/>
 </StateTransition>
-<StateTransition stateToId="0:607" duration="1600">
+<StateTransition stateToId="0:603" duration="1600">
 <TransitionNumberCondition inputId="0:536" opValue="equal" value="2"/>
 </StateTransition>
-<StateTransition stateToId="0:609" duration="1600">
+<StateTransition stateToId="0:605" duration="1600">
 <TransitionNumberCondition inputId="0:536" opValue="equal" value="4"/>
 </StateTransition>
 </AnimationState>
-<AnimationState x="680" y="120" animationId="0:604" id="0:609">
-<StateTransition stateToId="0:605" duration="1600">
+<AnimationState x="680" y="120" animationId="0:600" id="0:605">
+<StateTransition stateToId="0:601" duration="1600">
 <TransitionNumberCondition inputId="0:536" opValue="equal" value="0"/>
 </StateTransition>
-<StateTransition stateToId="0:606" duration="1600">
+<StateTransition stateToId="0:602" duration="1600">
 <TransitionNumberCondition inputId="0:536" opValue="equal" value="1"/>
 </StateTransition>
-<StateTransition stateToId="0:607" duration="1600">
+<StateTransition stateToId="0:603" duration="1600">
 <TransitionNumberCondition inputId="0:536" opValue="equal" value="2"/>
 </StateTransition>
-<StateTransition stateToId="0:608" duration="1600">
+<StateTransition stateToId="0:604" duration="1600">
 <TransitionNumberCondition inputId="0:536" opValue="equal" value="3"/>
 </StateTransition>
 </AnimationState>
 </StateMachineLayer>
-<StateMachineLayer name="close" id="0:618">
+<StateMachineLayer name="close" id="0:614">
 <AnyState x="100" y="-120"/>
 <ExitState x="700" y="-120"/>
 <EntryState x="0" y="0">
-<StateTransition stateToId="0:615"/>
+<StateTransition stateToId="0:611"/>
 </EntryState>
-<AnimationState x="200" y="0" animationId="0:614" id="0:615">
-<StateTransition stateToId="0:616">
-<TransitionTriggerCondition inputId="0:611"/>
+<AnimationState x="200" y="0" animationId="0:610" id="0:611">
+<StateTransition stateToId="0:612">
+<TransitionTriggerCondition inputId="0:607"/>
 </StateTransition>
-<StateTransition stateToId="0:617">
+<StateTransition stateToId="0:613">
 <TransitionBoolCondition inputId="0:537" opValue="equal"/>
 </StateTransition>
 </AnimationState>
-<AnimationState x="400" y="0" animationId="0:612" id="0:616">
-<StateTransition stateToId="0:617" enableExitTime="true" exitTimeIsPercetange="true" exitTime="100"/>
+<AnimationState x="400" y="0" animationId="0:608" id="0:612">
+<StateTransition stateToId="0:613" enableExitTime="true" exitTimeIsPercetange="true" exitTime="100"/>
 </AnimationState>
-<AnimationState x="600" y="0" animationId="0:613" id="0:617"/>
+<AnimationState x="600" y="0" animationId="0:609" id="0:613"/>
 </StateMachineLayer>
-<StateMachineLayer name="post" id="0:624">
+<StateMachineLayer name="post" id="0:620">
 <AnyState x="200" y="-140"/>
 <ExitState x="500" y="-140"/>
 <EntryState x="0" y="0">
-<StateTransition stateToId="0:621"/>
+<StateTransition stateToId="0:617"/>
 </EntryState>
-<AnimationState x="200" y="0" animationId="0:623" id="0:621">
-<StateTransition stateToId="0:622" duration="120">
-<TransitionTriggerCondition inputId="0:619"/>
+<AnimationState x="200" y="0" animationId="0:619" id="0:617">
+<StateTransition stateToId="0:618" duration="120">
+<TransitionTriggerCondition inputId="0:615"/>
 </StateTransition>
 </AnimationState>
-<AnimationState x="400" y="0" animationId="0:620" reset="true" id="0:622">
-<StateTransition stateToId="0:621" enableExitTime="true" exitTimeIsPercetange="true" exitTime="100" duration="120"/>
+<AnimationState x="400" y="0" animationId="0:616" reset="true" id="0:618">
+<StateTransition stateToId="0:617" enableExitTime="true" exitTimeIsPercetange="true" exitTime="100" duration="120"/>
 </AnimationState>
 </StateMachineLayer>
-<StateMachineLayer name="boil" id="0:634">
+<StateMachineLayer name="boil" id="0:630">
 <AnyState x="100" y="-120"/>
 <ExitState x="400" y="-120"/>
 <EntryState x="0" y="0">
-<StateTransition stateToId="0:633"/>
+<StateTransition stateToId="0:629"/>
 </EntryState>
-<AnimationState x="200" y="0" animationId="0:632" id="0:633"/>
+<AnimationState x="200" y="0" animationId="0:628" id="0:629"/>
 </StateMachineLayer>
 </StateMachine>
-<LinearAnimation loopValue="oneShot" duration="1" fps="60" name="season 0" id="0:591">
+<LinearAnimation loopValue="oneShot" duration="1" fps="60" name="season 0" id="0:587">
 <KeyedObject objectId="0:548">
 <KeyedProperty property="colorValue">
 <KeyFrameColor frame="0" value="4DA7CF7A" interpolationType="linear"/>
@@ -25544,33 +25270,33 @@
 <KeyFrameDouble frame="0" value="0" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:580">
+<KeyedObject objectId="0:576">
 <KeyedProperty property="colorValue">
 <KeyFrameColor frame="0" value="40B2D58A" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:581">
+<KeyedObject objectId="0:577">
 <KeyedProperty property="colorValue">
 <KeyFrameColor frame="0" value="3B809963" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:582">
+<KeyedObject objectId="0:578">
 <KeyedProperty property="colorValue">
 <KeyFrameColor frame="0" value="2DB2D58A" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:584">
+<KeyedObject objectId="0:580">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="1" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:586">
+<KeyedObject objectId="0:582">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
 </LinearAnimation>
-<LinearAnimation loopValue="oneShot" duration="1" fps="60" name="season 1" id="0:592">
+<LinearAnimation loopValue="oneShot" duration="1" fps="60" name="season 1" id="0:588">
 <KeyedObject objectId="0:548">
 <KeyedProperty property="colorValue">
 <KeyFrameColor frame="0" value="4D4C7F38" interpolationType="linear"/>
@@ -25591,33 +25317,33 @@
 <KeyFrameDouble frame="0" value="0" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:580">
+<KeyedObject objectId="0:576">
 <KeyedProperty property="colorValue">
 <KeyFrameColor frame="0" value="40B3AD58" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:581">
+<KeyedObject objectId="0:577">
 <KeyedProperty property="colorValue">
 <KeyFrameColor frame="0" value="3B817D3F" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:582">
+<KeyedObject objectId="0:578">
 <KeyedProperty property="colorValue">
 <KeyFrameColor frame="0" value="2DB3AD58" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:584">
+<KeyedObject objectId="0:580">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="1" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:586">
+<KeyedObject objectId="0:582">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
 </LinearAnimation>
-<LinearAnimation loopValue="oneShot" duration="1" fps="60" name="season 2" id="0:593">
+<LinearAnimation loopValue="oneShot" duration="1" fps="60" name="season 2" id="0:589">
 <KeyedObject objectId="0:548">
 <KeyedProperty property="colorValue">
 <KeyFrameColor frame="0" value="4D8E9A48" interpolationType="linear"/>
@@ -25638,33 +25364,33 @@
 <KeyFrameDouble frame="0" value="0" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:580">
+<KeyedObject objectId="0:576">
 <KeyedProperty property="colorValue">
 <KeyFrameColor frame="0" value="40B8A455" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:581">
+<KeyedObject objectId="0:577">
 <KeyedProperty property="colorValue">
 <KeyFrameColor frame="0" value="3B84763D" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:582">
+<KeyedObject objectId="0:578">
 <KeyedProperty property="colorValue">
 <KeyFrameColor frame="0" value="2DB8A455" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:584">
+<KeyedObject objectId="0:580">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0.4" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:586">
+<KeyedObject objectId="0:582">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
 </LinearAnimation>
-<LinearAnimation loopValue="oneShot" duration="1" fps="60" name="season 3" id="0:594">
+<LinearAnimation loopValue="oneShot" duration="1" fps="60" name="season 3" id="0:590">
 <KeyedObject objectId="0:548">
 <KeyedProperty property="colorValue">
 <KeyFrameColor frame="0" value="4D8D9C88" interpolationType="linear"/>
@@ -25685,24 +25411,112 @@
 <KeyFrameDouble frame="0" value="1" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:580">
+<KeyedObject objectId="0:576">
 <KeyedProperty property="colorValue">
 <KeyFrameColor frame="0" value="40C3CAC2" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:581">
+<KeyedObject objectId="0:577">
 <KeyedProperty property="colorValue">
 <KeyFrameColor frame="0" value="3B8C918C" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:582">
+<KeyedObject objectId="0:578">
 <KeyedProperty property="colorValue">
 <KeyFrameColor frame="0" value="2DC3CAC2" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:584">
+<KeyedObject objectId="0:580">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="linear"/>
+</KeyedProperty>
+</KeyedObject>
+<KeyedObject objectId="0:582">
+<KeyedProperty property="opacity">
+<KeyFrameDouble frame="0" value="1" interpolationType="linear"/>
+</KeyedProperty>
+</KeyedObject>
+</LinearAnimation>
+<LinearAnimation loopValue="oneShot" duration="1" fps="60" name="time 0" id="0:596">
+<KeyedObject objectId="0:583">
+<KeyedProperty property="colorValue">
+<KeyFrameColor frame="0" value="0FF4CFA8" interpolationType="linear"/>
+</KeyedProperty>
+</KeyedObject>
+<KeyedObject objectId="0:584">
+<KeyedProperty property="colorValue">
+<KeyFrameColor frame="0" value="0FF4CFA8" interpolationType="linear"/>
+</KeyedProperty>
+</KeyedObject>
+<KeyedObject objectId="0:585">
+<KeyedProperty property="colorValue">
+<KeyFrameColor frame="0" value="00F4CFA8" interpolationType="linear"/>
+</KeyedProperty>
+</KeyedObject>
+<KeyedObject objectId="0:586">
+<KeyedProperty property="opacity">
+<KeyFrameDouble frame="0" value="0" interpolationType="linear"/>
+</KeyedProperty>
+</KeyedObject>
+</LinearAnimation>
+<LinearAnimation loopValue="oneShot" duration="1" fps="60" name="time 1" id="0:597">
+<KeyedObject objectId="0:583">
+<KeyedProperty property="colorValue">
+<KeyFrameColor frame="0" value="00F4E3B0" interpolationType="linear"/>
+</KeyedProperty>
+</KeyedObject>
+<KeyedObject objectId="0:584">
+<KeyedProperty property="colorValue">
+<KeyFrameColor frame="0" value="00F4E3B0" interpolationType="linear"/>
+</KeyedProperty>
+</KeyedObject>
+<KeyedObject objectId="0:585">
+<KeyedProperty property="colorValue">
+<KeyFrameColor frame="0" value="00F4E3B0" interpolationType="linear"/>
+</KeyedProperty>
+</KeyedObject>
+<KeyedObject objectId="0:586">
+<KeyedProperty property="opacity">
+<KeyFrameDouble frame="0" value="0" interpolationType="linear"/>
+</KeyedProperty>
+</KeyedObject>
+</LinearAnimation>
+<LinearAnimation loopValue="oneShot" duration="1" fps="60" name="time 2" id="0:598">
+<KeyedObject objectId="0:583">
+<KeyedProperty property="colorValue">
+<KeyFrameColor frame="0" value="17E9B356" interpolationType="linear"/>
+</KeyedProperty>
+</KeyedObject>
+<KeyedObject objectId="0:584">
+<KeyedProperty property="colorValue">
+<KeyFrameColor frame="0" value="17E9B356" interpolationType="linear"/>
+</KeyedProperty>
+</KeyedObject>
+<KeyedObject objectId="0:585">
+<KeyedProperty property="colorValue">
+<KeyFrameColor frame="0" value="00E9B356" interpolationType="linear"/>
+</KeyedProperty>
+</KeyedObject>
+<KeyedObject objectId="0:586">
+<KeyedProperty property="opacity">
+<KeyFrameDouble frame="0" value="0" interpolationType="linear"/>
+</KeyedProperty>
+</KeyedObject>
+</LinearAnimation>
+<LinearAnimation loopValue="oneShot" duration="1" fps="60" name="time 3" id="0:599">
+<KeyedObject objectId="0:583">
+<KeyedProperty property="colorValue">
+<KeyFrameColor frame="0" value="25A06D9A" interpolationType="linear"/>
+</KeyedProperty>
+</KeyedObject>
+<KeyedObject objectId="0:584">
+<KeyedProperty property="colorValue">
+<KeyFrameColor frame="0" value="25A06D9A" interpolationType="linear"/>
+</KeyedProperty>
+</KeyedObject>
+<KeyedObject objectId="0:585">
+<KeyedProperty property="colorValue">
+<KeyFrameColor frame="0" value="00A06D9A" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
 <KeyedObject objectId="0:586">
@@ -25711,117 +25525,29 @@
 </KeyedProperty>
 </KeyedObject>
 </LinearAnimation>
-<LinearAnimation loopValue="oneShot" duration="1" fps="60" name="time 0" id="0:600">
-<KeyedObject objectId="0:587">
-<KeyedProperty property="colorValue">
-<KeyFrameColor frame="0" value="0FF4CFA8" interpolationType="linear"/>
-</KeyedProperty>
-</KeyedObject>
-<KeyedObject objectId="0:588">
-<KeyedProperty property="colorValue">
-<KeyFrameColor frame="0" value="0FF4CFA8" interpolationType="linear"/>
-</KeyedProperty>
-</KeyedObject>
-<KeyedObject objectId="0:589">
-<KeyedProperty property="colorValue">
-<KeyFrameColor frame="0" value="00F4CFA8" interpolationType="linear"/>
-</KeyedProperty>
-</KeyedObject>
-<KeyedObject objectId="0:590">
-<KeyedProperty property="opacity">
-<KeyFrameDouble frame="0" value="0" interpolationType="linear"/>
-</KeyedProperty>
-</KeyedObject>
-</LinearAnimation>
-<LinearAnimation loopValue="oneShot" duration="1" fps="60" name="time 1" id="0:601">
-<KeyedObject objectId="0:587">
-<KeyedProperty property="colorValue">
-<KeyFrameColor frame="0" value="00F4E3B0" interpolationType="linear"/>
-</KeyedProperty>
-</KeyedObject>
-<KeyedObject objectId="0:588">
-<KeyedProperty property="colorValue">
-<KeyFrameColor frame="0" value="00F4E3B0" interpolationType="linear"/>
-</KeyedProperty>
-</KeyedObject>
-<KeyedObject objectId="0:589">
-<KeyedProperty property="colorValue">
-<KeyFrameColor frame="0" value="00F4E3B0" interpolationType="linear"/>
-</KeyedProperty>
-</KeyedObject>
-<KeyedObject objectId="0:590">
-<KeyedProperty property="opacity">
-<KeyFrameDouble frame="0" value="0" interpolationType="linear"/>
-</KeyedProperty>
-</KeyedObject>
-</LinearAnimation>
-<LinearAnimation loopValue="oneShot" duration="1" fps="60" name="time 2" id="0:602">
-<KeyedObject objectId="0:587">
-<KeyedProperty property="colorValue">
-<KeyFrameColor frame="0" value="17E9B356" interpolationType="linear"/>
-</KeyedProperty>
-</KeyedObject>
-<KeyedObject objectId="0:588">
-<KeyedProperty property="colorValue">
-<KeyFrameColor frame="0" value="17E9B356" interpolationType="linear"/>
-</KeyedProperty>
-</KeyedObject>
-<KeyedObject objectId="0:589">
-<KeyedProperty property="colorValue">
-<KeyFrameColor frame="0" value="00E9B356" interpolationType="linear"/>
-</KeyedProperty>
-</KeyedObject>
-<KeyedObject objectId="0:590">
-<KeyedProperty property="opacity">
-<KeyFrameDouble frame="0" value="0" interpolationType="linear"/>
-</KeyedProperty>
-</KeyedObject>
-</LinearAnimation>
-<LinearAnimation loopValue="oneShot" duration="1" fps="60" name="time 3" id="0:603">
-<KeyedObject objectId="0:587">
-<KeyedProperty property="colorValue">
-<KeyFrameColor frame="0" value="25A06D9A" interpolationType="linear"/>
-</KeyedProperty>
-</KeyedObject>
-<KeyedObject objectId="0:588">
-<KeyedProperty property="colorValue">
-<KeyFrameColor frame="0" value="25A06D9A" interpolationType="linear"/>
-</KeyedProperty>
-</KeyedObject>
-<KeyedObject objectId="0:589">
-<KeyedProperty property="colorValue">
-<KeyFrameColor frame="0" value="00A06D9A" interpolationType="linear"/>
-</KeyedProperty>
-</KeyedObject>
-<KeyedObject objectId="0:590">
-<KeyedProperty property="opacity">
-<KeyFrameDouble frame="0" value="1" interpolationType="linear"/>
-</KeyedProperty>
-</KeyedObject>
-</LinearAnimation>
-<LinearAnimation loopValue="oneShot" duration="1" fps="60" name="time 4" id="0:604">
-<KeyedObject objectId="0:587">
+<LinearAnimation loopValue="oneShot" duration="1" fps="60" name="time 4" id="0:600">
+<KeyedObject objectId="0:583">
 <KeyedProperty property="colorValue">
 <KeyFrameColor frame="0" value="401E2A5E" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:588">
+<KeyedObject objectId="0:584">
 <KeyedProperty property="colorValue">
 <KeyFrameColor frame="0" value="401E2A5E" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:589">
+<KeyedObject objectId="0:585">
 <KeyedProperty property="colorValue">
 <KeyFrameColor frame="0" value="001E2A5E" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:590">
+<KeyedObject objectId="0:586">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="1" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
 </LinearAnimation>
-<LinearAnimation loopValue="oneShot" duration="90" fps="60" name="closing" id="0:612">
+<LinearAnimation loopValue="oneShot" duration="90" fps="60" name="closing" id="0:608">
 <KeyedObject objectId="0:563">
 <KeyedProperty property="scaleX">
 <KeyFrameDouble frame="0" value="0.74" interpolationType="cubic">
@@ -25845,7 +25571,7 @@
 </KeyedProperty>
 </KeyedObject>
 </LinearAnimation>
-<LinearAnimation loopValue="oneShot" duration="1" fps="60" name="closed" id="0:613">
+<LinearAnimation loopValue="oneShot" duration="1" fps="60" name="closed" id="0:609">
 <KeyedObject objectId="0:563">
 <KeyedProperty property="scaleX">
 <KeyFrameDouble frame="0" value="1" interpolationType="linear"/>
@@ -25857,7 +25583,7 @@
 </KeyedProperty>
 </KeyedObject>
 </LinearAnimation>
-<LinearAnimation loopValue="oneShot" duration="1" fps="60" name="ajar" id="0:614">
+<LinearAnimation loopValue="oneShot" duration="1" fps="60" name="ajar" id="0:610">
 <KeyedObject objectId="0:563">
 <KeyedProperty property="scaleX">
 <KeyFrameDouble frame="0" value="0.74" interpolationType="linear"/>
@@ -25869,7 +25595,7 @@
 </KeyedProperty>
 </KeyedObject>
 </LinearAnimation>
-<LinearAnimation loopValue="oneShot" duration="210" fps="60" name="post" id="0:620">
+<LinearAnimation loopValue="oneShot" duration="210" fps="60" name="post" id="0:616">
 <KeyedObject objectId="0:570">
 <KeyedProperty property="rotation">
 <KeyFrameDouble frame="0" value="0" interpolationType="elastic">
@@ -25883,8 +25609,8 @@
 </KeyedProperty>
 </KeyedObject>
 </LinearAnimation>
-<LinearAnimation loopValue="oneShot" duration="1" fps="60" name="Rest" id="0:623"/>
-<LinearAnimation loopValue="oneShot" duration="78" fps="60" name="intro" id="0:627">
+<LinearAnimation loopValue="oneShot" duration="1" fps="60" name="Rest" id="0:619"/>
+<LinearAnimation loopValue="oneShot" duration="78" fps="60" name="intro" id="0:623">
 <KeyedObject objectId="0:539">
 <KeyedProperty property="end">
 <KeyFrameDouble frame="0" value="0" interpolationType="cubic">
@@ -25967,7 +25693,7 @@
 <KeyFrameDouble frame="59" value="1" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:583">
+<KeyedObject objectId="0:579">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="cubic">
 <CubicEaseInterpolator x1="0.16" y1="1" x2="0.3" y2="1"/>
@@ -25975,7 +25701,7 @@
 <KeyFrameDouble frame="36" value="1" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:585">
+<KeyedObject objectId="0:581">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
 <KeyFrameDouble frame="36" value="0" interpolationType="cubic">
@@ -25999,7 +25725,7 @@
 </KeyedProperty>
 </KeyedObject>
 </LinearAnimation>
-<LinearAnimation loopValue="oneShot" duration="1" fps="60" name="drawn" id="0:628">
+<LinearAnimation loopValue="oneShot" duration="1" fps="60" name="drawn" id="0:624">
 <KeyedObject objectId="0:539">
 <KeyedProperty property="end">
 <KeyFrameDouble frame="0" value="1" interpolationType="linear"/>
@@ -26046,12 +25772,12 @@
 <KeyFrameDouble frame="0" value="1" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:583">
+<KeyedObject objectId="0:579">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="1" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:585">
+<KeyedObject objectId="0:581">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="1" interpolationType="linear"/>
 </KeyedProperty>
@@ -26063,7 +25789,7 @@
 </KeyedProperty>
 </KeyedObject>
 </LinearAnimation>
-<LinearAnimation loopValue="loop" duration="24" fps="60" name="boil" id="0:632">
+<LinearAnimation loopValue="loop" duration="24" fps="60" name="boil" id="0:628">
 <KeyedObject objectId="0:544">
 <KeyedProperty property="activeComponentId">
 <KeyFrameId frame="0" value="0:545" interpolationType="hold"/>
@@ -26097,13 +25823,6 @@
 <KeyFrameId frame="0" value="0:572" interpolationType="hold"/>
 <KeyFrameId frame="8" value="0:573" interpolationType="hold"/>
 <KeyFrameId frame="16" value="0:574" interpolationType="hold"/>
-</KeyedProperty>
-</KeyedObject>
-<KeyedObject objectId="0:576">
-<KeyedProperty property="activeComponentId">
-<KeyFrameId frame="0" value="0:577" interpolationType="hold"/>
-<KeyFrameId frame="8" value="0:578" interpolationType="hold"/>
-<KeyFrameId frame="16" value="0:579" interpolationType="hold"/>
 </KeyedProperty>
 </KeyedObject>
 </LinearAnimation>

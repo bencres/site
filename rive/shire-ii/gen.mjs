@@ -1426,14 +1426,14 @@ function gate(ids) {
 
   // ground, flowers
   const ground = [P(22, 196), P(160, 186), P(320, 192), P(470, 186), P(574, 191), P(584, 199), P(470, 206), P(150, 205), P(30, 203)];
-  const groundInk = k.boil({
-    name: 'ground ink', seed: 440, draw: (rr) => {
-      const list = [];
-      for (let x = 16; x < 540; x += rr.range(50, 80)) list.push([P(x, 198), P(x + 18, 198 + rr.jit(1)), P(x + 36, 198 + rr.jit(1))]);
-      for (const gx of [70, 220, 284, 486, 574]) list.push([P(gx, 196), P(gx - 4, 186)], [P(gx + 2, 196), P(gx + 2, 184)], [P(gx + 4, 196), P(gx + 8, 187)]);
-      return ink(list, rr, { w: 1.5, amt: 0.4, fx: fxBack });
-    },
-  });
+  // the ground line holds still (no boil) and is sparse, so the foot of the page stays calm
+  const groundInk = (() => {
+    const rr = rng(440);
+    const list = [];
+    for (const x of [40, 150, 330, 452]) list.push([P(x, 198), P(x + 22, 198 + rr.jit(0.6)), P(x + 44, 198 + rr.jit(0.6))]);
+    for (const gx of [92, 284, 520]) list.push([P(gx, 196), P(gx - 4, 187)], [P(gx + 2, 196), P(gx + 2, 185)], [P(gx + 4, 196), P(gx + 8, 188)]);
+    return ink(list, rr, { w: 1.4, amt: 0.3, fx: fxBack });
+  })();
   s.add(k.in({ name: 'ground in', cx: 300, cy: 200, t0: 0, t1: 40 }, [wc(ids, ground, GROUND[1], rng(441), { alpha: 0.42, off: [0, 0], grain: 0.5, key: 'gground' }), groundInk]));
   for (const t of tintTracks('gground', 'FFFFFF')) seasonP.push({ object: t.object, prop: t.prop, type: 'Color', vals: GROUND.map((c) => tintColor('gground', t.object, c, 1)) });
 
