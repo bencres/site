@@ -166,7 +166,7 @@ const RECIPES = {
   },
   // rain coming down hard: eighteen small drops almost at once
   downpour: {
-    dur: 1200,
+    dur: 1000,
     land: 0.07,
     plan: ({ W, H, M, x, y, r }) => [
       { x, y, t: 0, size: 0.1 * M, end: 4.8 * M },
