@@ -1125,7 +1125,8 @@ function hill(ids) {
   // nothing in a corner is left in daylight; the page carries the same colour on out
   // past the canvas and lets it fade (.hill::before in style.css)
   const [glazeXml, glazeTracks] = hourGlaze(ids, W, H, 1);
-  s.add(k.in({ name: 'glaze in', t0: 0, t1: 60 }, [glazeXml]));
+  // there from the first frame (not drawn in), so it and the page's halo arrive together
+  s.add(glazeXml);
   for (const t of glazeTracks) tp(t.object, t.prop, t.vals, t.type);
 
   // --- lamplight, moon and stars sit above the glaze

@@ -173,9 +173,10 @@ const hill = mount($('#hill'), {
     hill.set('regular', regular);
     hill.set('bare', phone.matches);
     plant(reducedMotion ? 0 : 1750);
+    $('.hill').classList.add('glazed');
   },
 });
-const gate = mount($('#gate'), { src: 'shire-ii', artboard: 'Gate', fit: 'fill', onLoad: () => setAll(gate) });
+const gate = mount($('#gate'), { src: 'shire-ii', artboard: 'Gate', fit: 'fill', onLoad: () => { setAll(gate); $('.gate').classList.add('glazed'); } });
 narrow.addEventListener('change', () => {
   arms.forEach((a, i) => { a.classList.toggle('l', dirOf(i) === 'l'); a.classList.toggle('r', dirOf(i) === 'r'); });
   paintArms(state.season);

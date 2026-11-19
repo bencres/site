@@ -20,7 +20,6 @@
 [data-time='afternoon'] { --hour: rgba(233, 179, 86, 0.15); }
 [data-time='dusk'] { --hour: rgba(160, 109, 154, 0.24); }
 [data-time='night'] { --hour: rgba(30, 42, 94, 0.42); }
-.gate::before { opacity: 0.6; }
 /* the halo reaches past the screen's edge on narrow windows; that shouldn't scroll */
 body { overflow-x: clip; }
 [data-season='winter'] { --link: #2f5f62; --link-line: rgba(47, 95, 98, 0.35); }
@@ -62,8 +61,14 @@ a:focus-visible { outline: 2px dashed var(--link); outline-offset: 3px; border-r
     linear-gradient(to bottom, transparent, rgb(0 0 0 / 0.2) calc(var(--halo) * 0.3), rgb(0 0 0 / 0.65) calc(var(--halo) * 0.62), #000 var(--halo), #000 calc(100% - var(--art) * 0.06), transparent),
     linear-gradient(#000, #000) no-repeat var(--halo) var(--halo) / calc(100% - 2 * var(--halo)) calc(100% - var(--halo));
   mask-composite: intersect, subtract;
-  transition: background-color 1.6s;
+  /* hidden until the painting is up, then it comes up exactly as the painting's glaze
+     does: the painting starts in its default light and cross-fades to the visitor's hour
+     over 1.6s, linearly. Before that it would frame an empty canvas */
+  opacity: 0;
+  transition: background-color 1.6s linear, opacity 1.6s linear 0.15s;
 }
+.hill.glazed::before { opacity: 1; }
+.gate.glazed::before { opacity: 0.6; }
 .hill canvas { width: 100%; aspect-ratio: 900 / 400; height: auto; }
 .sign {
   margin: -6px 0 0 calc(90px + 4%);
