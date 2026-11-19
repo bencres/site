@@ -340,14 +340,16 @@ const SUNPOS = [[566, 66, 0.9], [252, 54, 1], [118, 116, 1.06], [74, 236, 1.3], 
 const SHADOW = [[-1.7, 0.75], [0.55, 0.9], [2.5, 0.85], [3.6, 0.45], [1, 0]];
 const LIT = [0, 0, 0, 1, 1];
 // per season: spring, summer, autumn, winter
-const HILL = ['A6C864', '74A553', 'A8A957', 'A9B5A6'];
-const PATCH = [['E3C86A', 0.2], ['D9A93F', 0.2], ['D4863A', 0.32], ['C9CCC6', 0.18]];
-const FAR = ['93BFD1', '86B3C9', '9DAEC0', 'B1BDCA'];
-const FAR2 = ['A3C988', '8DB884', 'B2AF7C', 'B5C2BC'];
-const CANOPY = ['A2CB6A', '5E9A4A', 'D38B3B', '8F8A7A'];
-const CANOPY2 = ['E79CB2', '9CBF55', 'C4503B', '8F8A7A'];
-const HEDGE = ['8DBA5E', '5F9447', '8E9A48', '8D9C88'];
-const GROUND = ['9CC26A', '86B35B', 'B8A455', 'C3CAC2'];
+// spring is pale, cool and wet (new leaf, rain on the way); summer is deep and warm,
+// with the grass dried gold in patches
+const HILL = ['BCD98A', '5E8F3A', 'A8A957', 'A9B5A6'];
+const PATCH = [['D6E6B0', 0.22], ['E2B648', 0.42], ['D4863A', 0.32], ['C9CCC6', 0.18]];
+const FAR = ['A2BFD0', '7FB0CC', '9DAEC0', 'B1BDCA'];
+const FAR2 = ['C2DCA4', '7DA663', 'B2AF7C', 'B5C2BC'];
+const CANOPY = ['BEDD92', '477F35', 'D38B3B', '8F8A7A'];
+const CANOPY2 = ['EBA8BE', '8EB246', 'C4503B', '8F8A7A'];
+const HEDGE = ['A7CF7A', '4C7F38', '8E9A48', '8D9C88'];
+const GROUND = ['B2D58A', 'B3AD58', 'B8A455', 'C3CAC2'];
 const DROP = ['EBA2B8', '6E9F4E', 'D08A3A', 'C9D6E2'];
 
 // ---------- hero: the Hill ----------
@@ -557,6 +559,7 @@ function hill(ids) {
     hillInk,
   ]));
   for (const t of tintTracks('hill', 'FFFFFF')) sp(t.object, t.prop, HILL.map((c) => tintColor('hill', t.object, c, 1)), 'Color');
+  for (const t of tintTracks('patch', 'FFFFFF')) sp(t.object, t.prop, PATCH.map(([c, a]) => tintColor('patch', t.object, c, a / 0.2)), 'Color');
   for (const t of tintTracks('patch', 'FFFFFF')) sp(t.object, t.prop, PATCH.map(([c, a]) => tintColor('patch', t.object, c, a / 0.2)), 'Color');
 
   // --- long shadows: anchored at each thing's foot, stretched by the hour
@@ -1120,6 +1123,45 @@ function hill(ids) {
   s.add(group({ name: 'flakes', id: flakesId, opacity: SEASON0 === 3 ? 1 : 0 }, sheets));
   sp(flakesId, 'opacity', [0, 0, 0, 1]);
   gatedLoop(s, 'snowfall', s.anim({ name: 'snowfall', duration: sDur, loop: 'loop', tracks: snowTracks }), [[season, 'equal', 3]]);
+
+
+  // --- spring showers: grey rain clouds drift over, and a light rain falls
+  const showerId = ids.next();
+  s.add(group({ name: 'shower clouds', id: showerId, opacity: SEASON0 === 0 ? 1 : 0 }, [
+    wc(ids, blobPts(170, 34, rng(270), { n: 14, wobble: 0.14 }).map((p) => P(p.x + 330, p.y + 70)), '9AA6B4', rng(271), { alpha: 0.42, off: [0, 0], grain: 0.2, soft: true, hazy: true }),
+    wc(ids, blobPts(120, 26, rng(272), { n: 12, wobble: 0.16 }).map((p) => P(p.x + 650, p.y + 52)), 'A3AEBB', rng(273), { alpha: 0.38, off: [0, 0], grain: 0.2, soft: true, hazy: true }),
+  ]));
+  sp(showerId, 'opacity', [1, 0, 0, 0]);
+  // summer's warmth: a golden haze lying over the far hills
+  const hazeId = ids.next();
+  s.add(group({ name: 'summer haze', id: hazeId, opacity: SEASON0 === 1 ? 1 : 0 }, [
+    wc(ids, blobPts(300, 60, rng(275), { n: 14, wobble: 0.12 }).map((p) => P(p.x + 420, p.y + 250)), 'F0CF78', rng(276), { alpha: 0.3, off: [0, 0], grain: 0.1, soft: true, hazy: true }),
+  ]));
+  sp(hazeId, 'opacity', [0, 1, 0, 0]);
+  const rainId = ids.next();
+  const rainSheets = [];
+  const rainTracks = [];
+  const rDur = 54;
+  for (let j = 0; j < 3; j++) {
+    const id = ids.next();
+    const fr = rng(280 + j);
+    const streaks = [];
+    for (let i = 0; i < 30; i++) {
+      const x = fr.range(40, 880), y = fr.range(-40, 330), len = fr.range(7, 12);
+      streaks.push([P(x, y), P(x - len * 0.28, y + len)]);
+    }
+    rainSheets.push(group({ name: `rain${j}`, id, opacity: 0 }, [el('Shape', { name: 'streaks' }, [...streaks.map((st) => polyXml(st)), stroke(argb('7C93AD', 0.55), 1)])]));
+    const ph = j / 3;
+    const at = (t) => (t + ph) % 1;
+    rainTracks.push(
+      sampled(id, 'y', rDur, 6, (t) => at(t) * 70),
+      sampled(id, 'x', rDur, 6, (t) => -at(t) * 20),
+      sampled(id, 'opacity', rDur, 6, (t) => { const u = at(t); return u < 0.05 || u > 0.95 ? 0 : Math.min(1, (u - 0.05) / 0.2, (0.95 - u) / 0.2); })
+    );
+  }
+  s.add(group({ name: 'rain', id: rainId, opacity: SEASON0 === 0 ? 1 : 0 }, rainSheets));
+  sp(rainId, 'opacity', [1, 0, 0, 0]);
+  gatedLoop(s, 'rainfall', s.anim({ name: 'rainfall', duration: rDur, loop: 'loop', tracks: rainTracks }), [[season, 'equal', 0]]);
 
   // --- the light of the hour: one even glaze over the whole painting, edge to edge, so
   // nothing in a corner is left in daylight; the page carries the same colour on out
