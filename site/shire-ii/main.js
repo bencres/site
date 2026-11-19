@@ -161,7 +161,9 @@ const setAll = (m) => {
 };
 // on a phone the painting is cropped close around the door, and the HTML post stands in
 // for the painted one at its left edge
-const frame = () => (phone.matches ? ['cover', 'centerRight'] : ['contain', 'center']);
+// 'fill' rather than 'contain': the canvas is the artboard's shape to within a pixel, and
+// filling it exactly keeps the hour's glaze flush with the page's halo around it
+const frame = () => (phone.matches ? ['cover', 'centerRight'] : ['fill', 'center']);
 const hill = mount($('#hill'), {
   src: 'shire-ii', artboard: 'Hill', fit: frame()[0], align: frame()[1],
   onLoad: () => {
@@ -171,7 +173,7 @@ const hill = mount($('#hill'), {
     plant(reducedMotion ? 0 : 1750);
   },
 });
-const gate = mount($('#gate'), { src: 'shire-ii', artboard: 'Gate', fit: 'contain', onLoad: () => setAll(gate) });
+const gate = mount($('#gate'), { src: 'shire-ii', artboard: 'Gate', fit: 'fill', onLoad: () => setAll(gate) });
 phone.addEventListener('change', () => {
   hill.set('bare', phone.matches);
   hill.setLayout(...frame());

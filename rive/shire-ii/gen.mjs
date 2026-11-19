@@ -309,6 +309,23 @@ function gatedLoop(s, name, animId, conds) {
   ]));
 }
 
+
+// the hour's glaze: even over the whole canvas (so nothing in a corner is left in
+// daylight), thinning away over the bottom 6% so it never ends in a line. The page
+// carries the same colour on out past the other three edges (.hill::before / .gate::before).
+function hourGlaze(ids, W, H, k) {
+  const stops = [ids.next(), ids.next(), ids.next()];
+  const col = (i, c, a) => argb(c, i === 2 ? 0 : a * k);
+  const xml = el('Shape', { name: 'hour glaze', blendModeValue: 'multiply' }, [
+    // a little past the edges, so the canvas's own edge pixels are fully covered
+    el('Rectangle', { x: W / 2, y: H / 2, width: W + 20, height: H + 20, originX: 0.5, originY: 0.5, name: 'r' }),
+    el('Fill', { name: 'Fill' }, el('LinearGradient', { startX: 0, startY: 0, endX: 0, endY: H, name: 'G' },
+      [0, 0.94, 1].map((pos, i) => el('GradientStop', { colorValue: col(i, ...GLAZE[TIME0]), position: pos, id: stops[i] })))),
+  ]);
+  const tracks = stops.map((id, i) => ({ object: id, prop: 'colorValue', type: 'Color', vals: GLAZE.map(([c, a]) => col(i, c, a)) }));
+  return [xml, tracks];
+}
+
 // a pose for the 1-frame bool layer helper
 const hold = (s, name, tracks) => s.anim({ name, duration: 1, tracks });
 
@@ -456,17 +473,18 @@ function hill(ids) {
   s.loopLayer('flyers', s.anim({ name: 'flyers', duration: flyDur, loop: 'loop', tracks: flyTracks }));
 
   // --- far hills
-  const farBack = [P(16, 286), P(90, 254), P(190, 238), P(300, 247), P(400, 270), P(470, 304)];
-  const farFront = [P(8, 318), P(70, 294), P(160, 284), P(250, 296), P(330, 322)];
+  // both ranges run down into the meadow at the left, so the wash ends where it dried, not at a cut
+  const farBack = [P(26, 322), P(58, 290), P(112, 260), P(190, 238), P(300, 247), P(400, 270), P(470, 304)];
+  const farFront = [P(22, 344), P(50, 316), P(96, 296), P(160, 284), P(250, 296), P(330, 322)];
   const farInk = k.boil({
     name: 'far ink', seed: 51, draw: (rr) => [
-      ink(farBack.slice(1, 5), rr, { w: 1.2, amt: 0.6, n: 10, color: 'FF5E6878', fx: fxLand }),
-      ink(farFront.slice(1, 5), rr, { w: 1.3, amt: 0.6, n: 10, color: 'FF55606B', fx: fxLand }),
+      ink(farBack.slice(2, 6), rr, { w: 1.2, amt: 0.6, n: 10, color: 'FF5E6878', fx: fxLand }),
+      ink(farFront.slice(2, 6), rr, { w: 1.3, amt: 0.6, n: 10, color: 'FF55606B', fx: fxLand }),
     ],
   });
   s.add(k.in({ name: 'far in', cx: 220, cy: 300, t0: 8, t1: 66 }, [
-    wc(ids, [...farBack, P(470, 330), P(30, 332), P(10, 312)], FAR[1], rng(52), { alpha: 0.2, off: [0, 3], grain: 0.3, key: 'far' }),
-    wc(ids, [...farFront, P(330, 340), P(20, 344), P(4, 334)], FAR2[1], rng(53), { alpha: 0.3, off: [0, 3], grain: 0.3, key: 'far2' }),
+    wc(ids, [...farBack, P(470, 330), P(140, 336), P(44, 334)], FAR[1], rng(52), { alpha: 0.2, off: [0, 3], grain: 0.3, key: 'far' }),
+    wc(ids, [...farFront, P(330, 340), P(120, 350), P(40, 352)], FAR2[1], rng(53), { alpha: 0.3, off: [0, 3], grain: 0.3, key: 'far2' }),
     ...[[96, 290, 7], [118, 287, 5.5], [238, 241, 5]].map(([x, y, R], i) => wc(ids, blobPts(R, R * 0.9, rng(54 + i), { n: 8, wobble: 0.15 }).map((p) => P(p.x + x, p.y + y - R * 1.9)), FAR2[1], rng(57 + i), { alpha: 0.6, off: [1, 1], wobble: 0.5, grain: 0.2, soft: false, key: 'far2' })),
     k.boil({ name: 'far trees', seed: 59, draw: (rr) => ink([[96, 290, 7], [118, 287, 5.5], [238, 241, 5]].flatMap(([x, y, R]) => [[P(x, y), P(x, y - R)], { pts: blobPts(R, R * 0.9, rr, { n: 8, wobble: 0.12 }).map((p) => P(p.x + x, p.y + y - R * 1.9)), closed: true }]), rr, { w: 1, amt: 0.3, color: 'FF55606B', fx: fxLand }) }),
     farInk,
@@ -910,17 +928,17 @@ function hill(ids) {
   s.boolLayer('regular', regular, hold(s, 'no mat', [{ object: matId, prop: 'opacity', keys: [[0, 0]] }]), hold(s, 'mat', [{ object: matId, prop: 'opacity', keys: [[0, 1]] }]), { mixIn: 600, mixOut: 300 });
 
   // --- foreground
-  const groundPts = [P(14, 386), P(200, 380), P(420, 388), P(640, 380), P(884, 385), P(890, 393), P(620, 398), P(380, 396), P(140, 398), P(10, 394)];
+  const groundPts = [P(30, 389), P(200, 380), P(420, 388), P(640, 380), P(870, 386), P(884, 392), P(620, 398), P(380, 396), P(140, 398), P(36, 396)];
   const dashSpec = [];
   for (let x = 24; x < 880;) {
     const len = r.range(16, 56);
-    if ((x + len < 330 || x > 400) && x + len < 876) dashSpec.push({ x, y: r.range(390, 395), len });
+    if ((x + len < 330 || x > 400) && (x + len < 704 || x > 874) && x + len < 876) dashSpec.push({ x, y: r.range(390, 395), len });
     x += len + r.range(14, 40);
   }
   const groundInk = k.boil({
     name: 'ground ink', seed: 201, draw: (rr) => {
       const list = dashSpec.map((d) => [P(d.x, d.y), P(d.x + d.len / 2, d.y + rr.jit(1.1)), P(d.x + d.len, d.y + rr.jit(1.4))]);
-      for (const gx of [60, 120, 432, 520, 702, 790, 860]) {
+      for (const gx of [60, 120, 432, 520, 690]) {
         list.push([P(gx, 388), P(gx - 4, 380)], [P(gx + 2, 388), P(gx + 2, 378)], [P(gx + 4, 388), P(gx + 8, 381)]);
       }
       return ink(list, rr, { w: 1.6, amt: 0.4, fx: fxLand });
@@ -928,10 +946,94 @@ function hill(ids) {
   });
   s.add(k.in({ name: 'ground in', cx: 450, cy: 392, t0: 10, t1: 66 }, [
     wc(ids, groundPts, GROUND[1], rng(202), { alpha: 0.42, off: [0, 0], grain: 0.6, key: 'ground' }),
-    wc(ids, [P(6, 334), P(48, 330), P(100, 334), P(146, 342), P(152, 366), P(150, 390), P(70, 392), P(6, 390)], GROUND[1], rng(203), { alpha: 0.3, off: [0, 0], grain: 0.5, key: 'ground' }),
+    wc(ids, [P(30, 388), P(20, 370), P(30, 350), P(58, 336), P(100, 334), P(146, 342), P(152, 366), P(150, 390), P(80, 394)], GROUND[1], rng(203), { alpha: 0.3, off: [0, 0], grain: 0.5, key: 'ground' }),
     groundInk,
   ]));
   for (const t of tintTracks('ground', 'FFFFFF')) sp(t.object, t.prop, GROUND.map((c) => tintColor('ground', t.object, c, 1)), 'Color');
+
+  // --- a little kitchen garden by the washing line: a raised bed of cabbages, a
+  // sunflower and runner beans up a wigwam of canes, which keep the year: seedlings
+  // in spring, everything up in summer, pumpkins in autumn, snow on the soil in winter
+  const G = { x0: 712, x1: 866, top: 366, bot: 384 };
+  const gr = rng(610);
+  const bedTop = [P(G.x0, G.top + 1), P(760, G.top - 1), P(812, G.top + 1), P(G.x1, G.top)];
+  const bed = [...bedTop, P(G.x1 + 1, G.bot), P(G.x0 - 1, G.bot + 1)];
+  const cabbages = [748, 772, 796].map((x, i) => ({ x, y: G.top - 2 + gr.jit(1), R: 7.5 + gr.jit(1), seed: 620 + i }));
+  const canes = [[836, G.top], [847, G.top + 1], [858, G.top]];
+  const apex = P(847, 314);
+  const beanLeaves = [];
+  for (let i = 0; i < 12; i++) {
+    const [cx, cy] = canes[i % 3];
+    const t = 0.18 + (i / 12) * 0.72;
+    beanLeaves.push(P(cx + (apex.x - cx) * t + gr.jit(4), cy + (apex.y - cy) * t + gr.jit(2)));
+  }
+  const sunX = 721; // at the near end of the bed, clear of the washing
+  const sunflowerId = ids.next();
+  const gardenInk = k.boil({
+    name: 'garden ink', seed: 611, draw: (rr) => ink([
+      { pts: bed, closed: true, tension: 0.3 },
+      [P(G.x0 + 2, G.top + 9), P(790, G.top + 10), P(G.x1 - 2, G.top + 9)],
+      ...canes.map(([x, y]) => [P(x, y), P(apex.x + rr.jit(0.6), apex.y - 4)]),
+      [P(apex.x - 4, apex.y + 4), P(apex.x + 4, apex.y + 5)],
+    ], rr, { w: 1.2, amt: 0.35, fx: fxGarden }),
+  });
+  const leaf = (p, r, rot) => blobPts(4.2, 2.6, r, { n: 7, wobble: 0.12, start: rot }).map((q) => P(p.x + q.x, p.y + q.y));
+  const beansId = ids.next(), beanFlowerId = ids.next(), cabbageId = ids.next(), sproutId = ids.next(), pumpkinId = ids.next(), gardenSnowId = ids.next();
+  const headId = ids.next(), budId = ids.next(), seedHeadId = ids.next(), sunLeavesId = ids.next();
+  s.add(k.in({ name: 'garden in', cx: 790, cy: G.bot, t0: 74, t1: 132, sc: 0.94 }, [
+    wc(ids, bed, '8A6A4C', rng(612), { alpha: 0.5, off: [1.5, 1.5], wobble: 0.8, grain: 0.6, soft: false }),
+    wc(ids, [P(G.x0 + 2, G.top + 9), P(G.x1 - 2, G.top + 9), P(G.x1, G.bot - 1), P(G.x0, G.bot)], C.wood, rng(613), { alpha: 0.45, off: [1, 1], wobble: 0.6, grain: 0.3, soft: false }),
+    group({ name: 'sprouts', id: sproutId, opacity: SEASON0 === 0 ? 1 : 0 }, [
+      ink([737, 749, 761, 773, 785, 797, 809].map((x) => [P(x, G.top + 1), P(x + gr.jit(1), G.top - 7)]), gr, { w: 1.3, amt: 0.2, color: 'FF4F7F36' }),
+      ...[737, 749, 761, 773, 785, 797, 809].map((x, i) => wc(ids, leaf(P(x + (i % 2 ? -3 : 3), G.top - 7), rng(640 + i), i % 2 ? 2.7 : 0.4), '8DB86A', rng(650 + i), { alpha: 0.8, off: [0, 0], wobble: 0.3, grain: 0, soft: false })),
+    ]),
+    group({ name: 'cabbages', id: cabbageId, opacity: SEASON0 === 1 || SEASON0 === 2 ? 1 : 0 }, [
+      ...cabbages.map((c) => wc(ids, scallop(c.x, c.y, c.R, rng(c.seed), { bumps: 5, squash: 0.72, n: 18 }), '8DB86A', rng(c.seed + 9), { alpha: 0.7, off: [1, 1], wobble: 0.5, grain: 0.3, soft: false })),
+      ink(cabbages.map((c) => ({ pts: scallop(c.x, c.y, c.R, rng(c.seed), { bumps: 5, squash: 0.72, n: 18 }), closed: true })), gr, { w: 1.2, amt: 0.3 }),
+    ]),
+    group({ name: 'pumpkins', id: pumpkinId, opacity: SEASON0 === 2 ? 1 : 0 }, [P(760, G.top + 4), P(788, G.top + 5)].map((p, i) => [
+      wc(ids, blobPts(8, 5.5, rng(660 + i), { n: 10, wobble: 0.08 }).map((q) => P(q.x + p.x, q.y + p.y)), 'E08A2E', rng(662 + i), { alpha: 0.85, off: [0.5, 0.5], wobble: 0.4, grain: 0.2, soft: false }),
+      ink([{ pts: blobPts(8, 5.5, rng(660 + i), { n: 10, wobble: 0.08 }).map((q) => P(q.x + p.x, q.y + p.y)), closed: true }, [P(p.x, p.y - 5), P(p.x + 1, p.y - 9)]], rng(664 + i), { w: 1.1, amt: 0.25 }),
+    ]).flat()),
+    gardenInk,
+    group({ name: 'beans', id: beansId, opacity: SEASON0 === 3 ? 0 : 1 }, beanLeaves.map((p, i) =>
+      wc(ids, leaf(p, rng(670 + i), i * 0.7), i % 3 ? '6F9E4E' : '86B35B', rng(690 + i), { alpha: 0.82, off: [0, 0], wobble: 0.3, grain: 0, soft: false }))),
+    group({ name: 'bean flowers', id: beanFlowerId, opacity: SEASON0 === 1 ? 1 : 0 }, [stippleShape({ dots: beanLeaves.filter((_, i) => i % 2).map((p) => ({ x: p.x + 2.5, y: p.y - 2, r: 1.5 })), color: argb('D9573A', 0.9) })]),
+    // the sunflower nods on its stalk; what's on top of it changes with the season
+    el('Node', { name: 'sunflower', x: sunX, y: G.top, id: sunflowerId }, [
+      ink([P(0, 0), P(-1.5, -24), P(1, -48)], gr, { w: 1.4, amt: 0.3, fx: fxGarden }),
+      group({ name: 'sunflower leaves', id: sunLeavesId, opacity: SEASON0 === 3 ? 0 : 1 }, [
+        wc(ids, leaf(P(5, -20), rng(700), 0.3).map((q) => P(q.x * 1.3 - 1.5, q.y * 1.3 + 6)), '6F9E4E', rng(701), { alpha: 0.8, off: [0, 0], wobble: 0.3, grain: 0, soft: false }),
+        wc(ids, leaf(P(-5, -32), rng(702), 2.9).map((q) => P(q.x * 1.2 + 1, q.y * 1.2 + 6)), '6F9E4E', rng(703), { alpha: 0.8, off: [0, 0], wobble: 0.3, grain: 0, soft: false }),
+      ]),
+      group({ name: 'bud', id: budId, opacity: SEASON0 === 0 ? 1 : 0 }, [wc(ids, blobPts(3.5, 4.5, rng(704), { n: 8 }).map((q) => P(q.x + 1, q.y - 51)), '86B35B', rng(705), { alpha: 0.9, off: [0, 0], wobble: 0.3, grain: 0, soft: false })]),
+      group({ name: 'head', id: headId, opacity: SEASON0 === 1 ? 1 : 0 }, [
+        wc(ids, blobPts(12.5, 12.5, rng(706), { n: 14, wobble: 0.2 }).map((q) => P(q.x + 1, q.y - 54)), 'F2C230', rng(707), { alpha: 0.9, off: [0.5, 0.5], wobble: 0.5, grain: 0.1, soft: false }),
+        wc(ids, blobPts(5.5, 5.5, rng(708), { n: 9 }).map((q) => P(q.x + 1, q.y - 54)), '6B4A2A', rng(709), { alpha: 0.9, off: [0, 0], wobble: 0.3, grain: 0.4, soft: false }),
+        ink({ pts: blobPts(12.5, 12.5, rng(706), { n: 14, wobble: 0.2 }).map((q) => P(q.x + 1, q.y - 54)), closed: true }, rng(710), { w: 1, amt: 0.25 }),
+      ]),
+      group({ name: 'seed head', id: seedHeadId, opacity: SEASON0 === 2 ? 1 : 0 }, [
+        wc(ids, blobPts(6, 5, rng(711), { n: 10 }).map((q) => P(q.x + 5, q.y - 46)), '7A5A2E', rng(712), { alpha: 0.85, off: [0, 0], wobble: 0.3, grain: 0.5, soft: false }),
+        ink({ pts: blobPts(6, 5, rng(711), { n: 10 }).map((q) => P(q.x + 5, q.y - 46)), closed: true }, rng(713), { w: 1, amt: 0.2 }),
+      ]),
+    ]),
+    group({ name: 'garden snow', id: gardenSnowId, opacity: SEASON0 === 3 ? 1 : 0 }, [
+      wc(ids, [P(G.x0 + 2, G.top + 2), P(760, G.top - 3), P(812, G.top - 1), P(G.x1 - 2, G.top + 1), P(G.x1 - 4, G.top + 5), P(G.x0 + 4, G.top + 6)], 'FBFBF8', rng(714), { alpha: 0.95, off: [0, 0], wobble: 0.5, grain: 0, soft: false, blend: 'normal' }),
+    ]),
+  ]));
+  sp(sproutId, 'opacity', [1, 0, 0, 0]);
+  sp(cabbageId, 'opacity', [0, 1, 1, 0]);
+  sp(pumpkinId, 'opacity', [0, 0, 1, 0]);
+  sp(beansId, 'opacity', [0.55, 1, 0.7, 0]);
+  sp(beanFlowerId, 'opacity', [0, 1, 0, 0]);
+  sp(budId, 'opacity', [1, 0, 0, 0]);
+  sp(headId, 'opacity', [0, 1, 0, 0]);
+  sp(seedHeadId, 'opacity', [0, 0, 1, 0]);
+  sp(gardenSnowId, 'opacity', [0, 0, 0, 1]);
+  sp(sunLeavesId, 'opacity', [1, 1, 0.75, 0]);
+  s.loopLayer('sunflower', s.anim({ name: 'sunflower nods', duration: 300, loop: 'pingPong', tracks: [
+    { object: sunflowerId, prop: 'rotation', keys: [[0, -0.035, 'cubic', EASE.inOut], [300, 0.03]] },
+  ] }));
   s.add(k.in({ name: 'low shadows in', t0: 110, t1: 150 }, shadowsLow));
 
   // --- a dusting of snow: white gouache caps over a blue-grey shadow
@@ -1019,14 +1121,12 @@ function hill(ids) {
   sp(flakesId, 'opacity', [0, 0, 0, 1]);
   gatedLoop(s, 'snowfall', s.anim({ name: 'snowfall', duration: sDur, loop: 'loop', tracks: snowTracks }), [[season, 'equal', 3]]);
 
-  // --- the light of the hour: one soft glaze over the whole painting
-  // inside the canvas with a wide feather, so dusk and night shade in like a painted vignette rather than a rectangle
-  const glazePts = blobPts(396, 176, rng(260), { n: 16, wobble: 0.06 }).map((p) => P(p.x + 450, p.y + 214));
-  const glazeColor = ids.next();
-  s.add(k.in({ name: 'glaze in', t0: 0, t1: 60 }, [
-    el('Shape', { name: 'hour glaze', blendModeValue: 'multiply' }, [pathXml(glazePts, { closed: true }), el('Fill', { name: 'Fill', fillRule: 'clockwise' }, [el('SolidColor', { colorValue: argb(GLAZE[TIME0][0], GLAZE[TIME0][1]), name: 'C', id: glazeColor }), el('Feather', { strength: 46, name: 'F' })])]),
-  ]));
-  tp(glazeColor, 'colorValue', GLAZE.map(([c, a]) => argb(c, a)), 'Color');
+  // --- the light of the hour: one even glaze over the whole painting, edge to edge, so
+  // nothing in a corner is left in daylight; the page carries the same colour on out
+  // past the canvas and lets it fade (.hill::before in style.css)
+  const [glazeXml, glazeTracks] = hourGlaze(ids, W, H, 1);
+  s.add(k.in({ name: 'glaze in', t0: 0, t1: 60 }, [glazeXml]));
+  for (const t of glazeTracks) tp(t.object, t.prop, t.vals, t.type);
 
   // --- lamplight, moon and stars sit above the glaze
   const litId = ids.next();
@@ -1205,9 +1305,13 @@ function gate(ids) {
   };
   // hedge behind
   const top = [];
-  for (let x = 14; x <= 586; x += 12) top.push(P(x, 128 - Math.abs(Math.sin(x * 0.21)) * 9 + Math.sin(x * 0.013) * 6));
+  for (let x = 26; x <= 574; x += 12) {
+    // the hedge rises out of the grass at either end rather than stopping short
+    const end = Math.min(1, (x - 26) / 70, (574 - x) / 70);
+    top.push(P(x, 196 - (68 + Math.abs(Math.sin(x * 0.21)) * 9 - Math.sin(x * 0.013) * 6) * Math.sin((end * Math.PI) / 2)));
+  }
   const hedgeInk = k.boil({ name: 'hedge ink', seed: 401, draw: (rr) => ink(top, rr, { w: 1.6, amt: 0.6, n: 40, fx: fxBack }) });
-  s.add(k.in({ name: 'hedge in', cx: 300, cy: 170, t0: 0, t1: 46, sc: 0.98 }, [wc(ids, [...top, P(592, 150), P(590, 196), P(12, 196), P(8, 148)], HEDGE[1], rng(402), { alpha: 0.5, off: [0, 3], grain: 0.7, key: 'ghedge' }), hedgeInk]));
+  s.add(k.in({ name: 'hedge in', cx: 300, cy: 170, t0: 0, t1: 46, sc: 0.98 }, [wc(ids, [...top, P(560, 198), P(40, 198)], HEDGE[1], rng(402), { alpha: 0.5, off: [0, 3], grain: 0.7, key: 'ghedge' }), hedgeInk]));
   for (const t of tintTracks('ghedge', 'FFFFFF')) seasonP.push({ object: t.object, prop: t.prop, type: 'Color', vals: HEDGE.map((c) => tintColor('ghedge', t.object, c, 1)) });
 
   const hedgeSnow = ids.next();
@@ -1278,7 +1382,7 @@ function gate(ids) {
   ]));
 
   // ground, flowers
-  const ground = [P(8, 191), P(160, 186), P(320, 192), P(470, 186), P(592, 190), P(596, 202), P(470, 206), P(150, 205), P(6, 202)];
+  const ground = [P(22, 196), P(160, 186), P(320, 192), P(470, 186), P(574, 191), P(584, 199), P(470, 206), P(150, 205), P(30, 203)];
   const groundInk = k.boil({
     name: 'ground ink', seed: 440, draw: (rr) => {
       const list = [];
@@ -1317,10 +1421,9 @@ function gate(ids) {
   seasonP.push({ object: snowId, prop: 'opacity', vals: [0, 0, 0, 1] });
 
   // hour glaze and lantern light
-  const glazeColor = ids.next();
-  const glazePts = blobPts(286, 102, rng(470), { n: 14, wobble: 0.07 }).map((p) => P(p.x + 300, p.y + 112));
-  s.add(el('Shape', { name: 'hour glaze', blendModeValue: 'multiply' }, [pathXml(glazePts, { closed: true }), el('Fill', { name: 'Fill', fillRule: 'clockwise' }, [el('SolidColor', { colorValue: argb(GLAZE[TIME0][0], GLAZE[TIME0][1] * 0.6), name: 'C', id: glazeColor }), el('Feather', { strength: 20, name: 'F' })])]));
-  timeP.push({ object: glazeColor, prop: 'colorValue', type: 'Color', vals: GLAZE.map(([c, a]) => argb(c, a * 0.6)) });
+  const [glazeXml, glazeTracks] = hourGlaze(ids, W, H, 0.6);
+  s.add(glazeXml);
+  timeP.push(...glazeTracks);
   const litId = ids.next();
   s.add(group({ name: 'lit', id: litId, opacity: LIT[TIME0] }, [
     glow({ x: 476, y: 101, w: 90, h: 90, color: C.lamp, alpha: 0.6 }),

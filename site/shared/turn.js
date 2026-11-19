@@ -13,7 +13,7 @@ const INK = 'turn:ink';
 const TURN = (globalThis.TURN = {
   key: 'turn:settings',
   settings: [
-    { id: 'duration', label: 'length', min: 400, max: 2500, step: 50, value: 1000, unit: 'ms' },
+    { id: 'duration', label: 'length', min: 400, max: 2500, step: 50, value: 900, unit: 'ms' },
     { id: 'drops', label: 'drops', min: 0, max: 40, step: 1, value: 10 },
     { id: 'window', label: 'landing over', min: 0.02, max: 0.8, step: 0.01, value: 0.31, unit: '× length' },
     { id: 'land', label: 'landing speed', min: 0.02, max: 0.3, step: 0.01, value: 0.21, unit: '× length' },
@@ -21,7 +21,7 @@ const TURN = (globalThis.TURN = {
     { id: 'size', label: 'drop size', min: 0.01, max: 0.2, step: 0.005, value: 0.1, unit: '× screen' },
     { id: 'spread', label: 'spread', min: 0.4, max: 3, step: 0.05, value: 2.8, unit: '× screen' },
     { id: 'rim', label: 'rim', min: 0, max: 0.4, step: 0.005, value: 0.26 },
-    { id: 'dry', label: 'rim dries in', min: 0.03, max: 0.6, step: 0.01, value: 0.1, unit: '× length' },
+    { id: 'dry', label: 'rim dries in', min: 0.03, max: 0.6, step: 0.01, value: 0.05, unit: '× length' },
     { id: 'aim', label: 'on content', min: 0, max: 1, step: 0.05, value: 1, unit: 'of drops' },
   ],
   read() {

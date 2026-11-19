@@ -14,6 +14,15 @@
 [data-time='afternoon'] { --paper: #f8f0de; }
 [data-time='dusk'] { --paper: #f5ecdc; --grain: 0.34; }
 [data-time='night'] { --paper: #f0e9dc; --grain: 0.38; --soft: #645a4e; }
+/* the hour's glaze, matching the painting's (GLAZE in rive/shire-ii/gen.mjs) */
+:root { --hour: rgba(244, 227, 176, 0); }
+[data-time='morning'] { --hour: rgba(244, 207, 168, 0.1); }
+[data-time='afternoon'] { --hour: rgba(233, 179, 86, 0.15); }
+[data-time='dusk'] { --hour: rgba(160, 109, 154, 0.24); }
+[data-time='night'] { --hour: rgba(30, 42, 94, 0.42); }
+.gate::before { opacity: 0.6; }
+/* the halo reaches past the screen's edge on narrow windows; that shouldn't scroll */
+body { overflow-x: clip; }
 [data-season='winter'] { --link: #2f5f62; --link-line: rgba(47, 95, 98, 0.35); }
 [data-season='autumn'] { --link: #6a5a24; --link-line: rgba(140, 100, 30, 0.38); }
 
@@ -37,6 +46,24 @@ a:focus-visible { outline: 2px dashed var(--link); outline-offset: 3px; border-r
 
 /* ---- the hill */
 .hill { margin: 14px -90px 4px; position: relative; container-type: inline-size; }
+/* the hour's light, carried on past the painting: the painting's own glaze (in Rive)
+   covers the canvas evenly and thins away over its bottom 6%; this is the same colour
+   around the other three sides, fading out, with a hole exactly where the canvas is */
+.hill, .gate { --halo: 160px; --art: calc(100cqw * 4 / 9); isolation: isolate; }
+.gate { --halo: 44px; --art: calc(100cqw * 21 / 60); }
+.hill::before, .gate::before {
+  content: ''; position: absolute; z-index: -1; pointer-events: none;
+  left: calc(-1 * var(--halo)); right: calc(-1 * var(--halo)); top: calc(-1 * var(--halo));
+  height: calc(var(--art) + var(--halo));
+  background: var(--hour);
+  /* layers composite bottom-up: (the fade down) minus (the canvas), then times (the fade across) */
+  mask:
+    linear-gradient(to right, transparent, rgb(0 0 0 / 0.2) calc(var(--halo) * 0.3), rgb(0 0 0 / 0.65) calc(var(--halo) * 0.62), #000 var(--halo), #000 calc(100% - var(--halo)), rgb(0 0 0 / 0.65) calc(100% - var(--halo) * 0.62), rgb(0 0 0 / 0.2) calc(100% - var(--halo) * 0.3), transparent),
+    linear-gradient(to bottom, transparent, rgb(0 0 0 / 0.2) calc(var(--halo) * 0.3), rgb(0 0 0 / 0.65) calc(var(--halo) * 0.62), #000 var(--halo), #000 calc(100% - var(--art) * 0.06), transparent),
+    linear-gradient(#000, #000) no-repeat var(--halo) var(--halo) / calc(100% - 2 * var(--halo)) calc(100% - var(--halo));
+  mask-composite: intersect, subtract;
+  transition: background-color 1.6s;
+}
 .hill canvas { width: 100%; aspect-ratio: 900 / 400; height: auto; }
 .sign {
   margin: -6px 0 0 calc(90px + 4%);
@@ -190,7 +217,7 @@ main { margin-top: 30px; }
 /* on a phone the painting is cropped close around the door (taller than the wide
    desktop strip) and the post stands at its left edge, arms out over the slope */
 @media (max-width: 600px) {
-  .hill { margin: 8px -16px 2px; overflow: hidden; }
+  .hill { margin: 8px -16px 2px; --art: calc(100cqw * 5 / 6); --halo: 70px; }
   .hill canvas { aspect-ratio: 6 / 5; }
   .signpost { --u: 1px; inset: 0; width: auto; aspect-ratio: auto; }
   .upright { display: block; position: absolute; left: 20px; bottom: 6px; width: 26px; }
