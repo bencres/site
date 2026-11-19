@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en" data-turn="inward">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Universal Asset Browser: Browser Resize Algorithm · Ben Cressman</title>
+  <meta name="description" content="Writing an algorithm to dynamically resize grid cells and grid dimensions.">
+  <link rel="icon" href="../../../shared/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Caveat:wght@500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../shared/base.css">
+  <link rel="stylesheet" href="../../../shared/turn.css">
+  <link rel="stylesheet" href="../../post.css">
+  <script src="../../../shared/turn.js"></script>
+</head>
+<body class="paper">
+  <div class="col">
+    <nav class="trail"><a href="../../#writing" class="home">← back to the bookshelves</a></nav>
+    
+    <header class="title">
+      <p class="kicker">from the bookshelves · <time datetime="2025-11-15">November 15, 2025</time></p>
+      <h1>Universal Asset Browser: Browser Resize Algorithm</h1>
+      <p class="excerpt">Writing an algorithm to dynamically resize grid cells and grid dimensions.</p>
+      <ul class="tags" aria-label="Tags"><li>software engineering</li><li>houdini</li><li>python</li><li>tech art</li><li>uab</li></ul>
+    </header>
+    <article class="prose">
+<h2 id="purpose">Purpose</h2>
+<ul>
+<li>Users often want to easily see up-close the Preview image of an asset to inspect it for their scene. They also often need to glance at many assets at once to get a quick idea of which ones may be suitable. This algorithm is designed to enable that, smoothly transitioning between zoom levels in the browser.</li>
+</ul>
+<figure class="pinned"><img src="../images/003-default.png" alt="The default size of the UAB's browser." loading="lazy" decoding="async"><figcaption>The default size of the UAB's browser.</figcaption></figure>
+<figure class="pinned"><img src="../images/003-smallest-size.png" alt="The UAB's browser at minimum size." loading="lazy" decoding="async"><figcaption>The UAB's browser at minimum size.</figcaption></figure>
+<figure class="pinned"><img src="../images/003-zoomed-in.png" alt="The UAB's browser zoomed in." loading="lazy" decoding="async"><figcaption>The UAB's browser zoomed in.</figcaption></figure>
+<h2 id="technical-design-specifications">Technical Design Specifications</h2>
+<ul>
+<li>The grid&#39;s cell size is uniform.</li>
+<li>The grid&#39;s cell size must grow and shrink.</li>
+<li>The grid&#39;s row and column count must increase and decrease in proportion to the dimensions of the grid&#39;s cell size.</li>
+<li>The grid&#39;s row and column count still must respond to window resize events, maintaining cell size.</li>
+</ul>
+<h2 id="approach">Approach</h2>
+<p>The core flow is as follows:</p>
+<pre class="ink-code"><code class="hljs language-text">resize event (from Qt: resizeEvent)
+  show event (from Qt: showEvent)
+    zoom
+    reflow the grid
+    compute the new column count
+    rebuild the layout</code></pre>
+<p>Necessary base information about the widget&#39;s current state is stored, tracking:</p>
+<ol>
+<li>The minimum size of the grid&#39;s cell.</li>
+<li>The scale factor (rate of zoom).</li>
+<li>The last number of columns that was drawn.</li>
+</ol>
+<p>There are three triggers for reflowing the grid:</p>
+<ol>
+<li>When the widget is shown. On initial show, reflow the grid for the current widget size.</li>
+<li>When the widget is resized. When the widget&#39;s size changes, reflow <strong>only if the necessary column count actually changes</strong>, which is why the last number of columns drawn is stored.</li>
+<li>When the zoom changes. When the user holds cmd/ctrl and scrolls, zoom is triggered.</li>
+</ol>
+<h3 id="grid-reflow">Grid Reflow</h3>
+<ol>
+<li>Clear the grid. Remove all of the layout items.</li>
+<li>Compute how many columns can fit.<ol>
+<li>Start with the available width of the scroll area&#39;s visible section.</li>
+<li>Guard for early initialization (layout metrics don&#39;t yet exist on init).</li>
+<li>Subtract the grid margins.</li>
+<li>Compute the width of each cell.</li>
+<li>Compute how many cells can fit in the space.</li>
+</ol>
+<ul>
+<li>Guarantee at least one column for small spaces as the minimum size of the widget.</li>
+</ul>
+</li>
+<li>Compute the scaled size of the cell.<ul>
+<li><code>int(min width * scale factor)</code></li>
+</ul>
+</li>
+<li>Place the widget contents in each cell (in this case, a Preview).</li>
+<li>Add horizontal stretch to guarantee that each column is the same width.</li>
+</ol>
+<h3 id="zoom">Zoom</h3>
+<ol>
+<li>Filter the event to guarantee that the scroll position doesn&#39;t change if cmd/ctrl is held.</li>
+<li>Compute the change in angle.</li>
+<li>Compute the new scale factor.</li>
+<li>Reflow the grid with the new scale factor.</li>
+<li>Compute the new positions of the horizontal and vertical scroll to keep the point under the cursor fixed.</li>
+</ol>
+<p>This creates an intuitive way to zoom in and out of the browser&#39;s preview images.</p>
+
+    </article>
+    <footer class="end">
+      <p><a href="../../#writing" class="home">← back to the bookshelves</a></p>
+      <p class="write">Thoughts on this one? <a href="mailto:hello@bencres.dev?subject=Universal%20Asset%20Browser%3A%20Browser%20Resize%20Algorithm">Write to me</a>.</p>
+    </footer>
+  </div>
+  <script src="../../../shared/vendor/rive.js"></script>
+  <script type="module" src="../../post.js"></script>
+</body>
+</html>

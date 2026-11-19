@@ -3,8 +3,10 @@
 // in inks. Front matter is the bencres.dev format plus two optional fields:
 //   sketch:  the artboard in site/riv/sketches.riv drawn above the post
 //   caption: a hand-lettered line under the sketch
-//   turn:    the transition into the post (and back): bloom, burn, ink, brush or lamp
-import { readdirSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+//   turn:    the transition into the post (and back): bloom, tide, drops, burn, smolder or inward
+// Images referenced as /blog-images/<file> (as on bencres.dev) are read from
+// posts/images/ and copied beside the posts.
+import { readdirSync, readFileSync, writeFileSync, mkdirSync, copyFileSync, existsSync } from 'node:fs';
 import { join, resolve, basename } from 'node:path';
 import { Marked } from 'marked';
 import hljs from 'highlight.js';
@@ -44,6 +46,16 @@ const marked = new Marked({
       const language = lang && hljs.getLanguage(lang) ? lang : 'plaintext';
       const html = hljs.highlight(text, { language }).value;
       return `<pre class="ink-code"><code class="hljs language-${language}">${html}</code></pre>\n`;
+    },
+    // an image is pinned to the page like a photo, its alt text as the caption
+    image({ href, title, text }) {
+      const src = href.replace(/^\/blog-images\//, '../images/');
+      return `<figure class="pinned"><img src="${esc(src)}" alt="${esc(text)}" loading="lazy" decoding="async"${title ? ` title="${esc(title)}"` : ''}>${text ? `<figcaption>${esc(text)}</figcaption>` : ''}</figure>`;
+    },
+    // a paragraph holding only an image shouldn't wrap the figure in <p>
+    paragraph({ tokens }) {
+      const inner = this.parser.parseInline(tokens);
+      return tokens.length === 1 && tokens[0].type === 'image' ? `${inner}\n` : `<p>${inner}</p>\n`;
     },
     link({ href, title, tokens }) {
       const text = this.parser.parseInline(tokens);
@@ -103,6 +115,11 @@ ${html}
 }
 
 mkdirSync(outDir, { recursive: true });
+const images = join(srcDir, 'images');
+if (existsSync(images)) {
+  mkdirSync(join(outDir, 'images'), { recursive: true });
+  for (const f of readdirSync(images)) copyFileSync(join(images, f), join(outDir, 'images', f));
+}
 for (const file of readdirSync(srcDir).filter((f) => f.endsWith('.md'))) {
   const slug = basename(file, '.md');
   const { meta, body } = frontMatter(readFileSync(join(srcDir, file), 'utf8'));

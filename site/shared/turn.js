@@ -1,12 +1,12 @@
 // Page transitions between the hill and its posts (styles in turn.css).
 //
 // Each post names its effect on <html data-turn="…">; going back to the hill
-// replays the effect of the post you're leaving. Effects that spread from a
-// point (bloom, burn, ink) start where the link was pressed. Runs as a plain
-// script in <head>, before the page is first revealed.
+// replays the effect of the post you're leaving. Every effect spreads from (or
+// toward) the point where the link was pressed. Runs as a plain script in
+// <head>, before the page is first revealed.
 const AT = 'turn:at';
 const EFFECT = 'turn:effect';
-const EFFECTS = ['bloom', 'burn', 'ink', 'brush', 'lamp'];
+const EFFECTS = ['bloom', 'tide', 'drops', 'burn', 'smolder', 'inward'];
 
 addEventListener('click', (e) => {
   const a = e.target.closest?.('a[href]');
@@ -44,62 +44,86 @@ addEventListener('pagereveal', (e) => {
   const html = document.documentElement;
   const own = html.dataset.turn;
   const effect = EFFECTS.includes(own) ? own : EFFECTS.includes(left) ? left : 'bloom';
-  const back = !own;
   e.viewTransition.types.add(effect);
-  if (back) e.viewTransition.types.add('back');
 
   html.style.setProperty('--turn-x', `${(at.x * 100).toFixed(2)}vw`);
   html.style.setProperty('--turn-y', `${(at.y * 100).toFixed(2)}vh`);
-  const fx = FX[effect] && overlay(effect, FX[effect]);
+  // overlays are captured whole, centred on the screen (an overlay hanging off the
+  // edge would be captured clipped), then moved to the press and scaled from there
+  // as if they were 160vmax across, to match the masks
+  const W = innerWidth, H = innerHeight;
+  html.style.setProperty('--fx-k', ((1.6 * Math.max(W, H)) / Math.min(W, H)).toFixed(4));
+  html.style.setProperty('--fx-tx', `${(at.x * W - W / 2).toFixed(1)}px`);
+  html.style.setProperty('--fx-ty', `${(at.y * H - H / 2).toFixed(1)}px`);
+  const layers = (FX[effect] || []).map(([name, svg]) => overlay(name, svg));
   e.viewTransition.finished.finally(() => {
-    html.style.removeProperty('--turn-x');
-    html.style.removeProperty('--turn-y');
-    fx?.remove();
+    for (const v of ['--turn-x', '--turn-y', '--fx-k', '--fx-tx', '--fx-ty']) html.style.removeProperty(v);
+    layers.forEach((el) => el.remove());
   });
 });
 
-// Some effects need something drawn over both pages (a burning edge, a flood of
-// ink). It's added to the new page for the length of the transition, captured
-// as its own layer (view-transition-name: turn-fx) and animated in turn.css.
-function overlay(effect, svg) {
+// Some effects draw over both pages (a flame's rim, scorch, embers, a tide line of
+// pigment). Each layer is added to the new page for the length of the transition,
+// captured under its own view-transition-name and animated in turn.css.
+function overlay(name, svg) {
   const el = document.createElement('div');
-  el.className = `turn-fx ${effect}`;
+  el.className = `turn-fx ${name}`;
+  el.style.viewTransitionName = name;
   el.setAttribute('aria-hidden', 'true');
   el.innerHTML = svg;
   (document.body || document.documentElement).append(el);
   return el;
 }
 
-// Both use the bloom mask's own wobble (same noise, same seed, same 200-unit box),
-// so the burning rim sits exactly on the edge of the hole it burns.
+// All use the mask's own wobble (same noise, same seed, same 200-unit box), so
+// a rim drawn at r=60 sits exactly on the edge of the hole or the bloom.
 const WOBBLE = `<feTurbulence type='fractalNoise' baseFrequency='0.03' numOctaves='3' seed='7'/><feDisplacementMap in='SourceGraphic' scale='30'/>`;
+const ring = (circles, defs = '') => `<svg viewBox='0 0 200 200' preserveAspectRatio='xMidYMid meet'>
+<filter id='tw' x='-25%' y='-25%' width='150%' height='150%'>${WOBBLE}</filter>
+<filter id='tb4' x='-20%' y='-20%' width='140%' height='140%'><feGaussianBlur stdDeviation='3.4'/></filter>
+<filter id='tb1' x='-20%' y='-20%' width='140%' height='140%'><feGaussianBlur stdDeviation='0.9'/></filter>
+${defs}<g filter='url(#tw)'>${circles}</g></svg>`;
+const c = (r, stroke, opacity, width, blur) =>
+  `<circle cx='100' cy='100' r='${r}' fill='none' stroke='${stroke}' stroke-opacity='${opacity}' stroke-width='${width}'${blur ? ` filter='url(#${blur})'` : ''}/>`;
+
+// a flame eating outward: scorch ahead of it (outside), char, then the burning edge
+const FLAME_OUT = ring(
+  c(68, '#7a4a1c', 0.36, 16, 'tb4') + c(64.5, '#3a2412', 0.4, 5, 'tb1') + c(63, '#2a1a10', 0.8, 3.6, 'tb1') + c(61, '#e8681c', 1, 3, 'tb1') + c(60.6, '#ffd58a', 1, 1.1)
+);
+// a flame eating inward: the scorch and char sit inside the edge, on what's left
+const FLAME_IN = ring(
+  c(52, '#7a4a1c', 0.36, 16, 'tb4') + c(55.5, '#3a2412', 0.4, 5, 'tb1') + c(57, '#2a1a10', 0.8, 3.6, 'tb1') + c(59, '#e8681c', 1, 3, 'tb1') + c(59.4, '#ffd58a', 1, 1.1)
+);
+// the brown that spreads before a flame breaks through
+const SCORCH = `<svg viewBox='0 0 200 200' preserveAspectRatio='xMidYMid meet'>
+<filter id='ts' x='-30%' y='-30%' width='160%' height='160%'>${WOBBLE}<feGaussianBlur stdDeviation='7'/></filter>
+<radialGradient id='tg'><stop offset='0' stop-color='#2a1a10' stop-opacity='.75'/><stop offset='.55' stop-color='#6a3f1a' stop-opacity='.5'/><stop offset='1' stop-color='#9a6a2c' stop-opacity='0'/></radialGradient>
+<circle cx='100' cy='100' r='70' fill='url(#tg)' filter='url(#ts)'/></svg>`;
+// sparks scattered round the burning edge
+const EMBERS = (() => {
+  let a = 11;
+  const rnd = () => (a = (a * 16807) % 2147483647) / 2147483647;
+  let dots = '';
+  for (let i = 0; i < 46; i++) {
+    const t = rnd() * Math.PI * 2;
+    const r = 61 + rnd() * 16;
+    const s = 0.35 + rnd() * 0.9;
+    const col = rnd() > 0.35 ? '#ffb347' : '#ffe3a1';
+    dots += `<circle cx='${(100 + Math.cos(t) * r).toFixed(1)}' cy='${(100 + Math.sin(t) * r).toFixed(1)}' r='${s.toFixed(2)}' fill='${col}' opacity='${(0.5 + rnd() * 0.5).toFixed(2)}'/>`;
+  }
+  return `<svg viewBox='0 0 200 200' preserveAspectRatio='xMidYMid meet'><filter id='te'><feGaussianBlur stdDeviation='0.25'/></filter><g filter='url(#te)'>${dots}</g></svg>`;
+})();
+// the tide line watercolor leaves where a wash stops: pigment pooled at the edge,
+// a paler band just inside it, a little granulation
+const TIDE = ring(
+  c(57, '#7f9fbf', 0.14, 9, 'tb4') + c(59.6, '#5f86ad', 0.5, 2.6, 'tb1') + c(60.2, '#46698f', 0.4, 0.9) +
+    `<circle cx='100' cy='100' r='59.5' fill='none' stroke='#000' stroke-width='5' filter='url(#tg2)' opacity='.6'/>`,
+  `<filter id='tg2'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='5'/><feColorMatrix values='0 0 0 0 .27  0 0 0 0 .4  0 0 0 0 .56  0 0 0 -2.6 1.2'/><feComposite in2='SourceGraphic' operator='in'/></filter>`
+);
+
 const FX = {
-  burn: `<svg viewBox='0 0 200 200' preserveAspectRatio='none'>
-<filter id='turn-w' x='-25%' y='-25%' width='150%' height='150%'>${WOBBLE}</filter>
-<filter id='turn-b4' x='-20%' y='-20%' width='140%' height='140%'><feGaussianBlur stdDeviation='3.4'/></filter>
-<filter id='turn-b1' x='-20%' y='-20%' width='140%' height='140%'><feGaussianBlur stdDeviation='0.9'/></filter>
-<g filter='url(#turn-w)'>
-<circle cx='100' cy='100' r='68' fill='none' stroke='#7a4a1c' stroke-opacity='.36' stroke-width='16' filter='url(#turn-b4)'/>
-<circle cx='100' cy='100' r='64.5' fill='none' stroke='#3a2412' stroke-opacity='.4' stroke-width='5' filter='url(#turn-b1)'/>
-<circle cx='100' cy='100' r='63' fill='none' stroke='#2a1a10' stroke-opacity='.8' stroke-width='3.6' filter='url(#turn-b1)'/>
-<circle cx='100' cy='100' r='61' fill='none' stroke='#e8681c' stroke-width='3' filter='url(#turn-b1)'/>
-<circle cx='100' cy='100' r='60.6' fill='none' stroke='#ffd58a' stroke-width='1.1'/>
-</g></svg>`,
-  // the brush's wet edge: a pale glaze trailing behind, a pooled rim at the front, bristle streaks ahead of it
-  brush: `<svg viewBox='0 0 100 300' preserveAspectRatio='none'>
-<defs><linearGradient id='turn-glaze' x1='0' x2='1'><stop offset='0' stop-color='#e9b93a' stop-opacity='0'/><stop offset='.62' stop-color='#e9b93a' stop-opacity='.22'/><stop offset='.8' stop-color='#d9a63a' stop-opacity='.42'/></linearGradient></defs>
-<filter id='turn-r' x='-10%' y='-2%' width='120%' height='104%'><feTurbulence type='fractalNoise' baseFrequency='0.06 0.35' numOctaves='3' seed='4'/><feDisplacementMap in='SourceGraphic' scale='6' xChannelSelector='R'/><feGaussianBlur stdDeviation='0.35'/></filter>
-<g filter='url(#turn-r)'>
-<rect x='0' y='-10' width='80' height='320' fill='url(#turn-glaze)'/>
-<rect x='78' y='-10' width='3.2' height='320' fill='#b8862a' fill-opacity='.55'/>
-<path d='M79 14h10v1.4h-10zM80 52h14v1h-14zM78 91h8v1.6h-8zM80 133h12v1h-12zM79 171h16v1h-16zM80 214h9v1.5h-9zM78 252h13v1h-13zM80 287h7v1.4h-7z' fill='#c4922e' fill-opacity='.5'/>
-</g></svg>`,
-  ink: `<svg viewBox='0 0 200 200' preserveAspectRatio='none'>
-<filter id='turn-w' x='-25%' y='-25%' width='150%' height='150%'>${WOBBLE}<feGaussianBlur stdDeviation='1.6'/></filter>
-<filter id='turn-g'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='3'/><feColorMatrix values='0 0 0 0 .08  0 0 0 0 .06  0 0 0 0 .05  0 0 0 -2.4 1.3'/><feComposite in2='SourceGraphic' operator='in'/></filter>
-<g filter='url(#turn-w)'>
-<circle cx='100' cy='100' r='60' fill='#231a14' fill-opacity='.97'/>
-<circle cx='100' cy='100' r='60' filter='url(#turn-g)' opacity='.5'/>
-<circle cx='100' cy='100' r='58' fill='none' stroke='#120c08' stroke-opacity='.6' stroke-width='3'/>
-</g></svg>`,
+  tide: [['turn-tide', TIDE]],
+  burn: [['turn-flame', FLAME_OUT]],
+  smolder: [['turn-scorch', SCORCH], ['turn-flame', FLAME_OUT], ['turn-embers', EMBERS]],
+  inward: [['turn-flame', FLAME_IN]],
 };

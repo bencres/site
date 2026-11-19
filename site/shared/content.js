@@ -52,7 +52,7 @@ export const content = {
     { title: 'Pixel Foundry pipeline: beginnings of the environment/production manager', date: 'Dec 2025', url: 'blog/00a-pipeline-pxf-prod-manager/', local: true },
     { title: 'Universal Asset Browser: assets as objects', date: 'Dec 2025', url: 'blog/005-progress-uab-assets-as-objects/', local: true },
     { title: 'Universal Asset Browser: GUI enhancements, launcher shenanigans, and a new server/client model', date: 'Nov 2025', url: 'https://bencres.dev/blog/004-progress-uab-gui-enhancements' },
-    { title: 'Universal Asset Browser: browser resize algorithm', date: 'Nov 2025', url: 'https://bencres.dev/blog/003-progress-uab-resize-algorithm' },
+    { title: 'Universal Asset Browser: browser resize algorithm', date: 'Nov 2025', url: 'blog/003-progress-uab-resize-algorithm/', local: true },
     { title: 'Universal Asset Browser: Houdini integration', date: 'Nov 2025', url: 'https://bencres.dev/blog/002-progress-uab-houdini-integration' },
     { title: 'Houdini 21: how to create a package', date: 'Nov 2025', url: 'https://bencres.dev/blog/001-guide-houdini-package', starred: true },
   ],

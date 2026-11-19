@@ -109,3 +109,16 @@ a:focus-visible { outline: 2px dashed var(--link); outline-offset: 3px; border-r
 @media (prefers-reduced-motion: reduce) {
   .wash, .bloomed .wash { opacity: 0.86; animation: none; }
 }
+
+/* a screenshot, pinned to the page like a photo with two strips of tape */
+.pinned { position: relative; margin: 1.6em -10px 1.8em; padding: 10px 10px 8px; background: var(--card); border: 1px solid rgba(43, 35, 28, 0.18); box-shadow: 2px 3px 0 rgba(43, 35, 28, 0.1); transform: rotate(-0.4deg); }
+.pinned:nth-of-type(even) { transform: rotate(0.5deg); }
+.pinned img { display: block; width: 100%; height: auto; border: 1px solid rgba(43, 35, 28, 0.25); }
+.pinned figcaption { margin: 8px 2px 0; font: 600 18px/1.25 'Caveat', cursive; color: var(--soft); }
+.pinned::before, .pinned::after {
+  content: ''; position: absolute; top: -9px; width: 74px; height: 20px;
+  background: rgba(233, 222, 190, 0.78); box-shadow: 0 1px 1px rgba(43, 35, 28, 0.12);
+}
+.pinned::before { left: 18px; transform: rotate(-4deg); }
+.pinned::after { right: 18px; transform: rotate(5deg); }
+@media (max-width: 520px) { .pinned { margin: 1.4em -6px 1.6em; } }
