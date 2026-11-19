@@ -177,7 +177,7 @@ const hill = mount($('#hill'), {
     $('.hill').classList.add('glazed');
   },
 });
-const gate = mount($('#gate'), { src: 'shire-ii', artboard: 'Gate', fit: 'fill', onEvent: (name) => gateEvents[name]?.(), onLoad: () => { setAll(gate); $('.gate').classList.add('glazed'); } });
+const gate = mount($('#gate'), { src: 'shire-ii', artboard: 'Gate', fit: 'fill', onLoad: () => { setAll(gate); $('.gate').classList.add('glazed'); } });
 narrow.addEventListener('change', () => {
   arms.forEach((a, i) => { a.classList.toggle('l', dirOf(i) === 'l'); a.classList.toggle('r', dirOf(i) === 'r'); });
   paintArms(state.season);
@@ -254,12 +254,6 @@ function paintAt(px, py) {
   return { x: c.offsetLeft + ox + px * k, y: c.offsetTop + oy + py * k, k };
 }
 const doorAt = () => paintAt(620, 292);
-// the gate painting is 600×210 and fills its canvas
-function gateAt(px, py) {
-  const c = $('#gate');
-  const k = c.clientWidth / 600;
-  return { x: c.offsetLeft + px * k, y: c.offsetTop + py * k, k };
-}
 // a sound, written rather than heard: a word that pops off a spot and floats away
 function sfx(host, at, text, { spread = 30, cls = '' } = {}) {
   const el = h('span', { class: `say sfx ${cls}`, 'aria-hidden': 'true' }, text);
@@ -340,24 +334,7 @@ function chimney() {
   hill.fire(`ring-${kind}`);
   sfx(hillFigEl, paintAt(712, 128), kind === 'heart' ? 'pff ♥' : 'puff', { spread: 20 });
 }
-// the wind takes a piece of washing off the line
-function whoosh() {
-  if (state.season === 3) return; // no washing out in winter
-  sfx(hillFigEl, paintAt(800, 270), 'whoosh', { spread: 70, cls: 'wide' });
-}
-// the gate creaks open, and later clacks shut behind the hedgehog
-const gateFig = $('.gate');
-let gateBusy = false;
-function gateSwing() {
-  if (gateBusy) return;
-  gateBusy = true;
-  sfx(gateFig, gateAt(392, 110), 'creeeak', { spread: 30, cls: 'wide' });
-  setTimeout(() => sfx(gateFig, gateAt(350, 150), 'snuffle', { spread: 20 }), 3000);
-  setTimeout(() => sfx(gateFig, gateAt(440, 120), 'clack!', { spread: 10 }), 5600);
-  setTimeout(() => (gateBusy = false), 6700);
-}
-const hillEvents = { door: () => knockAt(), chimney, whoosh };
-const gateEvents = { gate: gateSwing };
+const hillEvents = { door: () => knockAt(), chimney };
 
 // the gate swings shut behind you when you reach the bottom
 new IntersectionObserver((entries, io) => {

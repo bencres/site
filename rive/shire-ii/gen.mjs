@@ -813,8 +813,7 @@ function hill(ids) {
   const gustTracks = [];
   const itemXml = items.map((it, i) => {
     const y0 = lineAt(it.x);
-    const sway = ids.next(), gust = ids.next(), fly = ids.next();
-    it.fly = fly;
+    const sway = ids.next(), gust = ids.next();
     let outline, extra = [];
     if (it.kind === 'towel') {
       outline = [P(-12, 0), P(12, 0), P(13, 30), P(0, 32), P(-12, 30)];
@@ -834,29 +833,13 @@ function hill(ids) {
     gustTracks.push({ object: gust, prop: 'rotation', keys: [[0, 0, 'cubic', EASE.out], [10 + i * 3, -0.32 - i * 0.04, 'cubic', EASE.inOut], [34 + i * 3, 0.16, 'cubic', EASE.inOut], [58 + i * 3, -0.07, 'cubic', EASE.inOut], [86 + i * 3, 0]] });
     return k.in({ name: `${it.kind} in`, cx: it.x, cy: y0, t0: 100 + i * 8, t1: 150 + i * 8, dy: -12 }, [
       group({ name: it.kind, x: it.x, y: y0, id: sway }, [
-        group({ name: 'gust', id: gust }, [group({ name: 'fly', id: fly }, [wc(ids, outline, it.color, ir, { alpha: 0.6, off: [1.5, 1.5], wobble: 1, grain: 0.5, soft: false }), itInk])]),
+        group({ name: 'gust', id: gust }, [wc(ids, outline, it.color, ir, { alpha: 0.6, off: [1.5, 1.5], wobble: 1, grain: 0.5, soft: false }), itInk]),
       ]),
     ]);
   });
   s.add(group({ name: 'washing', id: washSeason }, [k.in({ name: 'line in', t0: 70, t1: 110 }, [lineInk]), ...itemXml]));
   sp(washSeason, 'opacity', [1, 1, 1, 0]);
   s.loopLayer('sway', s.anim({ name: 'sway', duration: 360, loop: 'loop', tracks: swayTracks }));
-  // click a piece of washing and the wind takes it: up off the line, tumbling over the
-  // hill, then it drifts back down onto its peg
-  const whoosh = s.event('whoosh');
-  items.forEach((it, i) => {
-    const blow = s.input('trigger', `blow${i}`);
-    const path = [[0, 0, 0], [16, -8, -22], [50, -54, -78], [96, -118, -86], [140, -150, -52], [180, -96, -30], [214, -30, -10], [240, 0, 0]];
-    const ease = (f) => (f === 0 ? [0.3, 0, 0.6, 1] : EASE.inOut);
-    s.triggerLayer(`blow${i}`, blow, s.anim({ name: `blow ${it.kind}`, duration: 240, tracks: [
-      { object: it.fly, prop: 'x', keys: path.map(([f, x]) => [f, x, 'cubic', ease(f)]) },
-      { object: it.fly, prop: 'y', keys: path.map(([f, , y]) => [f, y, 'cubic', ease(f)]) },
-      { object: it.fly, prop: 'rotation', keys: [[0, 0, 'cubic', [0.4, 0, 0.6, 1]], [70, -2.6, 'cubic', EASE.inOut], [150, -5.2, 'cubic', [0.3, 0, 0.3, 1]], [230, -TAU, 'hold'], [240, -TAU]] },
-    ] }), { fromAny: false, mix: 0 });
-    const hb = ids.next();
-    s.add(hit(hb, it.x, lineAt(it.x) + 16, 30, 36));
-    s.listen(hb, 'click', [Scene.fire(blow), Scene.emit(whoosh)]);
-  });
 
   // --- bench, with a pipe left smoking on it
   const bench = [
@@ -1600,36 +1583,6 @@ function gate(ids) {
 
   // close: the leaf swings shut, bumps, and the latch clicks
 
-  // click the gate and it swings open; a few seconds later a hedgehog trundles
-  // through and the gate swings shut behind it
-  const hogId = ids.next(), hogBobId = ids.next();
-  const dome = [];
-  for (let i = 0; i <= 12; i++) { const a = Math.PI + (i / 12) * Math.PI; dome.push(P(Math.cos(a) * 13, Math.sin(a) * 9.5)); }
-  const spines = [];
-  for (let i = 0; i <= 18; i++) { const a = Math.PI * 1.06 + (i / 18) * Math.PI * 0.9; const r = i % 2 ? 12.5 : 16; spines.push(P(Math.cos(a) * r + 1, Math.sin(a) * r * 0.82)); }
-  s.add(group({ name: 'hedgehog', id: hogId, x: 500, y: 192, opacity: 0 }, [
-    group({ name: 'bob', id: hogBobId }, [
-      wc(ids, [...spines, P(14, 0), P(-12, 0)], '8A6E52', rng(470), { alpha: 0.85, off: [0.5, 0.5], wobble: 0.4, grain: 0.6, soft: false, blend: 'normal' }),
-      wc(ids, [P(-11, -6), P(-19, -1.5), P(-11, 0)], 'D9BF94', rng(471), { alpha: 0.95, off: [0, 0], wobble: 0.2, grain: 0, soft: false, blend: 'normal' }),
-      ink([{ pts: spines, tension: 0.2 }, [P(-11, -6), P(-19, -1.5), P(-11, 0)], [P(-12, 0), P(14, 0)]], rng(472), { w: 1.1, amt: 0.2, tension: 0.2 }),
-      el('Shape', { name: 'nose', x: -19, y: -1.6 }, [el('Ellipse', { width: 2.4, height: 2.2, originX: 0.5, originY: 0.5, name: 'E' }), fill(INK)]),
-      el('Shape', { name: 'eye', x: -13.5, y: -4 }, [el('Ellipse', { width: 1.8, height: 1.8, originX: 0.5, originY: 0.5, name: 'E' }), fill(INK)]),
-      ink([[P(-7, 0), P(-8, 3)], [P(7, 0), P(8, 3)]], rng(473), { w: 1.2, amt: 0.1 }),
-    ]),
-  ]));
-  void dome;
-  const swing = s.input('trigger', 'swing');
-  const swingAnim = s.anim({ name: 'swing', duration: 400, tracks: [
-    { object: leafId, prop: 'scaleX', keys: [[0, 1, 'cubic', [0.35, 0, 0.3, 1]], [28, 0.16, 'cubic', EASE.inOut], [34, 0.2, 'hold'], [300, 0.2, 'cubic', [0.6, 0, 0.9, 0.5]], [334, 1.03, 'cubic', EASE.out], [342, 0.97, 'cubic', EASE.inOut], [354, 1]] },
-    { object: clickId, prop: 'opacity', keys: [[0, 0, 'hold'], [334, 1, 'hold'], [352, 1, 'linear'], [380, 0]] },
-    { object: hogId, prop: 'opacity', keys: [[0, 0, 'hold'], [96, 0, 'cubic', EASE.out], [108, 1, 'hold'], [284, 1, 'cubic', EASE.in], [298, 0]] },
-    { object: hogId, prop: 'x', keys: [[0, 500, 'hold'], [96, 500, 'cubic', [0.4, 0, 0.6, 1]], [170, 410, 'hold'], [196, 410, 'cubic', [0.4, 0, 0.6, 1]], [298, 250]] },
-    sampled(hogBobId, 'y', 400, 6, (t) => { const f = t * 400; return (f > 96 && f < 170) || (f > 196 && f < 298) ? -Math.abs(Math.sin(f * 0.5)) * 1.2 : 0; }),
-    { object: hogBobId, prop: 'rotation', keys: [[0, 0, 'hold'], [172, 0, 'cubic', EASE.inOut], [178, 0.12, 'cubic', EASE.inOut], [184, -0.04, 'cubic', EASE.inOut], [190, 0.1, 'cubic', EASE.inOut], [196, 0, 'hold'], [400, 0]] },
-  ] });
-  const hGate = ids.next();
-  s.add(hit(hGate, 380, 130, 140, 104));
-  s.listen(hGate, 'click', [Scene.fire(swing), Scene.emit(s.event('gate'))]);
   const close = s.input('trigger', 'close');
   const closing = s.anim({ name: 'closing', duration: 90, tracks: [
     { object: leafId, prop: 'scaleX', keys: [[0, 0.74, 'cubic', [0.5, 0, 0.9, 0.6]], [34, 1.02, 'cubic', EASE.out], [44, 0.96, 'cubic', EASE.inOut], [56, 1]] },
@@ -1637,7 +1590,7 @@ function gate(ids) {
   ] });
   const closed = hold(s, 'closed', [{ object: leafId, prop: 'scaleX', keys: [[0, 1]] }, { object: clickId, prop: 'opacity', keys: [[0, 0]] }]);
   const ajar = hold(s, 'ajar', [{ object: leafId, prop: 'scaleX', keys: [[0, 0.74]] }, { object: clickId, prop: 'opacity', keys: [[0, 0]] }]);
-  const a = ids.next(), b = ids.next(), c = ids.next(), sw = ids.next();
+  const a = ids.next(), b = ids.next(), c = ids.next();
   s.layers.push(s._layer('close', [
     el('AnyState', { x: 100, y: -120 }),
     el('ExitState', { x: 700, y: -120 }),
@@ -1645,11 +1598,9 @@ function gate(ids) {
     el('AnimationState', { x: 200, y: 0, animationId: ajar, id: a }, [
       el('StateTransition', { stateToId: b }, el('TransitionTriggerCondition', { inputId: close })),
       el('StateTransition', { stateToId: c }, el('TransitionBoolCondition', { inputId: still, opValue: 'equal' })),
-      el('StateTransition', { stateToId: sw, duration: 120 }, el('TransitionTriggerCondition', { inputId: swing })),
     ]),
     el('AnimationState', { x: 400, y: 0, animationId: closing, id: b }, el('StateTransition', { stateToId: c, enableExitTime: 'true', exitTimeIsPercetange: 'true', exitTime: 100 })),
-    el('AnimationState', { x: 600, y: 0, animationId: closed, id: c }, el('StateTransition', { stateToId: sw }, el('TransitionTriggerCondition', { inputId: swing }))),
-    el('AnimationState', { x: 600, y: 160, animationId: swingAnim, reset: 'true', id: sw }, el('StateTransition', { stateToId: c, enableExitTime: 'true', exitTimeIsPercetange: 'true', exitTime: 100 })),
+    el('AnimationState', { x: 600, y: 0, animationId: closed, id: c }),
   ]));
 
   const post = s.input('trigger', 'post');
