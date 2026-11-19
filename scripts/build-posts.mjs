@@ -88,6 +88,7 @@ function page({ slug, meta, html }) {
   <link rel="stylesheet" href="../../../shared/base.css">
   <link rel="stylesheet" href="../../../shared/turn.css">
   <link rel="stylesheet" href="../../post.css">
+  <link rel="stylesheet" href="../../wash.css">
   <script src="../../../shared/turn.js"></script>
 </head>
 <body class="paper">

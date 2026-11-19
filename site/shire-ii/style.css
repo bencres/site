@@ -164,20 +164,6 @@ main { margin-top: 30px; }
 .room-block h2 small { flex-basis: 100%; font-size: 14px; font-weight: 400; font-style: italic; color: var(--faint); margin-top: -2px; }
 .room-block h2 .wash { left: -30px; top: -14px; width: 150px; height: 64px; }
 
-/* a watercolor wash: blooms in, then dries a shade lighter */
-.wash {
-  position: absolute; z-index: -1; pointer-events: none;
-  background: center / 100% 100% no-repeat; mix-blend-mode: multiply;
-  opacity: 0;
-}
-.bloomed .wash { animation: bloom 1.6s cubic-bezier(0.2, 0.75, 0.25, 1) both; }
-@keyframes bloom {
-  0% { opacity: 0; transform: scale(0.45, 0.6); clip-path: circle(12% at 42% 55%); }
-  30% { opacity: 1; }
-  100% { opacity: 0.86; transform: none; clip-path: circle(80% at 42% 55%); }
-}
-.called .wash { animation: bloom-again 1.1s cubic-bezier(0.2, 0.75, 0.25, 1) both; }
-@keyframes bloom-again { 0% { opacity: 0.86; transform: scale(0.93, 0.85); } 100% { opacity: 0.86; transform: none; } }
 
 /* lists, with little round brass knobs for bullets */
 .knobs { list-style: none; margin: 0; padding: 0 0 0 1.25em; }
@@ -257,7 +243,6 @@ main { margin-top: 30px; }
   .room-block h2 .wash { left: -22px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .wash, .bloomed .wash { opacity: 0.86; animation: none; }
   .sign { animation: none; }
   .paint .cel, .arm:hover .paint .cel, .arm:focus-visible .paint .cel { animation: none; }
   .arm:hover .paint .c0, .arm:focus-visible .paint .c0 { visibility: visible; }

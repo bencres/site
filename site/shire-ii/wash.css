@@ -1,0 +1,40 @@
+/* The watercolor swatch behind a heading. It arrives the way paint does: a loaded
+   brush touches down near the start of the word, the pigment runs along it in an
+   uneven wet edge, slowing as the paper drinks it, and then dries: the colour goes
+   a shade paler and loses its wet sheen, while the pooled rim stays. */
+@property --wash-spread { syntax: '<percentage>'; inherits: false; initial-value: 260%; }
+
+.wash {
+  position: absolute; z-index: -1; pointer-events: none;
+  background: center / 100% 100% no-repeat; mix-blend-mode: multiply;
+  opacity: 0;
+  /* the wet edge: an irregular blob, centred a quarter of the way along its own box,
+     anchored to the swatch's left; as it grows its centre runs right along the word */
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 200' preserveAspectRatio='none'%3E%3Cfilter id='w' x='-20%25' y='-30%25' width='140%25' height='160%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.035 0.06' numOctaves='3' seed='4'/%3E%3CfeDisplacementMap in='SourceGraphic' scale='34'/%3E%3CfeGaussianBlur stdDeviation='2.2'/%3E%3C/filter%3E%3Cellipse cx='100' cy='100' rx='92' ry='86' fill='white' filter='url(%23w)'/%3E%3C/svg%3E") no-repeat;
+  mask-size: var(--wash-spread) var(--wash-spread);
+  mask-position: 0% 50%;
+}
+.bloomed .wash { animation: wash-run 2.2s linear both, wash-dry 2.2s ease-out both; }
+@keyframes wash-run {
+  0% { --wash-spread: 0%; animation-timing-function: cubic-bezier(0.15, 0.7, 0.35, 1); }
+  14% { --wash-spread: 70%; animation-timing-function: cubic-bezier(0.35, 0.45, 0.4, 1); }
+  100% { --wash-spread: 260%; }
+}
+@keyframes wash-dry {
+  0% { opacity: 0; filter: saturate(1.5) brightness(0.88) contrast(1.06); }
+  6% { opacity: 1; }
+  45% { opacity: 1; filter: saturate(1.3) brightness(0.93); }
+  100% { opacity: 0.86; filter: none; }
+}
+
+/* re-wetted when you take the signpost to it: a quick darkening that dries again */
+.called .wash { animation: wash-rewet 1.4s ease-out both; }
+@keyframes wash-rewet {
+  0% { opacity: 0.86; filter: none; }
+  18% { opacity: 1; filter: saturate(1.45) brightness(0.9); }
+  100% { opacity: 0.86; filter: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wash, .bloomed .wash, .called .wash { opacity: 0.86; animation: none; }
+}
