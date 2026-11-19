@@ -305,6 +305,11 @@ main { margin-top: 30px; }
   animation: knock-word 1.2s cubic-bezier(0.2, 0.7, 0.3, 1) both;
 }
 .say.sfx.wide { letter-spacing: 0.06em; }
+/* readable on any light: a halo of paper by day; lamplit cream on a dark halo at dusk and night */
+.say.sfx { text-shadow: 0 0 2px #f8f2e4, 0 0 5px #f8f2e4, 0 0 9px rgba(248, 242, 228, 0.8); }
+[data-time='dusk'] .say.sfx, [data-time='night'] .say.sfx {
+  color: #fdeab8; text-shadow: 0 0 2px rgba(28, 22, 16, 0.9), 0 0 6px rgba(28, 22, 16, 0.7), 0 0 12px rgba(255, 190, 90, 0.35);
+}
 @keyframes knock-word {
   0% { opacity: 0; translate: 0 4px; scale: 0.7; }
   14% { opacity: 1; translate: 0 0; scale: 1.08; }

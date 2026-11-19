@@ -1209,7 +1209,28 @@ function hill(ids) {
     ]),
   ]));
   tp(litId, 'opacity', LIT);
-  s.add(group({ name: 'spill', id: spillId, opacity: 0 }, [glow({ x: 610, y: 360, w: 150, h: 44, color: 'FFD77A', alpha: 0.6 })]));
+  // light out of the open door. By day it's a little pool on the step; as it gets dark
+  // the doorway glows and a fan of lamplight falls out across the path, brightening
+  // the evening rather than tinting it (screen blend)
+  const nightLightId = ids.next();
+  const fan = [P(598, 330), P(642, 330), P(700, 360), P(752, 396), P(500, 396), P(560, 358)];
+  const lightShape = (name, kids, xml) => el('Shape', { name, blendModeValue: 'screen' }, [xml, ...kids]);
+  s.add(group({ name: 'spill', id: spillId, opacity: 0 }, [
+    glow({ x: 610, y: 360, w: 150, h: 44, color: 'FFD77A', alpha: 0.6 }),
+    group({ name: 'night light', id: nightLightId, opacity: [0.2, 0, 0.3, 0.8, 1][TIME0] }, [
+      lightShape('doorway', [el('Fill', { name: 'Fill' }, el('RadialGradient', { startX: 0, startY: 0, endX: 92, endY: 0, name: 'G' },
+        [[0, 0.78], [0.42, 0.5], [0.72, 0.16], [1, 0]].map(([p, a]) => el('GradientStop', { colorValue: argb('FFC860', a), position: p }))))],
+        el('Ellipse', { x: 620, y: 296, width: 200, height: 176, originX: 0.5, originY: 0.5, name: 'E' })),
+      // the lit room itself, glowing out through the doorway
+      lightShape('room', [el('Fill', { name: 'Fill' }, el('RadialGradient', { startX: 0, startY: 0, endX: DR, endY: 0, name: 'G' },
+        [[0, 0.75], [0.7, 0.55], [1, 0.2]].map(([p, a]) => el('GradientStop', { colorValue: argb('FFE3A0', a), position: p }))))],
+        el('Ellipse', { x: D.x + 6, y: D.y, width: DR * 2 - 6, height: DR * 2 - 6, originX: 0.5, originY: 0.5, name: 'E' })),
+      lightShape('fan', [el('Fill', { name: 'Fill' }, el('LinearGradient', { startX: 0, startY: 330, endX: 0, endY: 398, name: 'G' },
+        [[0, 0.7], [0.5, 0.34], [1, 0]].map(([p, a]) => el('GradientStop', { colorValue: argb('FFD27A', a), position: p }))))],
+        pathXml(fan, { closed: true, tension: 0.4 })),
+    ]),
+  ]));
+  tp(nightLightId, 'opacity', [0.2, 0, 0.3, 0.8, 1]);
 
   // fireflies on summer evenings
   const flyKids = [];
