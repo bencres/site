@@ -5,7 +5,6 @@ date: "2025-11-15"
 id: "ta-0003"
 tags: ["software engineering", "houdini", "python", "tech art", "uab"]
 excerpt: "Writing an algorithm to dynamically resize grid cells and grid dimensions."
-turn: "sweep"
 ---
 
 # Purpose

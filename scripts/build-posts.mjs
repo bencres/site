@@ -3,8 +3,6 @@
 // in inks. Front matter is the bencres.dev format plus two optional fields:
 //   sketch:  the artboard in site/riv/sketches.riv drawn above the post
 //   caption: a hand-lettered line under the sketch
-//   turn:    the transition into the post (and back), a recipe in site/shared/turn.js:
-//            drops, drizzle, rain, shower, downpour, patter, gathering, sweep, puddle, pigment or flick
 // Images referenced as /blog-images/<file> (as on bencres.dev) are read from
 // posts/images/ and copied beside the posts.
 import { readdirSync, readFileSync, writeFileSync, mkdirSync, copyFileSync, existsSync } from 'node:fs';
@@ -75,7 +73,7 @@ function page({ slug, meta, html }) {
     ? `<figure class="sketch"><canvas id="sketch" data-artboard="${esc(meta.sketch)}" aria-hidden="true"></canvas>${meta.caption ? `<figcaption>${esc(meta.caption)}</figcaption>` : ''}</figure>`
     : '';
   return `<!doctype html>
-<html lang="en" data-turn="${esc(meta.turn || 'drops')}">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -110,6 +108,7 @@ ${html}
   </div>
   <script src="../../../shared/vendor/rive.js"></script>
   <script type="module" src="../../post.js"></script>
+  <script type="module" src="../../../shared/turn-tune.js"></script>
 </body>
 </html>
 `;

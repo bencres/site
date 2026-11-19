@@ -5,7 +5,6 @@ date: "2025-12-11"
 id: "ta-0005"
 tags: ["software engineering", "python", "tech art", "uab"]
 excerpt: "Refactoring the application to use the new Asset object and its subclasses, rather than passing dictionaries around."
-turn: "rain"
 ---
 
 This week, the Universal Asset Browser was refactored to use proper object-oriented design for assets, moving away from the dictionary-based approach that had been used throughout the application. This change sets the foundation for better type safety, more maintainable code, and support for features like LODs (Levels of Detail) and asset collections.
