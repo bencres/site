@@ -223,3 +223,46 @@ export function drip({ seed = 1, color = 'C8643B', len = 70 }) {
 <g filter='url(#d${id})'><path d='${run}' fill='#${color}' fill-opacity='.46'/>
 <path d='${bead}' fill='#${color}' fill-opacity='.5' stroke='#${color}' stroke-opacity='.75' stroke-width='1.2'/></g>`, 1.6);
 }
+
+/**
+ * A little painted badge for a service in Elsewhere, 56 × 56: GitHub's cat on
+ * an ink-washed coin, or LinkedIn's "in" on a blue-washed board. Same ink, same
+ * three-cel boil and pooled wash as the signpost arms.
+ */
+export function icon({ kind, seed = 1 }) {
+  const id = `i${++uid}`;
+  const r = rng(seed);
+  const S = 56;
+  const glyph = (d, w) => `<path d='${d}' fill='none' stroke='#${INK}' stroke-width='${w}' stroke-linecap='round' stroke-linejoin='round'/>`;
+  if (kind === 'github') {
+    const coin = blobPts(r, 28, 28, 22.5, 22.5, 14, 0.05);
+    const cat = [[18, 12.5], [22.5, 19], [28, 17.5], [33.5, 19], [38, 12.5], [40.5, 22], [39.5, 29.5], [35.5, 34], [32, 35.5], [32.5, 49.5], [23.5, 49.5], [24, 35.5], [20.5, 34], [16.5, 29.5], [15.5, 22]].map(([x, y]) => [x + r.jit(0.4), y + r.jit(0.4)]);
+    return `<svg class='paint' viewBox='0 0 ${S} ${S}' aria-hidden='true' focusable='false'>${DEFS(id, seed, 1.6)}
+<clipPath id='k${id}'><path d='${smooth(coin)}'/></clipPath>
+<g class='soak' filter='url(#d${id})'>
+<path d='${smooth(coin)}' fill='#3a2f26' fill-opacity='.82'/>
+<path d='${blob(r, 24, 24, 14, 12, 10, 0.2)}' fill='#5a4a3c' fill-opacity='.5'/>
+<path d='${smooth(coin)}' filter='url(#g${id})' opacity='.5'/>
+<g clip-path='url(#k${id})'>
+<path d='${smooth(cat)}' fill='#F1E6CB' fill-opacity='.95'/>
+<path d='M24.5 42C20 42 17.5 40.5 15 36.5' fill='none' stroke='#F1E6CB' stroke-opacity='.95' stroke-width='2.6' stroke-linecap='round'/>
+</g>
+</g>
+<g class='ink'>${cels(id, r, () => smooth(coin.map(([x, y]) => [x + r.jit(0.5), y + r.jit(0.5)])), { w: 1.4 })}</g>
+</svg>`;
+  }
+  // linkedin
+  const board = [[7, 8], [48, 7], [49, 48], [7.5, 49]];
+  return `<svg class='paint' viewBox='0 0 ${S} ${S}' aria-hidden='true' focusable='false'>${DEFS(id, seed, 1.6)}
+<g class='soak' filter='url(#d${id})'>
+<path d='${poly(ruled(board, rng(seed + 1), 0.8))}' fill='#F1E6CB' fill-opacity='.96'/>
+<path d='${blob(r, 28, 28, 19, 18, 12, 0.14)}' fill='#5C86B4' fill-opacity='.5' style='mix-blend-mode:multiply'/>
+<path d='${blob(r, 25, 31, 12, 10, 10, 0.2)}' fill='#3F6C9E' fill-opacity='.32' style='mix-blend-mode:multiply'/>
+<path d='${poly(board)}' filter='url(#g${id})' opacity='.35'/>
+</g>
+<g class='ink'>${cels(id, r, () => poly(ruled(board, r, 1)), { w: 1.4 })}</g>
+<circle cx='${f(18.5 + r.jit(0.3))}' cy='${f(17.5 + r.jit(0.3))}' r='2.5' fill='#${INK}'/>
+${glyph(`M18.6 24.5L18.4 39.5`, 3.4)}
+${glyph(`M26.5 39.5L26.6 25M26.7 30C28.2 25.8 31.5 24.6 34 24.8C37.2 25.1 38.4 27.6 38.3 31L38.2 39.5`, 3.2)}
+</svg>`;
+}

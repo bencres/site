@@ -78,9 +78,9 @@ a:focus-visible { outline: 2px dashed var(--link); outline-offset: 3px; border-r
    arm all the time kept the browser busy for nothing */
 .paint .cel { visibility: hidden; }
 .paint .c0 { visibility: visible; }
-.arm:hover .paint .cel, .arm:focus-visible .paint .cel { visibility: hidden; animation: boil 0.4s step-end infinite; }
-.arm:hover .paint .c1, .arm:focus-visible .paint .c1 { animation-delay: -0.267s; }
-.arm:hover .paint .c2, .arm:focus-visible .paint .c2 { animation-delay: -0.133s; }
+.arm:hover .paint .cel, .arm:focus-visible .paint .cel, .badge:hover .paint .cel, .badge:focus-visible .paint .cel { visibility: hidden; animation: boil 0.4s step-end infinite; }
+.arm:hover .paint .c1, .arm:focus-visible .paint .c1, .badge:hover .paint .c1, .badge:focus-visible .paint .c1 { animation-delay: -0.267s; }
+.arm:hover .paint .c2, .arm:focus-visible .paint .c2, .badge:hover .paint .c2, .badge:focus-visible .paint .c2 { animation-delay: -0.133s; }
 @keyframes boil { 0% { visibility: visible; } 33.33% { visibility: hidden; } 100% { visibility: hidden; } }
 
 /* a loose arm creaks round on its nail, overshoots, and settles a little askew */
@@ -107,12 +107,12 @@ a:focus-visible { outline: 2px dashed var(--link); outline-offset: 3px; border-r
 .m-blot { right: -118px; top: -20px; width: 56px; aspect-ratio: 1; }
 .m-flick { position: relative; display: inline-block; vertical-align: -4px; margin-left: 10px; width: 84px; aspect-ratio: 130 / 50; transform-origin: left; }
 .room-block .mark, .colophon .mark { transition: opacity 0.6s ease 0.9s; }
-.bloomed .mark, .colophon .mark.seen { opacity: 1; }
+.bloomed .mark { opacity: 1; }
 .m-drip { left: -16px; top: 26px; width: 15px; aspect-ratio: 26 / 80; transform-origin: top; transform: scaleY(0); }
 .bloomed .m-drip { transform: none; transition: opacity 0.4s ease 1.2s, transform 2.6s cubic-bezier(0.3, 0.6, 0.3, 1) 1.2s; }
 .m-hatch { right: -4px; top: -6px; width: 40px; aspect-ratio: 60 / 50; transform: rotate(8deg); }
 .colophon { position: relative; }
-.m-spatter { left: -66px; top: -26px; width: 58px; aspect-ratio: 1; opacity: 1; }
+.m-spatter { left: -70px; top: -18px; width: 58px; aspect-ratio: 1; }
 
 /* ---- reading */
 main { margin-top: 30px; }
@@ -259,3 +259,14 @@ main { margin-top: 30px; }
   .almanac details[open] { width: 176px; }
   .m-blot { right: -4px; top: -40px; width: 40px; }
 }
+
+/* ---- Elsewhere: a painted badge for each service */
+.knobs.inline:has(.badge) { display: flex; flex-wrap: wrap; gap: 6px 26px; }
+.knobs.inline:has(.badge) li::before { display: none; }
+.badge { display: inline-flex; flex-direction: column; align-items: center; gap: 2px; text-decoration: none; color: var(--ink, #2b231c); }
+.badge .mark-icon { display: block; width: 54px; height: 54px; transition: transform 0.6s cubic-bezier(0.3, 2.2, 0.45, 0.8); }
+.badge .mark-icon .paint { width: 100%; height: 100%; overflow: visible; }
+.badge .label { font: 600 18px/1 'Caveat', cursive; color: var(--soft, #6e6152); }
+.badge:hover, .badge:focus-visible { text-decoration: none; }
+.badge:hover .mark-icon, .badge:focus-visible .mark-icon { transform: rotate(-6deg) translateY(-2px); }
+.badge:hover .label, .badge:focus-visible .label { color: var(--ink, #2b231c); }

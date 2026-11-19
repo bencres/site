@@ -1,0 +1,46 @@
+/* Moving between the hill and a post turns a page: going in, the page you're on
+   lifts from its right edge and turns over to the left; coming back, it turns
+   back over onto the stack. Browsers without cross-document view transitions
+   simply navigate. */
+@view-transition { navigation: auto; }
+
+::view-transition-group(root) { animation-duration: 0.85s; }
+::view-transition-old(root),
+::view-transition-new(root) { mix-blend-mode: normal; }
+
+html:active-view-transition-type(forward)::view-transition-old(root) {
+  z-index: 2;
+  transform-origin: left center;
+  animation: turn-over 0.85s cubic-bezier(0.5, 0, 0.25, 1) both;
+}
+html:active-view-transition-type(forward)::view-transition-new(root) {
+  z-index: 1;
+  animation: settle-under 0.85s cubic-bezier(0.3, 0, 0.2, 1) both;
+}
+html:active-view-transition-type(back)::view-transition-new(root) {
+  z-index: 2;
+  transform-origin: left center;
+  animation: turn-back 0.85s cubic-bezier(0.5, 0, 0.25, 1) both;
+}
+html:active-view-transition-type(back)::view-transition-old(root) {
+  z-index: 1;
+  animation: settle-under 0.85s cubic-bezier(0.3, 0, 0.2, 1) reverse both;
+}
+
+@keyframes turn-over {
+  0% { transform: perspective(2600px) rotateY(0); filter: drop-shadow(0 0 0 rgba(43, 35, 28, 0)); }
+  35% { filter: drop-shadow(-14px 6px 18px rgba(43, 35, 28, 0.22)); }
+  100% { transform: perspective(2600px) rotateY(-88deg); filter: drop-shadow(-26px 8px 24px rgba(43, 35, 28, 0.05)) brightness(0.8); }
+}
+@keyframes turn-back {
+  0% { transform: perspective(2600px) rotateY(-88deg); filter: brightness(0.8); }
+  100% { transform: perspective(2600px) rotateY(0); filter: brightness(1); }
+}
+@keyframes settle-under {
+  0% { filter: brightness(0.94); transform: scale(0.992); }
+  100% { filter: brightness(1); transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(root), ::view-transition-old(root), ::view-transition-new(root) { animation: none !important; }
+}

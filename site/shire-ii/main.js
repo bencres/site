@@ -1,34 +1,16 @@
 import { mount, reducedMotion } from '../shared/rive-mount.js';
 import { content as c, h } from '../shared/content.js';
-import { rng, blob, arm, upright, splotch, flick, hatch, drip } from './paint.js';
+import { rng, blob, arm, upright, splotch, flick, hatch, drip, icon } from './paint.js';
+import { SEASONS, TIMES, when as whenAt, remember, remembered } from './when.js';
+
+const when = () => whenAt(params);
 
 const $ = (s) => document.querySelector(s);
-const SEASONS = ['spring', 'summer', 'autumn', 'winter'];
-const TIMES = ['morning', 'day', 'afternoon', 'dusk', 'night'];
 
-// ---------- when is it? picked from the visitor's clock, or ?season=&time= / ?day=MM-DD&time=HH:MM
+// ---------- when is it? the visitor's clock, a ?season=&time= preview, or the dials' (see when.js)
 
 const params = new URLSearchParams(location.search);
-
-function when(now = new Date()) {
-  let month = now.getMonth();
-  let hours = now.getHours() + now.getMinutes() / 60;
-  const day = params.get('day')?.match(/^(\d{1,2})-(\d{1,2})$/);
-  if (day) month = Math.min(11, Math.max(0, +day[1] - 1));
-  let season = [3, 3, 0, 0, 0, 1, 1, 1, 2, 2, 2, 3][month];
-  if (SEASONS.includes(params.get('season'))) season = SEASONS.indexOf(params.get('season'));
-  const t = params.get('time') || '';
-  const hm = t.match(/^(\d{1,2}):(\d{2})$/);
-  if (hm) hours = +hm[1] + +hm[2] / 60;
-  // the light keeps different hours through the year
-  const dawn = [5.5, 5, 6.5, 7.25][season];
-  const golden = [16.5, 17.5, 15.5, 14.5][season];
-  const dusk = [18.75, 19.75, 17.5, 16.5][season];
-  const night = dusk + 2.25;
-  let time = hours >= night || hours < dawn ? 4 : hours >= dusk ? 3 : hours >= golden ? 2 : hours >= 10 ? 1 : 0;
-  if (TIMES.includes(t)) time = TIMES.indexOf(t);
-  return { season, time, elevenses: hours >= 11 && hours < 12 && !TIMES.includes(t) };
-}
+const urlPreview = ['season', 'time', 'day'].some((k) => params.has(k));
 
 // third visit and after: the hill knows you (a doormat appears, the sign changes,
 // and the arm you took last time has a tick inked beside it)
@@ -98,7 +80,11 @@ const rooms = [
     id: 'writing', title: 'Writing', room: 'the bookshelves', react: 'rustle',
     items: c.writing.map((w) => item(h('a', { href: w.url }, w.title), w.starred ? h('span', { class: 'star', title: 'A favorite' }, ' ✦') : null, ' ', h('span', { class: 'when' }, w.date))),
   },
-  { id: 'elsewhere', title: 'Elsewhere', room: 'out the back gate', arm: 'yonder', react: 'gust', items: c.elsewhere.map((l) => item(h('a', { href: l.url }, l.name))), inline: true },
+  { id: 'elsewhere', title: 'Elsewhere', room: 'out the back gate', arm: 'yonder', react: 'gust', items: c.elsewhere.map((l, i) => {
+      const badge = h('a', { href: l.url, class: 'badge', rel: 'me' }, h('span', { class: 'mark-icon' }), h('span', { class: 'label' }, l.name));
+      badge.firstChild.innerHTML = icon({ kind: l.name.toLowerCase(), seed: 61 + i * 13 });
+      return item(badge);
+    }), inline: true },
 ];
 const host = $('#rooms');
 rooms.forEach((rm) => {
@@ -160,7 +146,7 @@ mark($('#sign'), 'm-flick', flick({ seed: 9 }));
 mark(heads[1], 'm-blot', splotch({ seed: 5, dir: 2.5 }));
 const dripMark = mark(heads[2], 'm-drip');
 mark(heads[3], 'm-hatch', hatch({ seed: 4, n: 5, cross: true }));
-mark($('.colophon'), 'm-spatter', splotch({ seed: 12, dir: -0.5, size: 0.6, spatter: 10 }));
+mark(heads[4], 'm-spatter', splotch({ seed: 12, dir: -0.5, size: 0.6, spatter: 10 }));
 
 // ---------- season & hour on the page: paper warmth, pigments, the sign
 
@@ -171,7 +157,9 @@ const SIGN = {
   dusk: 'The lamps are lit. Do come in.',
   night: 'Late caller? Come in quietly.',
 };
-const WORD = { morning: 'morning', day: 'day', afternoon: 'afternoon', dusk: 'evening', night: 'night' };
+// midday's sign tells the time by elevenses
+const ELEVENSES = (hour) =>
+  hour == null || hour < 11 ? 'Elevenses is at eleven.' : hour < 12 ? 'It is elevenses; there’s a cup for you.' : 'Elevenses was at eleven.';
 
 let state = null;
 function paint(next) {
@@ -180,11 +168,10 @@ function paint(next) {
   root.dataset.season = season;
   root.dataset.time = time;
   let sign = SIGN[time];
-  if (next.elevenses && time === 'day') sign = 'Do come in. It is nearly elevenses.';
   if (season === 'winter' && (time === 'day' || time === 'afternoon')) sign = 'Knock the snow off your boots and come in.';
+  if (time === 'day') sign = `${sign} ${ELEVENSES(next.hour)}`;
   if (regular) sign = 'Oh, it’s you again. You know the way in.';
   $('#sign-text').textContent = sign;
-  $('#painted').textContent = `Painted for ${season === 'autumn' ? 'an' : 'a'} ${season} ${WORD[time]}, a little crookedly.`;
   document.querySelectorAll('.room-block .wash').forEach((el, i) => {
     const [col, acc] = PIGMENTS[season][i % 5];
     el.style.backgroundImage = wash({ w: 150, h: 64, color: col, accent: acc, seed: 101 + i * 37 });
@@ -193,7 +180,7 @@ function paint(next) {
   dripMark.innerHTML = drip({ seed: 21, color: PIGMENTS[season][2][0], len: 64 });
 }
 
-state = when();
+state = (!urlPreview && remembered()) || when();
 paint(state);
 
 // ---------- rive
@@ -314,7 +301,7 @@ else {
 // winter = 3, morning = 0 ... night = 4) and cross-fade between them, so the dials
 // step through those poses rather than sending in-between values the painting ignores.
 
-let previewing = false;
+let previewing = !urlPreview && !!remembered();
 const seasonDial = $('#season-dial'), timeDial = $('#time-dial');
 const SEASON_WORD = ['spring', 'summer', 'autumn', 'winter'];
 const TIME_WORD = ['morning', 'midday', 'afternoon', 'dusk', 'night'];
@@ -333,11 +320,12 @@ function apply(next) {
   showDials(state);
 }
 function scrub() {
-  const next = { season: +seasonDial.value, time: +timeDial.value, elevenses: false };
+  const next = { season: +seasonDial.value, time: +timeDial.value, hour: null, elevenses: false };
   previewing = true;
   $('#almanac').classList.add('moved');
   if (next.season === state.season && next.time === state.time) return;
   apply(next);
+  remember(next);
   const q = new URLSearchParams(location.search);
   q.set('season', SEASONS[next.season]);
   q.set('time', TIMES[next.time]);
@@ -347,11 +335,13 @@ seasonDial.addEventListener('input', scrub);
 timeDial.addEventListener('input', scrub);
 $('#almanac-now').addEventListener('click', () => {
   previewing = false;
+  remember(null);
   for (const k of ['season', 'time', 'day']) params.delete(k);
   history.replaceState(null, '', location.pathname);
   apply(when());
   $('#almanac').classList.remove('moved');
 });
 showDials(state);
+if (previewing || urlPreview) $('#almanac').classList.add('moved');
 // on a phone the almanac folds away until asked for, so it never sits on the text
 if (phone.matches) $('#almanac-box').open = false;

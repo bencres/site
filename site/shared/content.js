@@ -46,7 +46,7 @@ export const content = {
   ],
 
   writing: [
-    { title: "Dynamically loading EXR and HDR files during Qt's paint", date: 'Jan 2026', url: 'https://bencres.dev/blog/008-swe-dynamic-exr-hdr' },
+    { title: "Dynamically loading EXR and HDR files during Qt's paint", date: 'Jan 2026', url: 'blog/008-swe-dynamic-exr-hdr/', local: true },
     { title: 'What I learned from 3 months of building my first large application, and why I spent January rebuilding it from scratch', date: 'Jan 2026', url: 'https://bencres.dev/blog/007-progress-uab-refactor', starred: true },
     { title: 'Universal Asset Browser: plugins, external libraries, and the registry pattern', date: 'Dec 2025', url: 'https://bencres.dev/blog/006-progress-uab-plugins', starred: true },
     { title: 'Pixel Foundry pipeline: beginnings of the environment/production manager', date: 'Dec 2025', url: 'https://bencres.dev/blog/00a-pipeline-pxf-prod-manager' },
@@ -60,9 +60,6 @@ export const content = {
   elsewhere: [
     { name: 'GitHub', url: 'https://github.com/bencres' },
     { name: 'LinkedIn', url: 'https://linkedin.com/in/bencres' },
-    { name: 'Résumé', url: 'https://bencres.dev/ben-cressman-software-engineer.pdf' },
-    { name: 'Snippets', url: 'https://bencres.dev/snippets' },
-    { name: 'bencres.dev', url: 'https://bencres.dev' },
   ],
 };
 

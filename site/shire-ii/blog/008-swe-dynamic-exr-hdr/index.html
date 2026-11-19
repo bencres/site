@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dynamically Loading EXR and HDR Files During QT's Paint · Ben Cressman</title>
+  <meta name="description" content="How I implemented dynamically loading EXR and HDR files for the asset thumbnails in the Universal Asset Browser.">
+  <link rel="icon" href="../../../shared/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Caveat:wght@500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../shared/base.css">
+  <link rel="stylesheet" href="../../../shared/turn.css">
+  <link rel="stylesheet" href="../../post.css">
+  <script src="../../../shared/turn.js"></script>
+</head>
+<body class="paper">
+  <div class="col">
+    <nav class="trail"><a href="../../#writing" class="home">← back to the bookshelves</a></nav>
+    <figure class="sketch"><canvas id="sketch" data-artboard="Niggle" aria-hidden="true"></canvas><figcaption>leaf by leaf, as each one is ready (after Tolkien)</figcaption></figure>
+    <header class="title">
+      <p class="kicker">from the bookshelves · <time datetime="2026-01-28">January 28, 2026</time></p>
+      <h1>Dynamically Loading EXR and HDR Files During QT's Paint</h1>
+      <p class="excerpt">How I implemented dynamically loading EXR and HDR files for the asset thumbnails in the Universal Asset Browser.</p>
+      <ul class="tags" aria-label="Tags"><li>software engineering</li><li>qt</li><li>optimization</li></ul>
+    </header>
+    <article class="prose">
+<h2 id="context">Context</h2>
+<p>For rendering thousands of items on the screen, your only choice in QT is to use delegates (<code>QStyledItemDelegate</code>); widgets are too memory-costly to keep thousands at once alive. Delegates, however, are drawn during paint, which (in short) means that every time the user interacts with the view, delegates are re-rendered.</p>
+<p>The problem is this: not every HDR or EXR file (or other heavy file types, but implemented now is HDR and EXR) is guaranteed to come with a pre-rendered preview. As such, they have to be decoded, tone-mapped, gamma-corrected, and resampled on-the-fly. Without anything external to painting the delegates, this process is repeated for each delegate, up to something like 60 times every second, which makes the application so slow as to be unusable.</p>
+<p>As such, I implemented an asynchronous HDR/EXR thumbnail loading system. </p>
+<h2 id="implementation">Implementation</h2>
+<p>Details about how this system is architected and works in the context of the Universal Asset Browser.</p>
+<p>A unified base class architecture with specialized loaders:</p>
+<h3 id="base-class-thumbnailloaderbase">Base Class: <code>ThumbnailLoaderBase</code></h3>
+<p>Abstract base class (<code>QThread</code>) providing:</p>
+<ul>
+<li>Thread management: queue (<code>list[Any]</code>), mutex (<code>QMutex</code>), stop flag</li>
+<li>Common signals: <code>batch_complete</code>, <code>all_complete</code></li>
+<li>Queue operations: <code>set_items()</code>, <code>add_item()</code>, <code>request_stop()</code></li>
+<li>Abstract method: <code>_process_item(item: Any) -&gt; None</code> for subclass-specific logic</li>
+</ul>
+<p>Uses <code>QMutexLocker</code> for thread-safe queue access. The <code>run()</code> loop processes items, calls <code>_process_item()</code>, and emits batch/all-complete signals.</p>
+<h3 id="subclass-1-networkthumbnailloader">Subclass 1: <code>NetworkThumbnailLoader</code></h3>
+<p>Extends <code>ThumbnailLoaderBase</code> for network thumbnail downloads:</p>
+<ul>
+<li>Processes <code>StandardAsset</code> items</li>
+<li>Uses synchronous <code>urllib</code> (avoids aiohttp thread-safety issues)<ul>
+<li>Using <code>urllib</code> instead of <code>requests</code> to avoid as many third-party dependencies as possible, as the dependencies have to be bundled with the application in embedded contexts</li>
+</ul>
+</li>
+<li>Emits <code>thumbnail_ready(str, Path)</code> with asset_id and cached file path</li>
+<li>Used by the presenter layer for batch processing cloud assets</li>
+</ul>
+<h3 id="subclass-2-localimageloader">Subclass 2: <code>LocalImageLoader</code></h3>
+<p>Extends <code>ThumbnailLoaderBase</code> for local file processing:</p>
+<ul>
+<li>Processes <code>(asset_id: str, path: Path, max_size: int)</code> tuples</li>
+<li>Detects HDR/EXR by file extension<ul>
+<li>Bug right now: many texture maps are EXR files... so naturally they&#39;re currently considered HDRI&#39;s!</li>
+</ul>
+</li>
+<li>Calls <code>load_hdri_thumbnail()</code> for conversion</li>
+<li>Emits <code>thumbnail_loaded(str, QPixmap)</code> with asset_id and processed pixmap</li>
+<li>Used by the UI layer for on-demand loading during paint</li>
+</ul>
+<h3 id="layers">Layers</h3>
+<p>The layers of this system ()</p>
+<h4 id="delegate-layer-assetdelegate">Delegate Layer (<code>AssetDelegate</code>)</h4>
+<p><strong>Loading State Tracking:</strong></p>
+<ul>
+<li><code>_loading_assets: set[str]</code> — tracks assets currently loading</li>
+<li><code>_loading_placeholder: Optional[QPixmap]</code> — cached loading icon</li>
+<li><code>_image_loader: Optional[LocalImageLoader]</code> — reference to background loader</li>
+<li><code>thumbnail_ready = Signal(str)</code> — emitted when thumbnail is ready</li>
+</ul>
+<pre class="ink-code"><code class="hljs language-python"><span class="hljs-comment"># short version</span>
+<span class="hljs-keyword">if</span> cached:
+    <span class="hljs-keyword">return</span> cached
+
+<span class="hljs-keyword">if</span> suffix <span class="hljs-keyword">in</span> (<span class="hljs-string">&quot;.hdr&quot;</span>, <span class="hljs-string">&quot;.exr&quot;</span>):
+    <span class="hljs-keyword">if</span> asset_id <span class="hljs-keyword">not</span> <span class="hljs-keyword">in</span> _loading_assets <span class="hljs-keyword">and</span> _image_loader <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span>:
+        _loading_assets.add(asset_id)
+        _image_loader.add_item((asset_id, path, max_size))
+        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> _image_loader.isRunning():
+            _image_loader.start()
+        <span class="hljs-keyword">return</span> _get_loading_placeholder()</code></pre>
+<p><strong>Handler Methods:</strong></p>
+<ul>
+<li><code>set_image_loader()</code> — connects loader&#39;s <code>thumbnail_loaded</code> signal</li>
+<li><code>_on_image_thumbnail_loaded()</code> — updates cache, removes from loading set, emits <code>thumbnail_ready</code></li>
+<li><code>_get_loading_placeholder()</code> — creates/caches lightweight &quot;Loading...&quot; QPixmap</li>
+</ul>
+<h4 id="view-layer-browserview">View Layer (<code>BrowserView</code>)</h4>
+<p><strong>Initialization:</strong></p>
+<ul>
+<li>Creates <code>LocalImageLoader</code> instance in <code>__init__</code></li>
+<li>Connects delegate&#39;s <code>thumbnail_ready</code> signal to <code>_on_thumbnail_ready()</code></li>
+<li>Passes loader to delegate via <code>delegate.set_image_loader()</code></li>
+</ul>
+<p><strong>Update Handler:</strong></p>
+<ul>
+<li><code>_on_thumbnail_ready(asset_id)</code> — finds <code>QModelIndex</code> by iterating model, calls <code>self._grid.update(index)</code> to trigger repaint</li>
+</ul>
+<h2 id="data-flow">Data Flow</h2>
+<ol>
+<li>User scrolls → <code>paint()</code> called for visible items</li>
+<li><code>_get_thumbnail()</code> checks cache → not found</li>
+<li>For HDR/EXR: adds to <code>_loading_assets</code>, queues load request, returns placeholder</li>
+<li>Background thread: <code>LocalImageLoader._process_item()</code> calls <code>load_hdri_thumbnail()</code></li>
+<li>On completion: emits <code>thumbnail_loaded(asset_id, pixmap)</code></li>
+<li>Main thread: <code>_on_image_thumbnail_loaded()</code> updates cache, emits <code>thumbnail_ready(asset_id)</code></li>
+<li>View: <code>_on_thumbnail_ready()</code> finds index, calls <code>update(index)</code> → repaint with actual thumbnail</li>
+</ol>
+<h2 id="technical-challenges-and-solutions">Technical Challenges and Solutions</h2>
+<p>A brief discussion of challenges and problems I faced, and how I handled them.</p>
+<h3 id="1-challenge-thread-safety">1. Challenge: Thread Safety</h3>
+<ul>
+<li>Qt signals/slots use queued connections for cross-thread communication</li>
+<li><code>QMutex</code> protects queue access</li>
+<li>Cache updates happen on the main thread via signal handlers</li>
+<li><code>_loading_assets</code> set is only accessed from the main thread</li>
+</ul>
+<h3 id="2-challenge-queue-management">2. Challenge: Queue Management</h3>
+<ul>
+<li><code>add_item()</code> allows incremental additions without replacing the queue</li>
+<li>Supports concurrent requests during rapid scrolling</li>
+<li>Thread-safe via mutex protection</li>
+</ul>
+<h3 id="3-problem-hdr-files-appeared-darker-in-houdini-than-in-the-standalone-desktop-app">3. Problem: HDR files appeared darker in Houdini than in the standalone desktop app</h3>
+<p>I think either because of a different <code>imageio</code> version or color space management, but I&#39;m not sure about this one. Needs more research.</p>
+<p><strong>Solution:</strong> Adaptive exposure based on median luminance:</p>
+<pre class="ink-code"><code class="hljs language-python"><span class="hljs-comment"># actual implementation</span>
+luminance = <span class="hljs-number">0.2126</span> * hdr_data[:, :, <span class="hljs-number">0</span>] + <span class="hljs-number">0.7152</span> * hdr_data[:, :, <span class="hljs-number">1</span>] + <span class="hljs-number">0.0722</span> * hdr_data[:, :, <span class="hljs-number">2</span>]
+median_lum = np.median(luminance[luminance &gt; <span class="hljs-number">0</span>])
+<span class="hljs-keyword">if</span> median_lum &gt; <span class="hljs-number">0</span>:
+    target_lum = <span class="hljs-number">0.18</span>  <span class="hljs-comment"># Middle gray</span>
+    exposure = target_lum / median_lum
+    exposure = <span class="hljs-built_in">max</span>(<span class="hljs-number">0.1</span>, <span class="hljs-built_in">min</span>(<span class="hljs-number">10.0</span>, exposure))  <span class="hljs-comment"># Clamp to reasonable range</span></code></pre>
+<p>This normalizes brightness across different HDR files and environments, though minor differences persist. Will come back to this.</p>
+<h3 id="4-problem-caching-thousands-of-assets">4. Problem: Caching thousands of assets</h3>
+<p>I&#39;ve implemented a simple <a href="https://redis.io/glossary/lru-cache/" rel="noopener">LRU cache</a> capped at 200, which is pretty arbitrary, but was chosen for:</p>
+<p>QPixmap Memory Footprint:</p>
+<ul>
+<li>Each thumbnail is a QPixmap stored in GPU/system memory</li>
+<li>At default cell size (180px) with margins: ~164×164 pixels</li>
+<li>RGBA format: 164 × 164 × 4 bytes ≈ 107 KB per thumbnail</li>
+<li>200 thumbnails ≈ 21 MB minimum (before Qt overhead)</li>
+</ul>
+<p>And because given physical size constraints of the browser, it should be very rare that 200 assets is not at least several screen-fulls.</p>
+<p><em>Side note</em>: <code>functools</code> has a built-in LRU cache in <code>functools.lru_cache</code>. Lesson learned to check if there&#39;s a built-in solution for data structures in the future. I&#39;m sure their implementation is way more robust than mine.</p>
+<h2 id="questions">Questions</h2>
+<ol>
+<li><p>Does Houdini apply anything to images with tonemapping, color spaces, etc. that would cause the dynamically rendered HDR/EXR&#39;s to look different? I&#39;m confused because this process is very similar to my first implemenation that used widgets instead of delegates, and the coloration between the embedded Houdini version and the standalone desktop version was consistent.</p>
+</li>
+<li><p>Is this how Nuke, Unreal, etc. render EXR thumbnail images? Is there a better way to accomplish this?</p>
+</li>
+<li><p>Architecturally, does it make a meaningful difference to have implemented an interface for thumbnail loading, since there are only ever two ways to get a thumbnail (from disk or from network)?</p>
+</li>
+</ol>
+<h2 id="implementation-reference">Implementation Reference</h2>
+<p>Quick reference for my implementation and some places I read about these concepts.</p>
+<h3 id="universal-asset-browser">Universal Asset Browser</h3>
+<ol>
+<li><a href="https://github.com/pxf-lab/uab/blob/main/src/uab/ui/delegates.py" rel="noopener">Delegates</a></li>
+<li><a href="https://github.com/pxf-lab/uab/blob/main/src/uab/ui/utils.py" rel="noopener">Thumbnail loader interface, local implementation, and HDR/EXR conversion</a></li>
+<li><a href="https://github.com/pxf-lab/uab/blob/main/src/uab/presenters/tab_presenter.py" rel="noopener">Network implementation and usage</a></li>
+</ol>
+<h3 id="pyside6-documentation">PySide6 Documentation</h3>
+<ol>
+<li><a href="https://doc.qt.io/qtforpython-6/PySide6/QtWidgets/QStyledItemDelegate.html" rel="noopener">QStyledItemDelegate</a></li>
+<li><a href="https://stackoverflow.com/a/34558/23048824" rel="noopener">What is a mutex?</a> (this is my first time touching threading)</li>
+<li><a href="https://redis.io/glossary/lru-cache/" rel="noopener">LRU Cache Concept</a> (this is also my first time implementing an LRU cache)</li>
+<li><a href="https://www.geeksforgeeks.org/system-design/lru-cache-implementation/" rel="noopener">LRU Cache Implementation</a></li>
+</ol>
+
+    </article>
+    <footer class="end">
+      <p><a href="../../#writing" class="home">← back to the bookshelves</a></p>
+      <p class="write">Thoughts on this one? <a href="mailto:hello@bencres.dev?subject=Dynamically%20Loading%20EXR%20and%20HDR%20Files%20During%20QT's%20Paint">Write to me</a>.</p>
+    </footer>
+  </div>
+  <script src="../../../shared/vendor/rive.js"></script>
+  <script type="module" src="../../post.js"></script>
+</body>
+</html>
