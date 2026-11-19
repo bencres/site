@@ -1426,26 +1426,30 @@ function gate(ids) {
   s.add(group({ name: 'click', id: clickId, opacity: 0 }, [ink([[P(462, 112), P(470, 106)], [P(464, 124), P(474, 124)], [P(462, 136), P(470, 142)]], rng(422), { w: 1.2, amt: 0.2 })]));
 
 
-  // an owl lives in the mailbox: click it and it peeks out of the open end, blinks,
-  // tilts its head at you, and goes back in. Drawn behind the box, so only what's
-  // past the box's open end shows.
-  const owlId = ids.next(), lidsId = ids.next();
-  const O = P(0, 0);
-  const owlHead = blobPts(11.5, 10.5, rng(450), { n: 12, wobble: 0.05 }).map((p) => P(p.x, p.y + 1));
-  const face = blobPts(8.5, 7.5, rng(451), { n: 10, wobble: 0.06 }).map((p) => P(p.x - 1, p.y + 2));
-  const eye = (x) => [x, 1];
-  s.add(group({ name: 'owl', id: owlId, x: 520, y: 100, opacity: 0 }, [
-    wc(ids, owlHead, 'A07850', rng(452), { alpha: 0.9, off: [0.6, 0.6], wobble: 0.4, grain: 0.4, soft: false, blend: 'normal' }),
-    wc(ids, [P(-9, -8), P(-6, -16), P(-3, -9)], 'A07850', rng(453), { alpha: 0.9, off: [0, 0], wobble: 0.2, grain: 0, soft: false, blend: 'normal' }),
-    wc(ids, [P(3, -9), P(6, -16), P(8, -8)], 'A07850', rng(454), { alpha: 0.9, off: [0, 0], wobble: 0.2, grain: 0, soft: false, blend: 'normal' }),
-    wc(ids, face, 'E8D3A8', rng(455), { alpha: 0.95, off: [0, 0], wobble: 0.3, grain: 0.1, soft: false, blend: 'normal' }),
-    ...[-5, 3].map((x) => el('Shape', { name: 'eye', x, y: 1 }, [el('Ellipse', { width: 6.4, height: 6.4, originX: 0.5, originY: 0.5, name: 'E' }), fill('FFFFFDF4'), stroke(INK, 0.9)])),
-    ...[-5.6, 2.4].map((x) => el('Shape', { name: 'pupil', x, y: 1.4 }, [el('Ellipse', { width: 3.2, height: 3.4, originX: 0.5, originY: 0.5, name: 'E' }), fill(INK)])),
-    el('Node', { name: 'lids', id: lidsId, y: -2, scaleY: 0 }, [-5, 3].map((x) => el('Shape', { name: 'lid', x, y: 0 }, [el('Rectangle', { width: 7.2, height: 7, originX: 0.5, originY: 0, name: 'R' }), fill('FFA07850')]))),
-    wc(ids, [P(-2.5, 4), P(0.5, 4), P(-1, 8)], 'E09A3A', rng(456), { alpha: 0.95, off: [0, 0], wobble: 0.1, grain: 0, soft: false, blend: 'normal' }),
-    ink([{ pts: owlHead, closed: true }, [P(-9, -8), P(-6, -16), P(-3, -9)], [P(3, -9), P(6, -16), P(8, -8)], [P(-2.5, 4), P(-1, 8), P(0.5, 4)]], rng(457), { w: 1.1, amt: 0.25 }),
+  // a mouse lives in the mailbox: click it and it noses out of the box's right end,
+  // sniffs, twitches an ear, blinks, and goes back in. It's clipped to what's outside
+  // the box, so the box itself hides it: only the part that's poked out shows.
+  const mouseId = ids.next(), mLidId = ids.next(), mEarId = ids.next(), mNoseId = ids.next(), mClipId = ids.next();
+  // the clip: everything to the right of the box's right-hand end
+  s.add(el('Shape', { name: 'mouse clip', id: mClipId }, [polyXml([P(552, 50), P(640, 50), P(640, 150), P(559, 150), P(560, 116), P(561, 92), P(552, 82)], { closed: true })]));
+  const head = [P(-9, -5), P(-2, -7), P(5, -5), P(10, -1.5), P(12.5, 1), P(10, 3), P(4, 5.5), P(-4, 6), P(-9, 4)];
+  const ear = blobPts(4.6, 4.6, rng(450), { n: 9, wobble: 0.05 }).map((p) => P(p.x, p.y));
+  s.add(group({ name: 'mouse', id: mouseId, x: 545, y: 106, opacity: 0 }, [
+    el('ClippingShape', { sourceId: mClipId, name: 'Clip' }),
+    group({ name: 'ear', id: mEarId, x: -1, y: -6 }, [
+      wc(ids, ear, 'A8988A', rng(451), { alpha: 0.95, off: [0, 0], wobble: 0.2, grain: 0.2, soft: false, blend: 'normal' }),
+      wc(ids, ear.map((p) => P(p.x * 0.55 + 0.4, p.y * 0.55 + 0.4)), 'E7A9A4', rng(452), { alpha: 0.9, off: [0, 0], wobble: 0.1, grain: 0, soft: false, blend: 'normal' }),
+      ink({ pts: ear, closed: true }, rng(453), { w: 1, amt: 0.15 }),
+    ]),
+    wc(ids, head, 'B3A598', rng(454), { alpha: 0.95, off: [0.4, 0.4], wobble: 0.3, grain: 0.3, soft: false, blend: 'normal', tension: 0.8 }),
+    ink({ pts: head, closed: true, tension: 0.8 }, rng(455), { w: 1.1, amt: 0.2 }),
+    el('Shape', { name: 'eye', x: 5, y: -1.5 }, [el('Ellipse', { width: 2.4, height: 2.6, originX: 0.5, originY: 0.5, name: 'E' }), fill(INK)]),
+    el('Shape', { name: 'lid', id: mLidId, x: 5, y: -3, scaleY: 0 }, [el('Rectangle', { width: 3.4, height: 3.4, originX: 0.5, originY: 0, name: 'R' }), fill('FFB3A598')]),
+    group({ name: 'nose', id: mNoseId, x: 12.5, y: 1 }, [
+      el('Shape', { name: 'tip' }, [el('Ellipse', { width: 2.6, height: 2.2, originX: 0.5, originY: 0.5, name: 'E' }), fill('FFD98B86')]),
+      ink([[P(-1, 0.6), P(6, -1.6)], [P(-1, 1.2), P(6.5, 1.6)], [P(-1.5, 1.8), P(5, 4)]], rng(456), { w: 0.6, amt: 0.1 }),
+    ]),
   ]));
-  void O; void eye;
 
   // mailbox
   const flagId = ids.next();
@@ -1542,16 +1546,19 @@ function gate(ids) {
   const hMail = ids.next();
   s.add(hit(hMail, 532, 120, 80, 90));
   s.listen(hMail, 'enter', [Scene.fire(post)]);
-  const owl = s.input('trigger', 'owl');
-  const blink = (f) => [[f, 0, 'cubic', EASE.in], [f + 4, 1, 'cubic', EASE.out], [f + 8, 0, 'hold']];
-  s.triggerLayer('owl', owl, s.anim({ name: 'owl', duration: 230, tracks: [
-    { object: owlId, prop: 'x', keys: [[0, 520, 'cubic', [0.3, 1.4, 0.5, 1]], [22, 492, 'hold'], [196, 492, 'cubic', [0.5, 0, 0.8, 0.4]], [214, 520]] },
-    { object: owlId, prop: 'rotation', keys: [[0, 0, 'hold'], [60, 0, 'cubic', EASE.inOut], [74, -0.32, 'hold'], [120, -0.32, 'cubic', EASE.inOut], [132, 0.12, 'cubic', EASE.inOut], [150, 0, 'hold'], [230, 0]] },
-    { object: lidsId, prop: 'scaleY', keys: [[0, 0, 'hold'], ...blink(36), ...blink(100), ...blink(170), [230, 0]] },
-    // out of sight (and out of the paint, which is a little see-through) when it's inside
-    { object: owlId, prop: 'opacity', keys: [[0, 1, 'hold'], [214, 0, 'hold'], [230, 0]] },
+  const mouse = s.input('trigger', 'mouse');
+  const blink = (f) => [[f, 0, 'cubic', EASE.in], [f + 3, 1, 'cubic', EASE.out], [f + 6, 0, 'hold']];
+  const sniff = (f0, f1) => { const k = []; for (let f = f0; f < f1; f += 6) k.push([f, 0, 'cubic', EASE.inOut], [f + 3, 0.16, 'cubic', EASE.inOut]); return k; };
+  s.triggerLayer('mouse', mouse, s.anim({ name: 'mouse', duration: 230, tracks: [
+    // creeps out in two goes, has a look round, then whisks back in
+    { object: mouseId, prop: 'x', keys: [[0, 545, 'cubic', EASE.inOut], [16, 556, 'hold'], [34, 556, 'cubic', EASE.out], [46, 566, 'hold'], [196, 566, 'cubic', [0.5, 0, 0.9, 0.5]], [206, 540]] },
+    { object: mouseId, prop: 'rotation', keys: [[0, 0, 'hold'], [80, 0, 'cubic', EASE.inOut], [92, -0.22, 'hold'], [128, -0.22, 'cubic', EASE.inOut], [140, 0.06, 'cubic', EASE.inOut], [152, 0, 'hold'], [230, 0]] },
+    { object: mNoseId, prop: 'rotation', keys: [[0, 0, 'hold'], ...sniff(18, 34), ...sniff(50, 78), ...sniff(144, 176), [230, 0]] },
+    { object: mEarId, prop: 'rotation', keys: [[0, 0, 'hold'], [110, 0, 'cubic', EASE.out], [114, -0.35, 'cubic', EASE.inOut], [120, 0.05, 'cubic', EASE.inOut], [126, 0, 'hold'], [230, 0]] },
+    { object: mLidId, prop: 'scaleY', keys: [[0, 0, 'hold'], ...blink(64), ...blink(164), [230, 0]] },
+    { object: mouseId, prop: 'opacity', keys: [[0, 1, 'hold'], [206, 0, 'hold'], [230, 0]] },
   ] }), { fromAny: false, mix: 0 });
-  s.listen(hMail, 'click', [Scene.fire(owl)]);
+  s.listen(hMail, 'click', [Scene.fire(mouse)]);
 
   k.finish(still);
   return s.toXml();
