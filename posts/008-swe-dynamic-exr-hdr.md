@@ -7,7 +7,7 @@ tags: ["software engineering", "qt", "optimization"]
 excerpt: "How I implemented dynamically loading EXR and HDR files for the asset thumbnails in the Universal Asset Browser."
 sketch: "Niggle"
 caption: "leaf by leaf, as each one is ready (after Tolkien)"
-turn: "bloom"
+turn: "drizzle"
 ---
 
 # Context

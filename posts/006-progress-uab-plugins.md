@@ -5,7 +5,7 @@ date: "2025-12-31"
 id: "ta-0006"
 tags: ["software engineering", "python", "tech art", "uab"]
 excerpt: "Adding a plugin system using the registry pattern, allowing the integration of third-party asset libraries."
-turn: "smolder"
+turn: "pigment"
 ---
 
 One of the core features of the UAB is the ability to access external asset libraries, not only a user's own local assets. To accomplish this, I've used the registry pattern to create a plugin system, allowing me to integrate libraries like PolyHaven (thanks to Greg Zaal!) and create a way for other developers to extend the UAB with their own asset libraries, whether it be a large commerical service or an internal library. Asset libraries are only the first kind of plugin; more to come in the future!
