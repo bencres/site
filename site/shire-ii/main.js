@@ -9,7 +9,6 @@ const TIMES = ['morning', 'day', 'afternoon', 'dusk', 'night'];
 // ---------- when is it? picked from the visitor's clock, or ?season=&time= / ?day=MM-DD&time=HH:MM
 
 const params = new URLSearchParams(location.search);
-const overridden = ['season', 'time', 'day'].some((k) => params.has(k));
 
 function when(now = new Date()) {
   let month = now.getMonth();
@@ -114,12 +113,15 @@ const ARMS = [
   { id: 'callers', title: 'Post', sub: 'at the gate', react: 'post', dir: 'r' },
 ];
 const TILT = [-2.2, 1.6, -1.1, 2.2, -2.6, 5.5];
+// on a phone the post stands at the left edge of the painting, so every arm points right
+const phone = matchMedia('(max-width: 600px)');
+const dirOf = (i) => (phone.matches ? 'r' : ARMS[i].dir);
 const signpost = $('#signpost');
 const foot = h('span', { class: 'upright', 'aria-hidden': 'true' });
 foot.innerHTML = upright({ w: 26, h: 262, seed: 7 });
 signpost.append(foot);
 const arms = ARMS.map((a, i) => {
-  const link = h('a', { href: `#${a.id}`, class: `arm ${a.dir}`, style: `--i:${i}; --tilt:${TILT[i]}deg` }, h('b', {}, a.title), ' ', h('small', {}, a.sub));
+  const link = h('a', { href: `#${a.id}`, class: `arm ${dirOf(i)}`, style: `--i:${i}; --tilt:${TILT[i]}deg` }, h('b', {}, a.title), ' ', h('small', {}, a.sub));
   link.addEventListener('animationend', () => link.classList.add('settled'), { once: true });
   signpost.append(link);
   return link;
@@ -138,7 +140,7 @@ function paintArms(season) {
   const at = (el) => (el.offsetHeight ? (el.offsetWidth / el.offsetHeight) * 40 : 200);
   arms.forEach((a, i) => {
     a.querySelector('svg.paint')?.remove();
-    a.insertAdjacentHTML('afterbegin', arm({ w: at(a), dir: ARMS[i].dir, tint: ARM_TINT(SEASONS[season], i), seed: 31 + i * 7 }));
+    a.insertAdjacentHTML('afterbegin', arm({ w: at(a), dir: dirOf(i), tint: ARM_TINT(SEASONS[season], i), seed: 31 + i * 7 }));
   });
   back.querySelector('svg.paint')?.remove();
   back.insertAdjacentHTML('afterbegin', arm({ w: at(back), dir: 'l', tint: PIGMENTS[SEASONS[season]][0][0], seed: 91 }));
@@ -201,10 +203,11 @@ const setAll = (m) => {
   m.set('time', state.time);
   if (reducedMotion) m.set('still', true);
 };
-// on a phone the signpost stands under the painting, so the painted one steps out
-const phone = matchMedia('(max-width: 600px)');
+// on a phone the painting is cropped close around the door, and the HTML post stands in
+// for the painted one at its left edge
+const frame = () => (phone.matches ? ['cover', 'centerRight'] : ['contain', 'center']);
 const hill = mount($('#hill'), {
-  src: 'shire-ii', artboard: 'Hill', fit: 'contain',
+  src: 'shire-ii', artboard: 'Hill', fit: frame()[0], align: frame()[1],
   onLoad: () => {
     setAll(hill);
     hill.set('regular', regular);
@@ -213,7 +216,12 @@ const hill = mount($('#hill'), {
   },
 });
 const gate = mount($('#gate'), { src: 'shire-ii', artboard: 'Gate', fit: 'contain', onLoad: () => setAll(gate) });
-phone.addEventListener('change', () => hill.set('bare', phone.matches));
+phone.addEventListener('change', () => {
+  hill.set('bare', phone.matches);
+  hill.setLayout(...frame());
+  arms.forEach((a, i) => { a.classList.toggle('l', dirOf(i) === 'l'); a.classList.toggle('r', dirOf(i) === 'r'); });
+  paintArms(state.season);
+});
 
 // the arms go up once the post is inked in (or anyway, if the painting never loads)
 let planted = false;
@@ -244,17 +252,14 @@ arms.forEach((a, i) => {
   });
 });
 
-// look at the clock again every few minutes; the hill cross-fades if the hour turned
-if (!overridden) {
-  setInterval(() => {
-    if (previewing) return;
-    const next = when();
-    if (next.season === state.season && next.time === state.time && next.elevenses === state.elevenses) return;
-    state = next;
-    paint(state);
-    for (const m of [hill, gate]) { m.set('season', state.season); m.set('time', state.time); }
-  }, 5 * 60 * 1000);
-}
+// look at the clock again every few minutes; the hill cross-fades if the hour turned.
+// A preview (the dials, or ?season= / ?time= / ?day=) holds until "back to now".
+setInterval(() => {
+  if (previewing || ['season', 'time', 'day'].some((k) => params.has(k))) return;
+  const next = when();
+  if (next.season === state.season && next.time === state.time && next.elevenses === state.elevenses) return;
+  apply(next);
+}, 5 * 60 * 1000);
 
 // email links raise the mailbox flags
 for (const a of [hello, post]) {
@@ -304,50 +309,49 @@ else {
   blocks.forEach((b) => io.observe(b));
 }
 
-// ---------- the almanac: scrub season and time to preview the hill in any light.
-// The painting blends between poses, so it moves smoothly; the page's pigments
-// and sign snap to the nearest season and hour.
+// ---------- the almanac: preview the hill in any season and light.
+// The painting's season and time layers switch on whole-number poses (spring = 0 ...
+// winter = 3, morning = 0 ... night = 4) and cross-fade between them, so the dials
+// step through those poses rather than sending in-between values the painting ignores.
 
 let previewing = false;
 const seasonDial = $('#season-dial'), timeDial = $('#time-dial');
 const SEASON_WORD = ['spring', 'summer', 'autumn', 'winter'];
 const TIME_WORD = ['morning', 'midday', 'afternoon', 'dusk', 'night'];
-function showDials(s, t) {
-  seasonDial.value = s;
-  timeDial.value = t;
-  $('#season-word').textContent = SEASON_WORD[Math.round(s)];
-  $('#time-word').textContent = TIME_WORD[Math.round(t)];
-  seasonDial.setAttribute('aria-valuetext', SEASON_WORD[Math.round(s)]);
-  timeDial.setAttribute('aria-valuetext', TIME_WORD[Math.round(t)]);
+function showDials({ season, time }) {
+  seasonDial.value = season;
+  timeDial.value = time;
+  $('#season-word').textContent = SEASON_WORD[season];
+  $('#time-word').textContent = TIME_WORD[time];
+  seasonDial.setAttribute('aria-valuetext', SEASON_WORD[season]);
+  timeDial.setAttribute('aria-valuetext', TIME_WORD[time]);
+}
+function apply(next) {
+  state = next;
+  paint(state);
+  for (const m of [hill, gate]) { m.set('season', state.season); m.set('time', state.time); }
+  showDials(state);
 }
 function scrub() {
+  const next = { season: +seasonDial.value, time: +timeDial.value, elevenses: false };
   previewing = true;
-  const s = +seasonDial.value, t = +timeDial.value;
-  for (const m of [hill, gate]) { m.set('season', s); m.set('time', t); }
-  const snapped = { season: Math.round(s), time: Math.round(t), elevenses: false };
-  if (snapped.season !== state.season || snapped.time !== state.time) {
-    state = snapped;
-    paint(state);
-    const q = new URLSearchParams(location.search);
-    q.set('season', SEASONS[state.season]);
-    q.set('time', TIMES[state.time]);
-    history.replaceState(null, '', `?${q}`);
-  }
-  showDials(s, t);
   $('#almanac').classList.add('moved');
+  if (next.season === state.season && next.time === state.time) return;
+  apply(next);
+  const q = new URLSearchParams(location.search);
+  q.set('season', SEASONS[next.season]);
+  q.set('time', TIMES[next.time]);
+  history.replaceState(null, '', `?${q}`);
 }
 seasonDial.addEventListener('input', scrub);
 timeDial.addEventListener('input', scrub);
 $('#almanac-now').addEventListener('click', () => {
   previewing = false;
+  for (const k of ['season', 'time', 'day']) params.delete(k);
   history.replaceState(null, '', location.pathname);
-  params.delete('season'); params.delete('time'); params.delete('day');
-  state = when();
-  paint(state);
-  for (const m of [hill, gate]) { m.set('season', state.season); m.set('time', state.time); }
-  showDials(state.season, state.time);
+  apply(when());
   $('#almanac').classList.remove('moved');
 });
-showDials(state.season, state.time);
+showDials(state);
 // on a phone the almanac folds away until asked for, so it never sits on the text
 if (phone.matches) $('#almanac-box').open = false;

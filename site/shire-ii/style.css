@@ -73,10 +73,14 @@ a:focus-visible { outline: 2px dashed var(--link); outline-offset: 3px; border-r
 .arm b, .arm small { position: relative; opacity: 0; }
 .planted .arm b, .planted .arm small { opacity: 1; transition: opacity 0.5s ease calc(var(--i) * 0.11s + 0.6s); }
 .arm.settled { animation: none; }
-/* the ink boils, three re-traced cels at the hill's own pace */
-.paint .cel { visibility: hidden; animation: boil 0.4s step-end infinite; }
-.paint .c1 { animation-delay: -0.267s; }
-.paint .c2 { animation-delay: -0.133s; }
+/* the ink boils, three re-traced cels at the hill's own pace, but only on the arm
+   you're touching: each swap repaints a blurred stroke, and doing that on every
+   arm all the time kept the browser busy for nothing */
+.paint .cel { visibility: hidden; }
+.paint .c0 { visibility: visible; }
+.arm:hover .paint .cel, .arm:focus-visible .paint .cel { visibility: hidden; animation: boil 0.4s step-end infinite; }
+.arm:hover .paint .c1, .arm:focus-visible .paint .c1 { animation-delay: -0.267s; }
+.arm:hover .paint .c2, .arm:focus-visible .paint .c2 { animation-delay: -0.133s; }
 @keyframes boil { 0% { visibility: visible; } 33.33% { visibility: hidden; } 100% { visibility: hidden; } }
 
 /* a loose arm creaks round on its nail, overshoots, and settles a little askew */
@@ -179,37 +183,47 @@ main { margin-top: 30px; }
 @media (max-width: 860px) {
   .hill { margin: 12px -20px 4px; }
   .sign { margin-left: 4%; }
-    .m-spatter { left: auto; right: -8px; top: -34px; }
+  .m-spatter { left: auto; right: -8px; top: -34px; }
 }
-/* on a phone the signpost stands on its own under the painting, its foot in the bank */
+/* on a phone the painting is cropped close around the door (taller than the wide
+   desktop strip) and the post stands at its left edge, arms out over the slope */
 @media (max-width: 600px) {
-  .hill { display: flex; flex-direction: column; }
-  .signpost { --u: 1px; position: relative; order: 1; aspect-ratio: auto; width: 100%; height: 266px; margin: -30px 0 0; }
-  .sign { order: 2; }
-  .upright { display: block; position: absolute; left: 146px; top: 0; width: 26px; }
+  .hill { margin: 8px -16px 2px; overflow: hidden; }
+  .hill canvas { aspect-ratio: 6 / 5; }
+  .signpost { --u: 1px; inset: 0; width: auto; aspect-ratio: auto; }
+  .upright { display: block; position: absolute; left: 20px; bottom: 6px; width: 26px; }
   .upright .o { stroke-dasharray: 1 1; stroke-dashoffset: 1; transition: stroke-dashoffset 0.9s cubic-bezier(0.45, 0.05, 0.25, 1); }
   .upright .soak { opacity: 0; transition: opacity 1s ease 0.5s; }
   .planted .upright .o { stroke-dashoffset: 0; }
   .planted .upright .soak { opacity: 1; }
-  .arm { top: calc(16px + var(--i) * 40px); height: 33px; font-size: 21px; line-height: 33px; animation-delay: calc(0.5s + var(--i) * 0.11s); }
-  .arm small { font-size: 15.5px; }
-  .arm.r { left: 148px; padding: 0 30px 0 22px; transform-origin: 11px 50%; }
-  .arm.l { left: auto; right: calc(100% - 172px); padding: 0 22px 0 30px; transform-origin: calc(100% - 11px) 50%; }
+  .arm {
+    top: auto; bottom: calc(46px + (5 - var(--i)) * 35px); height: 30px;
+    font-size: 19px; line-height: 30px; animation-delay: calc(0.5s + var(--i) * 0.11s);
+  }
+  .arm small { font-size: 14px; }
+  .arm.r, .arm.l { left: 23px; right: auto; padding: 0 26px 0 19px; transform-origin: 10px 50%; }
+  .sign { font-size: 19px; margin: 4px 0 0 58px; }
+}
+/* narrow phones: the boards carry just the room, so they stop short of the door
+   (the room's name is still there, beside each heading) */
+@media (max-width: 460px) {
+  .arm small { display: none; }
+  .arm.r, .arm.l { padding: 0 22px 0 17px; }
+}
+@media (max-width: 380px) {
+  .arm { bottom: calc(42px + (5 - var(--i)) * 32px); height: 27px; font-size: 17px; line-height: 27px; }
 }
 @media (max-width: 520px) {
   body { font-size: 17.5px; }
   .col { padding: 22px 16px 96px; }
-      /* the painting bleeds off both sides of a phone, so the door gets more room */
-  .hill { margin: 10px -16px 2px; overflow: hidden; }
-  .hill canvas { width: 118%; max-width: none; margin-left: -12%; }
-  .sign { font-size: 19px; margin: 2px 0 0 2px; }
   .gate { margin: 0 -16px; }
   .room-block h2 .wash { left: -22px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .wash, .bloomed .wash { opacity: 0.86; animation: none; }
   .sign { animation: none; }
-  .paint .cel { animation: none; }
+  .paint .cel, .arm:hover .paint .cel, .arm:focus-visible .paint .cel { animation: none; }
+  .arm:hover .paint .c0, .arm:focus-visible .paint .c0 { visibility: visible; }
   .paint .c0 { visibility: visible; }
   .arm, .arm .soak, .arm b, .arm small, .mark { opacity: 1; }
   .arm .o, .upright .o { stroke-dashoffset: 0; }
