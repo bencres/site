@@ -153,6 +153,65 @@ const RECIPES = {
       })),
     ],
   },
+  // rain, quicker and lighter: seven drops, all down in the first third
+  shower: {
+    dur: 1000,
+    land: 0.08,
+    plan: ({ W, H, M, x, y, r }) => [
+      { x, y, t: 0, size: 0.12 * M, end: 4.8 * M },
+      ...Array.from({ length: 7 }, (_, i) => ({
+        x: r() * W, y: r() * H, t: 0.03 + (i / 7) * 0.26 + r() * 0.03, size: (0.05 + r() * 0.05) * M, end: (1.4 + r() * 0.9) * M,
+      })),
+    ],
+  },
+  // rain coming down hard: eighteen small drops almost at once
+  downpour: {
+    dur: 1200,
+    land: 0.07,
+    plan: ({ W, H, M, x, y, r }) => [
+      { x, y, t: 0, size: 0.1 * M, end: 4.8 * M },
+      ...Array.from({ length: 18 }, () => ({
+        x: r() * W, y: r() * H, t: 0.02 + r() * 0.22, size: (0.035 + r() * 0.04) * M, end: (1.1 + r() * 0.8) * M,
+      })),
+    ],
+  },
+  // slow rain: nine drops one at a time, each given room to land and spread
+  patter: {
+    dur: 2200,
+    land: 0.06,
+    plan: ({ W, H, M, x, y, r }) => [
+      { x, y, t: 0, size: 0.1 * M, end: 4.8 * M },
+      ...Array.from({ length: 9 }, (_, i) => ({
+        x: r() * W, y: r() * H, t: 0.06 + (i / 9) * 0.58 + r() * 0.02, size: (0.05 + r() * 0.04) * M, end: (1.2 + r() * 0.8) * M,
+      })),
+    ],
+  },
+  // rain starting up: a few slow, sparse drops, then quicker and thicker
+  gathering: {
+    dur: 1800,
+    land: 0.07,
+    plan: ({ W, H, M, x, y, r }) => [
+      { x, y, t: 0, size: 0.1 * M, end: 4.8 * M },
+      ...Array.from({ length: 14 }, (_, i) => ({
+        x: r() * W, y: r() * H, t: 0.06 + 0.56 * Math.sqrt((i + 1) / 14) + r() * 0.015, size: (0.045 + r() * 0.045) * M, end: (1.2 + r() * 0.8) * M,
+      })),
+    ],
+  },
+  // a passing shower: the drops move across the page from the side you pressed
+  sweep: {
+    dur: 1400,
+    land: 0.07,
+    plan: ({ W, H, M, x, y, r }) => {
+      const fromLeft = x < W / 2;
+      return [
+        { x, y, t: 0, size: 0.11 * M, end: 4.8 * M },
+        ...Array.from({ length: 12 }, (_, i) => {
+          const u = (i + r() * 0.8) / 12; // how far across the page this drop is
+          return { x: (fromLeft ? u : 1 - u) * W, y: r() * H, t: 0.03 + u * 0.42, size: (0.05 + r() * 0.04) * M, end: (1.3 + r() * 0.8) * M };
+        }),
+      ];
+    },
+  },
   // four big, slow drops, each leaving a tide line of pigment that dries away
   puddle: {
     dur: 2200,

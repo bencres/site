@@ -4,7 +4,7 @@
 //   sketch:  the artboard in site/riv/sketches.riv drawn above the post
 //   caption: a hand-lettered line under the sketch
 //   turn:    the transition into the post (and back), a recipe in site/shared/turn.js:
-//            drops, drizzle, rain, puddle, pigment or flick
+//            drops, drizzle, rain, shower, downpour, patter, gathering, sweep, puddle, pigment or flick
 // Images referenced as /blog-images/<file> (as on bencres.dev) are read from
 // posts/images/ and copied beside the posts.
 import { readdirSync, readFileSync, writeFileSync, mkdirSync, copyFileSync, existsSync } from 'node:fs';

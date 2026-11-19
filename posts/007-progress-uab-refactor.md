@@ -5,7 +5,7 @@ date: "2026-01-24"
 id: "ta-0007"
 tags: ["software engineering", "python", "tech art", "uab", "design patterns"]
 excerpt: "Building a large application from the ground up is challenging. Here's what went wrong with my first attempt, and how I fixed it."
-turn: "puddle"
+turn: "patter"
 ---
 
 # Mistakes Were Made

@@ -5,7 +5,7 @@ date: "2025-12-22"
 id: "ta-0007"
 tags: ["software engineering", "python", "tech art", "pipeline", "pxf"]
 excerpt: "Building the Pixel Foundry's environment launcher and production manager, allowing artists to launch their assigned task's environment."
-turn: "drops"
+turn: "downpour"
 ---
 
 I've begun working on our environment/production manager at PXF. Its purpose is to manage environment variables for individual assets and shots, and to allow artists to access their assigned tasks and projects. The general flow we're aiming for is:

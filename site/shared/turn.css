@@ -8,6 +8,7 @@
      puddle   four big, slow drops, each leaving a tide line that dries away
      pigment  five drops carrying colour, which blooms and dries clear
      flick    a trail of drops flung off a brush, with specks
+   and rain, in five tempos: shower, downpour, patter, gathering, sweep
 
    Browsers without cross-document view transitions simply navigate. */
 @view-transition { navigation: auto; }
