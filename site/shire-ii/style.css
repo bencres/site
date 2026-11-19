@@ -299,11 +299,13 @@ main { margin-top: 30px; }
 
 /* ---- at the door: a "knock", and whoever answers */
 .say { position: absolute; z-index: 3; pointer-events: none; font-family: 'Caveat', cursive; color: var(--ink); }
-.say.knock {
-  font: 700 19px/1 'Caveat', cursive; color: #5a4632;
+.say.sfx {
+  font: 700 19px/1 'Caveat', cursive; color: #5a4632; white-space: nowrap;
   transform: translate(-50%, -50%) rotate(var(--tilt, 0deg));
-  animation: knock-word 1.05s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+  animation: knock-word 1.2s cubic-bezier(0.2, 0.7, 0.3, 1) both;
 }
+.say.sfx.wide { letter-spacing: 0.06em; }
+.gate .say.sfx { z-index: 3; }
 @keyframes knock-word {
   0% { opacity: 0; translate: 0 4px; scale: 0.7; }
   14% { opacity: 1; translate: 0 0; scale: 1.08; }

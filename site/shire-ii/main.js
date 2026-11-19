@@ -168,7 +168,7 @@ const setAll = (m) => {
 const frame = () => (phone.matches ? ['cover', 'centerRight'] : ['fill', 'center']);
 const hill = mount($('#hill'), {
   src: 'shire-ii', artboard: 'Hill', fit: frame()[0], align: frame()[1],
-  onEvent: (name) => name === 'door' && knockAt(),
+  onEvent: (name) => hillEvents[name]?.(),
   onLoad: () => {
     setAll(hill);
     hill.set('regular', regular);
@@ -177,7 +177,7 @@ const hill = mount($('#hill'), {
     $('.hill').classList.add('glazed');
   },
 });
-const gate = mount($('#gate'), { src: 'shire-ii', artboard: 'Gate', fit: 'fill', onLoad: () => { setAll(gate); $('.gate').classList.add('glazed'); } });
+const gate = mount($('#gate'), { src: 'shire-ii', artboard: 'Gate', fit: 'fill', onEvent: (name) => gateEvents[name]?.(), onLoad: () => { setAll(gate); $('.gate').classList.add('glazed'); } });
 narrow.addEventListener('change', () => {
   arms.forEach((a, i) => { a.classList.toggle('l', dirOf(i) === 'l'); a.classList.toggle('r', dirOf(i) === 'r'); });
   paintArms(state.season);
@@ -242,7 +242,7 @@ for (const a of [hello, post]) {
 const hillFigEl = $('.hill');
 // where the door is on screen, inside .hill: the painting is 900×400 and fills its
 // canvas on desktop; on phones it's cropped to cover, anchored right
-function doorAt() {
+function paintAt(px, py) {
   const c = $('#hill');
   const w = c.clientWidth, h = c.clientHeight;
   let k = w / 900, ox = 0, oy = 0;
@@ -251,7 +251,23 @@ function doorAt() {
     ox = w - 900 * k;
     oy = (h - 400 * k) / 2;
   }
-  return { x: c.offsetLeft + ox + 620 * k, y: c.offsetTop + oy + 292 * k, k };
+  return { x: c.offsetLeft + ox + px * k, y: c.offsetTop + oy + py * k, k };
+}
+const doorAt = () => paintAt(620, 292);
+// the gate painting is 600×210 and fills its canvas
+function gateAt(px, py) {
+  const c = $('#gate');
+  const k = c.clientWidth / 600;
+  return { x: c.offsetLeft + px * k, y: c.offsetTop + py * k, k };
+}
+// a sound, written rather than heard: a word that pops off a spot and floats away
+function sfx(host, at, text, { spread = 30, cls = '' } = {}) {
+  const el = h('span', { class: `say sfx ${cls}`, 'aria-hidden': 'true' }, text);
+  el.style.left = `${at.x + (Math.random() - 0.5) * spread * at.k}px`;
+  el.style.top = `${at.y + (Math.random() - 0.5) * spread * 0.5 * at.k}px`;
+  el.style.setProperty('--tilt', `${(Math.random() * 16 - 8).toFixed(1)}deg`);
+  host.append(el);
+  setTimeout(() => el.remove(), 1400);
 }
 function say(text, { kind = 'speech', ms = 2600, dx = 0, dy = 0 } = {}) {
   const d = doorAt();
@@ -269,15 +285,7 @@ function say(text, { kind = 'speech', ms = 2600, dx = 0, dy = 0 } = {}) {
   setTimeout(() => el.remove(), ms + 600);
   return el;
 }
-function knockWord() {
-  const d = doorAt();
-  const el = h('span', { class: 'say knock', 'aria-hidden': 'true' }, 'knock');
-  el.style.left = `${d.x + (-30 + Math.random() * 36) * d.k}px`;
-  el.style.top = `${d.y + (-14 + Math.random() * 20) * d.k}px`;
-  el.style.setProperty('--tilt', `${(Math.random() * 16 - 8).toFixed(1)}deg`);
-  hillFigEl.append(el);
-  setTimeout(() => el.remove(), 1100);
-}
+const knockWord = () => sfx(hillFigEl, paintAt(608, 288), 'knock', { spread: 36 });
 
 // idle → (knock) → coming → (wait) welcome, or (knock, knock) angry → idle
 let door = { state: 'idle', knocks: 0, timer: 0 };
@@ -285,7 +293,7 @@ function knockAt() {
   hill.fire('knock');
   knockWord();
   if (door.state === 'idle') {
-    door = { state: 'coming', knocks: 0, timer: setTimeout(answer, 3600) };
+    door = { state: 'coming', knocks: 0, timer: setTimeout(answer, 3600), regular: knockedThisWeek() >= 3 };
     setTimeout(() => door.state === 'coming' && say('I’m coming!', { ms: 2200 }), 500);
   } else if (door.state === 'coming' && ++door.knocks >= 2) {
     clearTimeout(door.timer);
@@ -299,15 +307,57 @@ function knockAt() {
     }, 350);
   }
 }
+// counts this visit's knock, and returns how many times they've knocked in the past week
+function knockedThisWeek() {
+  const week = 7 * 24 * 3600 * 1000, now = Date.now();
+  let times = [];
+  try {
+    times = (JSON.parse(localStorage.getItem('shire-ii:knocks')) || []).filter((t) => now - t < week);
+    times.push(now);
+    localStorage.setItem('shire-ii:knocks', JSON.stringify(times.slice(-12)));
+  } catch {}
+  return times.length;
+}
 function answer() {
   door.state = 'open';
   hill.fire('welcome');
-  setTimeout(() => say('Oh, it’s just you. Welcome in, welcome in…', { ms: 3200 }), 500);
+  const line = door.regular ? 'Back again? The kettle’s on.' : 'Oh, it’s just you. Welcome in, welcome in…';
+  setTimeout(() => say(line, { ms: 3200 }), 500);
   setTimeout(() => (door = { state: 'idle', knocks: 0, timer: 0 }), 5200);
 }
 document.addEventListener('keydown', (e) => {
   if (e.key === 'k' && !e.metaKey && !e.ctrlKey && !e.altKey && document.activeElement === document.body) knockAt();
 });
+
+// ---------- small things to find
+// the chimney blows smoke rings, wobblier the more you ask, and every fifth a heart
+let rings = 0, ringsCool = 0;
+function chimney() {
+  clearTimeout(ringsCool);
+  ringsCool = setTimeout(() => (rings = 0), 4000);
+  rings++;
+  const kind = rings % 5 === 0 ? 'heart' : rings >= 3 ? 'wobble' : 'ring';
+  hill.fire(`ring-${kind}`);
+  sfx(hillFigEl, paintAt(712, 128), kind === 'heart' ? 'pff ♥' : 'puff', { spread: 20 });
+}
+// the wind takes a piece of washing off the line
+function whoosh() {
+  if (state.season === 3) return; // no washing out in winter
+  sfx(hillFigEl, paintAt(800, 270), 'whoosh', { spread: 70, cls: 'wide' });
+}
+// the gate creaks open, and later clacks shut behind the hedgehog
+const gateFig = $('.gate');
+let gateBusy = false;
+function gateSwing() {
+  if (gateBusy) return;
+  gateBusy = true;
+  sfx(gateFig, gateAt(392, 110), 'creeeak', { spread: 30, cls: 'wide' });
+  setTimeout(() => sfx(gateFig, gateAt(350, 150), 'snuffle', { spread: 20 }), 3000);
+  setTimeout(() => sfx(gateFig, gateAt(440, 120), 'clack!', { spread: 10 }), 5600);
+  setTimeout(() => (gateBusy = false), 6700);
+}
+const hillEvents = { door: () => knockAt(), chimney, whoosh };
+const gateEvents = { gate: gateSwing };
 
 // the gate swings shut behind you when you reach the bottom
 new IntersectionObserver((entries, io) => {
