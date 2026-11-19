@@ -296,3 +296,48 @@ main { margin-top: 30px; }
 .badge:hover, .badge:focus-visible { text-decoration: none; }
 .badge:hover .mark-icon, .badge:focus-visible .mark-icon { transform: rotate(-6deg) translateY(-2px); }
 .badge:hover .label, .badge:focus-visible .label { color: var(--ink, #2b231c); }
+
+/* ---- at the door: a "knock", and whoever answers */
+.say { position: absolute; z-index: 3; pointer-events: none; font-family: 'Caveat', cursive; color: var(--ink); }
+.say.knock {
+  font: 700 19px/1 'Caveat', cursive; color: #5a4632;
+  transform: translate(-50%, -50%) rotate(var(--tilt, 0deg));
+  animation: knock-word 1.05s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+@keyframes knock-word {
+  0% { opacity: 0; translate: 0 4px; scale: 0.7; }
+  14% { opacity: 1; translate: 0 0; scale: 1.08; }
+  26% { scale: 1; }
+  70% { opacity: 1; }
+  100% { opacity: 0; translate: 0 -18px; }
+}
+/* a speech bubble in the hill's hand: paper, an inked edge, a tail toward the door */
+.say.speech, .say.angry {
+  max-width: 11em; padding: 6px 13px 7px; transform: translateY(-100%);
+  font-size: 21px; font-weight: 600; line-height: 1.1; white-space: normal; width: max-content;
+  background: #fbf6ea; border: 1.6px solid var(--ink);
+  border-radius: 18px 22px 20px 6px / 16px 18px 20px 6px;
+  box-shadow: 2px 3px 0 rgba(43, 35, 28, 0.12);
+  animation: bubble-in 0.42s cubic-bezier(0.34, 1.6, 0.64, 1) both;
+  transform-origin: 0% 100%;
+}
+.say.speech::after, .say.angry::after {
+  content: ''; position: absolute; left: calc(var(--tail, 0px) - 9px); bottom: -1px; width: 14px; height: 12px;
+  background: inherit; border-left: 1.6px solid var(--ink); border-bottom: 1.6px solid var(--ink);
+  clip-path: polygon(0 100%, 100% 0, 100% 100%); transform: skewX(-24deg);
+}
+.say.gone { animation: bubble-out 0.5s ease-in both; }
+@keyframes bubble-in { 0% { opacity: 0; scale: 0.4; } 100% { opacity: 1; scale: 1; } }
+@keyframes bubble-out { to { opacity: 0; translate: 0 -6px; } }
+/* someone very cross */
+.say.angry {
+  font-size: 30px; font-weight: 700; letter-spacing: 0.02em; color: #8e2a18;
+  background: #fbe6d8; border-color: #8e2a18; border-width: 2.2px;
+  border-radius: 6px 3px 7px 2px;
+  animation: bubble-in 0.2s cubic-bezier(0.34, 2, 0.64, 1) both, rage 0.32s steps(2) 0.2s 3;
+}
+.say.angry::after { border-color: #8e2a18; }
+.say.angry.gone { animation: bubble-out 0.35s ease-in both; }
+@keyframes rage { 0% { rotate: -3deg; } 50% { rotate: 3deg; } 100% { rotate: 0deg; } }
+@media (max-width: 600px) { .say.speech { font-size: 18px; max-width: 10em; } .say.angry { font-size: 25px; } }
+@media (prefers-reduced-motion: reduce) { .say { animation: none !important; } }

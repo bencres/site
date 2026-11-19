@@ -168,6 +168,7 @@ const setAll = (m) => {
 const frame = () => (phone.matches ? ['cover', 'centerRight'] : ['fill', 'center']);
 const hill = mount($('#hill'), {
   src: 'shire-ii', artboard: 'Hill', fit: frame()[0], align: frame()[1],
+  onEvent: (name) => name === 'door' && knockAt(),
   onLoad: () => {
     setAll(hill);
     hill.set('regular', regular);
@@ -233,9 +234,79 @@ for (const a of [hello, post]) {
   a.addEventListener('focus', raise);
 }
 
-// k knocks on the door, for anyone not pointing
+// ---------- knocking at the door
+// A knock rattles the door and a little "knock" rises off it. Then someone inside
+// calls out, and if you wait, opens up kindly; if you keep knocking, they fling
+// the door open, shout, and slam it. (k knocks too, for anyone not pointing.)
+
+const hillFigEl = $('.hill');
+// where the door is on screen, inside .hill: the painting is 900×400 and fills its
+// canvas on desktop; on phones it's cropped to cover, anchored right
+function doorAt() {
+  const c = $('#hill');
+  const w = c.clientWidth, h = c.clientHeight;
+  let k = w / 900, ox = 0, oy = 0;
+  if (phone.matches) {
+    k = Math.max(w / 900, h / 400);
+    ox = w - 900 * k;
+    oy = (h - 400 * k) / 2;
+  }
+  return { x: c.offsetLeft + ox + 620 * k, y: c.offsetTop + oy + 292 * k, k };
+}
+function say(text, { kind = 'speech', ms = 2600, dx = 0, dy = 0 } = {}) {
+  const d = doorAt();
+  const el = h('span', { class: `say ${kind}`, role: 'status' }, text);
+  el.style.left = `${d.x + (dx + 26) * d.k}px`;
+  el.style.top = `${d.y + (dy - 48) * d.k}px`;
+  hillFigEl.append(el);
+  // keep it on the page: slide it left if it would run off the painting's right side
+  const over = el.offsetLeft + el.offsetWidth - (hillFigEl.clientWidth - 8);
+  if (over > 0) {
+    el.style.left = `${el.offsetLeft - over}px`;
+    el.style.setProperty('--tail', `${Math.min(over, el.offsetWidth - 40)}px`);
+  }
+  setTimeout(() => el.classList.add('gone'), ms);
+  setTimeout(() => el.remove(), ms + 600);
+  return el;
+}
+function knockWord() {
+  const d = doorAt();
+  const el = h('span', { class: 'say knock', 'aria-hidden': 'true' }, 'knock');
+  el.style.left = `${d.x + (-30 + Math.random() * 36) * d.k}px`;
+  el.style.top = `${d.y + (-14 + Math.random() * 20) * d.k}px`;
+  el.style.setProperty('--tilt', `${(Math.random() * 16 - 8).toFixed(1)}deg`);
+  hillFigEl.append(el);
+  setTimeout(() => el.remove(), 1100);
+}
+
+// idle → (knock) → coming → (wait) welcome, or (knock, knock) angry → idle
+let door = { state: 'idle', knocks: 0, timer: 0 };
+function knockAt() {
+  hill.fire('knock');
+  knockWord();
+  if (door.state === 'idle') {
+    door = { state: 'coming', knocks: 0, timer: setTimeout(answer, 3600) };
+    setTimeout(() => door.state === 'coming' && say('I’m coming!', { ms: 2200 }), 500);
+  } else if (door.state === 'coming' && ++door.knocks >= 2) {
+    clearTimeout(door.timer);
+    door.state = 'angry';
+    setTimeout(() => {
+      hill.fire('slam');
+      say('WHAT?!', { kind: 'angry', ms: 1100, dx: -6, dy: -6 });
+      // the slam shakes a few leaves off the tree
+      setTimeout(() => hill.fire('shake'), 1450);
+      setTimeout(() => (door = { state: 'idle', knocks: 0, timer: 0 }), 2600);
+    }, 350);
+  }
+}
+function answer() {
+  door.state = 'open';
+  hill.fire('welcome');
+  setTimeout(() => say('Oh, it’s just you. Welcome in, welcome in…', { ms: 3200 }), 500);
+  setTimeout(() => (door = { state: 'idle', knocks: 0, timer: 0 }), 5200);
+}
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'k' && !e.metaKey && !e.ctrlKey && !e.altKey && document.activeElement === document.body) hill.fire('knock');
+  if (e.key === 'k' && !e.metaKey && !e.ctrlKey && !e.altKey && document.activeElement === document.body) knockAt();
 });
 
 // the gate swings shut behind you when you reach the bottom

@@ -1240,13 +1240,28 @@ function hill(ids) {
   poseLayer(s, 'time', time, 5, timeP);
 
   // --- reactions
+  // the door: a knock rattles it; the page (main.js) decides what happens next and
+  // either has it opened kindly ('welcome') or flung open and slammed ('slam')
   const knock = s.input('trigger', 'knock');
-  s.triggerLayer('knock', knock, s.anim({ name: 'knock', duration: 300, tracks: [
-    { object: leafId, prop: 'scaleX', keys: [[0, 1, 'cubic', EASE.out], [6, 0.97, 'cubic', EASE.out], [12, 1, 'cubic', EASE.inOut], [40, 0.62, 'hold'], [230, 0.62, 'cubic', EASE.inOut], [276, 1.01, 'cubic', EASE.out], [290, 1]] },
-    { object: insideId, prop: 'opacity', keys: [[0, 0, 'hold'], [12, 0, 'cubic', EASE.out], [40, 1, 'hold'], [240, 1, 'cubic', EASE.in], [276, 0]] },
-    { object: spillId, prop: 'opacity', keys: [[0, 0, 'hold'], [16, 0, 'cubic', EASE.out], [50, 1, 'hold'], [230, 1, 'cubic', EASE.in], [272, 0]] },
-  ] }), { fromAny: false });
-  s.listen(hDoor, 'click', [Scene.fire(knock)]);
+  s.triggerLayer('knock', knock, s.anim({ name: 'knock', duration: 16, tracks: [
+    { object: leafId, prop: 'scaleX', keys: [[0, 1, 'cubic', EASE.out], [3, 0.975, 'cubic', EASE.out], [7, 1.004, 'cubic', EASE.inOut], [16, 1]] },
+  ] }), { mix: 0 });
+  const welcome = s.input('trigger', 'welcome');
+  s.triggerLayer('welcome', welcome, s.anim({ name: 'welcome', duration: 300, tracks: [
+    { object: leafId, prop: 'scaleX', keys: [[0, 1, 'cubic', [0.4, 0, 0.3, 1]], [40, 0.5, 'hold'], [228, 0.5, 'cubic', [0.45, 0, 0.35, 1]], [288, 1.006, 'cubic', EASE.out], [300, 1]] },
+    { object: insideId, prop: 'opacity', keys: [[0, 0, 'hold'], [4, 0, 'cubic', EASE.out], [36, 1, 'hold'], [236, 1, 'cubic', EASE.in], [284, 0]] },
+    { object: spillId, prop: 'opacity', keys: [[0, 0, 'hold'], [8, 0, 'cubic', EASE.out], [44, 1, 'hold'], [228, 1, 'cubic', EASE.in], [280, 0]] },
+  ] }), { fromAny: false, mix: 0 });
+  const slam = s.input('trigger', 'slam');
+  const jolt = [[88, 0], [91, 2.4], [94, -2], [97, 1.4], [100, -0.8], [104, 0.3], [110, 0]].map(([f, dx]) => [f, D.x - DR + dx, 'cubic', EASE.inOut]);
+  s.triggerLayer('slam', slam, s.anim({ name: 'slam', duration: 120, tracks: [
+    { object: leafId, prop: 'scaleX', keys: [[0, 1, 'cubic', [0.2, 0.9, 0.3, 1]], [7, 0.16, 'cubic', EASE.inOut], [12, 0.22, 'hold'], [80, 0.22, 'cubic', [0.7, 0, 1, 0.6]], [88, 1.03, 'cubic', EASE.out], [93, 0.985, 'cubic', EASE.inOut], [100, 1]] },
+    { object: leafId, prop: 'x', keys: [[0, D.x - DR, 'hold'], ...jolt, [120, D.x - DR]] },
+    { object: insideId, prop: 'opacity', keys: [[0, 0, 'cubic', EASE.out], [6, 1, 'hold'], [82, 1, 'linear'], [88, 0]] },
+    { object: spillId, prop: 'opacity', keys: [[0, 0, 'cubic', EASE.out], [8, 1, 'hold'], [80, 1, 'linear'], [88, 0]] },
+  ] }), { fromAny: false, mix: 0 });
+  const doorEv = s.event('door');
+  s.listen(hDoor, 'click', [Scene.emit(doorEv)]);
 
   const glint = s.input('trigger', 'glint');
   s.triggerLayer('glint', glint, s.anim({ name: 'glint', duration: 60, tracks: [
@@ -1410,6 +1425,28 @@ function gate(ids) {
   ]));
   s.add(group({ name: 'click', id: clickId, opacity: 0 }, [ink([[P(462, 112), P(470, 106)], [P(464, 124), P(474, 124)], [P(462, 136), P(470, 142)]], rng(422), { w: 1.2, amt: 0.2 })]));
 
+
+  // an owl lives in the mailbox: click it and it peeks out of the open end, blinks,
+  // tilts its head at you, and goes back in. Drawn behind the box, so only what's
+  // past the box's open end shows.
+  const owlId = ids.next(), lidsId = ids.next();
+  const O = P(0, 0);
+  const owlHead = blobPts(11.5, 10.5, rng(450), { n: 12, wobble: 0.05 }).map((p) => P(p.x, p.y + 1));
+  const face = blobPts(8.5, 7.5, rng(451), { n: 10, wobble: 0.06 }).map((p) => P(p.x - 1, p.y + 2));
+  const eye = (x) => [x, 1];
+  s.add(group({ name: 'owl', id: owlId, x: 520, y: 100, opacity: 0 }, [
+    wc(ids, owlHead, 'A07850', rng(452), { alpha: 0.9, off: [0.6, 0.6], wobble: 0.4, grain: 0.4, soft: false, blend: 'normal' }),
+    wc(ids, [P(-9, -8), P(-6, -16), P(-3, -9)], 'A07850', rng(453), { alpha: 0.9, off: [0, 0], wobble: 0.2, grain: 0, soft: false, blend: 'normal' }),
+    wc(ids, [P(3, -9), P(6, -16), P(8, -8)], 'A07850', rng(454), { alpha: 0.9, off: [0, 0], wobble: 0.2, grain: 0, soft: false, blend: 'normal' }),
+    wc(ids, face, 'E8D3A8', rng(455), { alpha: 0.95, off: [0, 0], wobble: 0.3, grain: 0.1, soft: false, blend: 'normal' }),
+    ...[-5, 3].map((x) => el('Shape', { name: 'eye', x, y: 1 }, [el('Ellipse', { width: 6.4, height: 6.4, originX: 0.5, originY: 0.5, name: 'E' }), fill('FFFFFDF4'), stroke(INK, 0.9)])),
+    ...[-5.6, 2.4].map((x) => el('Shape', { name: 'pupil', x, y: 1.4 }, [el('Ellipse', { width: 3.2, height: 3.4, originX: 0.5, originY: 0.5, name: 'E' }), fill(INK)])),
+    el('Node', { name: 'lids', id: lidsId, y: -2, scaleY: 0 }, [-5, 3].map((x) => el('Shape', { name: 'lid', x, y: 0 }, [el('Rectangle', { width: 7.2, height: 7, originX: 0.5, originY: 0, name: 'R' }), fill('FFA07850')]))),
+    wc(ids, [P(-2.5, 4), P(0.5, 4), P(-1, 8)], 'E09A3A', rng(456), { alpha: 0.95, off: [0, 0], wobble: 0.1, grain: 0, soft: false, blend: 'normal' }),
+    ink([{ pts: owlHead, closed: true }, [P(-9, -8), P(-6, -16), P(-3, -9)], [P(3, -9), P(6, -16), P(8, -8)], [P(-2.5, 4), P(-1, 8), P(0.5, 4)]], rng(457), { w: 1.1, amt: 0.25 }),
+  ]));
+  void O; void eye;
+
   // mailbox
   const flagId = ids.next();
   const box = [P(500, 116), P(499, 92), P(508, 82), P(552, 82), P(561, 92), P(560, 116)];
@@ -1505,6 +1542,16 @@ function gate(ids) {
   const hMail = ids.next();
   s.add(hit(hMail, 532, 120, 80, 90));
   s.listen(hMail, 'enter', [Scene.fire(post)]);
+  const owl = s.input('trigger', 'owl');
+  const blink = (f) => [[f, 0, 'cubic', EASE.in], [f + 4, 1, 'cubic', EASE.out], [f + 8, 0, 'hold']];
+  s.triggerLayer('owl', owl, s.anim({ name: 'owl', duration: 230, tracks: [
+    { object: owlId, prop: 'x', keys: [[0, 520, 'cubic', [0.3, 1.4, 0.5, 1]], [22, 492, 'hold'], [196, 492, 'cubic', [0.5, 0, 0.8, 0.4]], [214, 520]] },
+    { object: owlId, prop: 'rotation', keys: [[0, 0, 'hold'], [60, 0, 'cubic', EASE.inOut], [74, -0.32, 'hold'], [120, -0.32, 'cubic', EASE.inOut], [132, 0.12, 'cubic', EASE.inOut], [150, 0, 'hold'], [230, 0]] },
+    { object: lidsId, prop: 'scaleY', keys: [[0, 0, 'hold'], ...blink(36), ...blink(100), ...blink(170), [230, 0]] },
+    // out of sight (and out of the paint, which is a little see-through) when it's inside
+    { object: owlId, prop: 'opacity', keys: [[0, 1, 'hold'], [214, 0, 'hold'], [230, 0]] },
+  ] }), { fromAny: false, mix: 0 });
+  s.listen(hMail, 'click', [Scene.fire(owl)]);
 
   k.finish(still);
   return s.toXml();
