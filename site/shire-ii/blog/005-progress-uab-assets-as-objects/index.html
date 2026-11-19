@@ -39,7 +39,7 @@
 <p>The new design centers around a base <code>Asset</code> class that encapsulates all asset data and provides helper methods for common operations. Asset types are represented as subclasses, allowing for type-specific behavior while maintaining a common interface.</p>
 <h3 id="base-asset-class">Base Asset Class</h3>
 <p>The <code>Asset</code> base class stores all the core asset data that was previously in dictionaries:</p>
-<pre class="ink-code"><code class="hljs language-python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Asset</span>:
+<figure class="pinned code"><pre class="ink-code" tabindex="0"><code class="hljs language-python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Asset</span>:
     <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, <span class="hljs-built_in">id</span>, name, path, file_type, description=<span class="hljs-literal">None</span>, 
                  tags=<span class="hljs-literal">None</span>, author=<span class="hljs-literal">None</span>, creation_date=<span class="hljs-literal">None</span>, date_added=<span class="hljs-literal">None</span></span>):
         <span class="hljs-variable language_">self</span>.<span class="hljs-built_in">id</span> = <span class="hljs-built_in">id</span>
@@ -50,7 +50,7 @@
         <span class="hljs-variable language_">self</span>.tags = tags <span class="hljs-keyword">or</span> []
         <span class="hljs-variable language_">self</span>.author = author
         <span class="hljs-variable language_">self</span>.creation_date = creation_date
-        <span class="hljs-variable language_">self</span>.date_added = date_added</code></pre>
+        <span class="hljs-variable language_">self</span>.date_added = date_added</code></pre><figcaption>python</figcaption></figure>
 <p>This immediately provides better structure than dictionaries, but the real power comes from the helper methods.</p>
 <h3 id="helper-methods">Helper Methods</h3>
 <p>Helper methods encapsulate common operations that were previously scattered throughout the codebase. For example:</p>

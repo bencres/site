@@ -73,14 +73,14 @@ a:focus-visible { outline: 2px dashed var(--link); outline-offset: 3px; border-r
 .prose code { font: 400 0.8em/1.5 'JetBrains Mono', ui-monospace, monospace; }
 .prose :not(pre) > code { padding: 0.08em 0.32em; border-radius: 3px; background: rgba(43, 35, 28, 0.06); box-shadow: inset 0 0 0 1px rgba(43, 35, 28, 0.1); white-space: break-spaces; }
 .ink-code {
-  margin: 1.2em -14px 1.5em; padding: 16px 18px; overflow-x: auto;
-  background: var(--card); border: 1.5px solid rgba(43, 35, 28, 0.55);
-  border-radius: 3px 5px 4px 6px / 5px 3px 6px 4px;
-  box-shadow: 2px 3px 0 rgba(43, 35, 28, 0.1);
-  font-size: 17px;
+  margin: 0; padding: 14px 16px 12px; overflow-x: auto;
+  background: transparent; border: 1px solid rgba(43, 35, 28, 0.18);
+  font-size: 17px; line-height: 1.5;
 }
+.ink-code:focus-visible { outline: 2px dashed var(--link); outline-offset: 2px; }
+.pinned.code, .pinned.code:nth-of-type(even) { padding-bottom: 6px; transform: none; } /* code stays square to the page, so it stays crisp */
+.pinned.code figcaption { text-align: right; margin-top: 4px; color: var(--faint); }
 .ink-code code { font-size: 0.86em; line-height: 1.5; }
-.ink-code { line-height: 1.5; }
 /* the inks: iron-gall for words, sap green for strings, rust for keywords, ochre for numbers */
 .hljs-keyword, .hljs-built_in, .hljs-literal { color: #9a3f22; }
 .hljs-string, .hljs-symbol { color: #3f6b3a; }
@@ -103,7 +103,7 @@ a:focus-visible { outline: 2px dashed var(--link); outline-offset: 3px; border-r
   .prose h2 .wash { left: -20px; }
   .col { padding: 20px 16px 80px; }
   .sketch { margin: 6px -16px 0; }
-  .ink-code { margin: 1.1em -16px 1.4em; border-left: 0; border-right: 0; border-radius: 0; font-size: 15.5px; }
+  .ink-code { font-size: 15.5px; padding: 12px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

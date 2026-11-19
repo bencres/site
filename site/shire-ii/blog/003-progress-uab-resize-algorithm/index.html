@@ -41,12 +41,12 @@
 </ul>
 <h2 id="approach">Approach</h2>
 <p>The core flow is as follows:</p>
-<pre class="ink-code"><code class="hljs language-text">resize event (from Qt: resizeEvent)
+<figure class="pinned code"><pre class="ink-code" tabindex="0"><code class="hljs language-text">resize event (from Qt: resizeEvent)
   show event (from Qt: showEvent)
     zoom
     reflow the grid
     compute the new column count
-    rebuild the layout</code></pre>
+    rebuild the layout</code></pre><figcaption>text</figcaption></figure>
 <p>Necessary base information about the widget&#39;s current state is stored, tracking:</p>
 <ol>
 <li>The minimum size of the grid&#39;s cell.</li>

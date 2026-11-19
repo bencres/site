@@ -74,7 +74,7 @@
 <li><code>_image_loader: Optional[LocalImageLoader]</code> — reference to background loader</li>
 <li><code>thumbnail_ready = Signal(str)</code> — emitted when thumbnail is ready</li>
 </ul>
-<pre class="ink-code"><code class="hljs language-python"><span class="hljs-comment"># short version</span>
+<figure class="pinned code"><pre class="ink-code" tabindex="0"><code class="hljs language-python"><span class="hljs-comment"># short version</span>
 <span class="hljs-keyword">if</span> cached:
     <span class="hljs-keyword">return</span> cached
 
@@ -84,7 +84,7 @@
         _image_loader.add_item((asset_id, path, max_size))
         <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> _image_loader.isRunning():
             _image_loader.start()
-        <span class="hljs-keyword">return</span> _get_loading_placeholder()</code></pre>
+        <span class="hljs-keyword">return</span> _get_loading_placeholder()</code></pre><figcaption>python</figcaption></figure>
 <p><strong>Handler Methods:</strong></p>
 <ul>
 <li><code>set_image_loader()</code> — connects loader&#39;s <code>thumbnail_loaded</code> signal</li>
@@ -130,13 +130,13 @@
 <h3 id="3-problem-hdr-files-appeared-darker-in-houdini-than-in-the-standalone-desktop-app">3. Problem: HDR files appeared darker in Houdini than in the standalone desktop app</h3>
 <p>I think either because of a different <code>imageio</code> version or color space management, but I&#39;m not sure about this one. Needs more research.</p>
 <p><strong>Solution:</strong> Adaptive exposure based on median luminance:</p>
-<pre class="ink-code"><code class="hljs language-python"><span class="hljs-comment"># actual implementation</span>
+<figure class="pinned code"><pre class="ink-code" tabindex="0"><code class="hljs language-python"><span class="hljs-comment"># actual implementation</span>
 luminance = <span class="hljs-number">0.2126</span> * hdr_data[:, :, <span class="hljs-number">0</span>] + <span class="hljs-number">0.7152</span> * hdr_data[:, :, <span class="hljs-number">1</span>] + <span class="hljs-number">0.0722</span> * hdr_data[:, :, <span class="hljs-number">2</span>]
 median_lum = np.median(luminance[luminance &gt; <span class="hljs-number">0</span>])
 <span class="hljs-keyword">if</span> median_lum &gt; <span class="hljs-number">0</span>:
     target_lum = <span class="hljs-number">0.18</span>  <span class="hljs-comment"># Middle gray</span>
     exposure = target_lum / median_lum
-    exposure = <span class="hljs-built_in">max</span>(<span class="hljs-number">0.1</span>, <span class="hljs-built_in">min</span>(<span class="hljs-number">10.0</span>, exposure))  <span class="hljs-comment"># Clamp to reasonable range</span></code></pre>
+    exposure = <span class="hljs-built_in">max</span>(<span class="hljs-number">0.1</span>, <span class="hljs-built_in">min</span>(<span class="hljs-number">10.0</span>, exposure))  <span class="hljs-comment"># Clamp to reasonable range</span></code></pre><figcaption>python</figcaption></figure>
 <p>This normalizes brightness across different HDR files and environments, though minor differences persist. Will come back to this.</p>
 <h3 id="4-problem-caching-thousands-of-assets">4. Problem: Caching thousands of assets</h3>
 <p>I&#39;ve implemented a simple <a href="https://redis.io/glossary/lru-cache/" rel="noopener">LRU cache</a> capped at 200, which is pretty arbitrary, but was chosen for:</p>

@@ -42,7 +42,7 @@
 <li>When the rest of the application is initialized, it queries the registry for all valid plugins and handles instantiation accordingly.</li>
 </ol>
 <h3 id="conceptual-implementation">Conceptual Implementation</h3>
-<pre class="ink-code"><code class="hljs language-python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">AssetLibraryRegistry</span>:
+<figure class="pinned code"><pre class="ink-code" tabindex="0"><code class="hljs language-python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">AssetLibraryRegistry</span>:
     _libraries = []
 
 <span class="hljs-meta">    @classmethod</span>
@@ -52,7 +52,7 @@
 
 <span class="hljs-meta">    @classmethod</span>
     <span class="hljs-keyword">def</span> <span class="hljs-title function_">get_all_libraries</span>(<span class="hljs-params">cls</span>):
-        <span class="hljs-keyword">return</span> cls._libraries</code></pre>
+        <span class="hljs-keyword">return</span> cls._libraries</code></pre><figcaption>python</figcaption></figure>
 <p>There are a few interesting things to note here:</p>
 <ul>
 <li><code>_libraries</code> is &quot;Python private&quot;, so is of course not technically private, but is denoted as private with the prepended underscore. This list of plugins should not be accessed outside of the provided methods to access it.</li>
@@ -61,26 +61,26 @@
 <h4 id="class-methods-versus-static-methods">Class Methods versus Static Methods</h4>
 <p>The question here is one of extensibility. Both are attached to the class itself, but class methods have access to the current state of the passed class, while static methods don&#39;t. This probably sounds like esoteric mumbo-jumbo, so let&#39;s look at an example. </p>
 <p>The static method way: </p>
-<pre class="ink-code"><code class="hljs language-python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Registry</span>:
+<figure class="pinned code"><pre class="ink-code" tabindex="0"><code class="hljs language-python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Registry</span>:
     plugins = []
 
 <span class="hljs-meta">    @staticmethod</span>
     <span class="hljs-keyword">def</span> <span class="hljs-title function_">register</span>(<span class="hljs-params">plugin</span>):
         <span class="hljs-comment"># We have to explicitly name &#x27;AssetRegistry&#x27; here</span>
-        Registry.plugins.append(plugin)</code></pre>
+        Registry.plugins.append(plugin)</code></pre><figcaption>python</figcaption></figure>
 <p>The class method way:</p>
-<pre class="ink-code"><code class="hljs language-python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Registry</span>:
+<figure class="pinned code"><pre class="ink-code" tabindex="0"><code class="hljs language-python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Registry</span>:
     plugins = []
 
 <span class="hljs-meta">    @classmethod</span>
     <span class="hljs-keyword">def</span> <span class="hljs-title function_">register</span>(<span class="hljs-params">cls, plugin</span>):
         <span class="hljs-comment"># &#x27;cls&#x27; refers to whatever class called this method</span>
-        cls.plugins.append(plugin)</code></pre>
+        cls.plugins.append(plugin)</code></pre><figcaption>python</figcaption></figure>
 <p>The problem with the static approach is that it has the same logic in every context. In the example above, it will always only ever append to <code>plugins</code> in <code>AssetRegistry</code>. But, crucially, this application will eventually support multiple kinds of plugins. The first kind right now is asset libraries, but extra context menu actions and other convenience plugins will be supported in the future, so it makes sense to have a base <code>Registry</code> and subclasses like <code>AssetLibraryRegistry</code>, <code>ContextActionRegistry</code>, etc. as otherwise accessing a specific kind of plugin would require looping through the list of plugins and checking the type of each plugin (like when rendering a browser tab for each external library, we could either access the <code>AssetLibraryRegistry</code> directly, or iterate through all <code>plugins</code> in <code>Registry</code> and check if each one is an external library). This way is extensible, allowing any kind of plugin to be added and accessed intentionally. </p>
 <p>The class method approach allows the logic for registration to live in the base <code>Registry</code> class, but the data for each registry to live in that specific class, which is why a class reference is passed as the first argument to the register method; this way, it knows which specific class is calling it.</p>
 <h4 id="init-subclass"><code>__init_subclass__</code></h4>
 <p>We can take this a step further and automatically register plugins that subclass <code>Registry</code>, rather than having to manually call a registration method. Python has a dunder method <code>__init_subclass__</code>, which is called by a parent class every time a new class inherits it. This allows us to move the responsibility for registration away from the developer, and instead directly to the parent <code>Registry</code> class, as all registries will inherit it. Check out this example:</p>
-<pre class="ink-code"><code class="hljs language-python"><span class="hljs-comment"># Registry</span>
+<figure class="pinned code"><pre class="ink-code" tabindex="0"><code class="hljs language-python"><span class="hljs-comment"># Registry</span>
 <span class="hljs-keyword">class</span> <span class="hljs-title class_">BaseRegistry</span>:
     <span class="hljs-string">&quot;&quot;&quot;Abstract storage for plugins&quot;&quot;&quot;</span>
     _plugins = []
@@ -130,9 +130,9 @@
     <span class="hljs-keyword">pass</span>
 
 <span class="hljs-keyword">class</span> <span class="hljs-title class_">SendToUnreal</span>(<span class="hljs-title class_ inherited__">ContextActionPlugin</span>):
-    <span class="hljs-keyword">pass</span></code></pre>
+    <span class="hljs-keyword">pass</span></code></pre><figcaption>python</figcaption></figure>
 <p>And now, finally, we can get to my implementaion (well, a very simplified version of it). You might notice that the above is a bit much, unless registries need a bunch of their own functionality (which I don&#39;t foresee), as the registries are basically just wrappers for a list of a specific type of plugin. As such, I moved the registries directly into the abstract plugin.</p>
-<pre class="ink-code"><code class="hljs language-python"><span class="hljs-keyword">from</span> abc <span class="hljs-keyword">import</span> ABC, abstractmethod
+<figure class="pinned code"><pre class="ink-code" tabindex="0"><code class="hljs language-python"><span class="hljs-keyword">from</span> abc <span class="hljs-keyword">import</span> ABC, abstractmethod
 <span class="hljs-keyword">import</span> inspect
 
 <span class="hljs-comment"># Abstract Plugin base class</span>
@@ -170,7 +170,7 @@
     name = <span class="hljs-string">&quot;PolyHaven Assets&quot;</span>
     
     <span class="hljs-keyword">def</span> <span class="hljs-title function_">get_widget</span>(<span class="hljs-params">self</span>):
-        <span class="hljs-keyword">return</span> SomeWidget() </code></pre>
+        <span class="hljs-keyword">return</span> SomeWidget() </code></pre><figcaption>python</figcaption></figure>
 <p>Once plugins are implemented across the application (for toolbar widgets, context actions, asset libraries, etc.), the application will be much more extensible, and much <em>easier</em> for other developers to add more functionality to. I&#39;m working on that refactor now! Then on to more work on supporting textures and materials.</p>
 
     </article>

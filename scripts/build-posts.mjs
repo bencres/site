@@ -44,7 +44,9 @@ const marked = new Marked({
     code({ text, lang }) {
       const language = lang && hljs.getLanguage(lang) ? lang : 'plaintext';
       const html = hljs.highlight(text, { language }).value;
-      return `<pre class="ink-code"><code class="hljs language-${language}">${html}</code></pre>\n`;
+      // pinned to the page like the screenshots, its language pencilled underneath
+      const label = language === 'plaintext' ? '' : `<figcaption>${language}</figcaption>`;
+      return `<figure class="pinned code"><pre class="ink-code" tabindex="0"><code class="hljs language-${language}">${html}</code></pre>${label}</figure>\n`;
     },
     // an image is pinned to the page like a photo, its alt text as the caption
     image({ href, title, text }) {
