@@ -400,44 +400,236 @@
 </Node>
 <Node name="spill" id="0:273" opacity="0">
 <Node name="night light" id="0:434" opacity="0">
-<Shape name="fan" blendModeValue="screen">
+<Node name="paint">
+<Shape x="0" y="0" name="grain">
+<Ellipse x="629.158" y="311.507" width="1.363" height="1.363" originX="0.5" originY="0.5" name="d"/>
+<Fill name="Fill">
+<SolidColor colorValue="355E4A36" name="C"/>
+</Fill>
+</Shape>
+<Shape name="wet">
 <PointsPath isClosed="true" isClockwise="true" name="Path">
-<CubicMirroredVertex x="598" y="330" rotation="-0.329" distance="5.777"/>
-<CubicMirroredVertex x="642" y="330" rotation="0.286" distance="7.088"/>
-<CubicMirroredVertex x="700" y="360" rotation="0.54" distance="8.552"/>
-<CubicMirroredVertex x="752" y="396" rotation="2.963" distance="13.548"/>
-<CubicMirroredVertex x="500" y="396" rotation="-2.946" distance="13.048"/>
-<CubicMirroredVertex x="560" y="358" rotation="-0.593" distance="7.877"/>
+<CubicMirroredVertex x="627.337" y="276.519" rotation="-1.587" distance="5.501"/>
+<CubicMirroredVertex x="627.466" y="277.91" rotation="0.077" distance="1.155"/>
+<CubicMirroredVertex x="634.245" y="277.05" rotation="0.189" distance="1.896"/>
+<CubicMirroredVertex x="638.639" y="280.048" rotation="0.699" distance="1.92"/>
+<CubicMirroredVertex x="643.062" y="284.465" rotation="0.965" distance="1.995"/>
+<CubicMirroredVertex x="645.454" y="289.887" rotation="1.237" distance="1.77"/>
+<CubicMirroredVertex x="646.542" y="294.501" rotation="1.523" distance="1.745"/>
+<CubicMirroredVertex x="645.957" y="300.347" rotation="1.891" distance="1.701"/>
+<CubicMirroredVertex x="643.33" y="304.188" rotation="2.392" distance="1.757"/>
+<CubicMirroredVertex x="638.245" y="307.532" rotation="2.527" distance="1.954"/>
+<CubicMirroredVertex x="633.751" y="310.946" rotation="2.823" distance="1.799"/>
+<CubicMirroredVertex x="627.993" y="310.912" rotation="-1.755" distance="5.837"/>
 </PointsPath>
 <Fill name="Fill">
-<LinearGradient startX="0" startY="330" endX="0" endY="398" name="G">
-<GradientStop colorValue="B3FFD27A" position="0"/>
-<GradientStop colorValue="57FFD27A" position="0.5"/>
-<GradientStop colorValue="00FFD27A" position="1"/>
-</LinearGradient>
+<SolidColor colorValue="46F8DC9C" name="C"/>
 </Fill>
 </Shape>
-<Shape name="room" blendModeValue="screen">
-<Ellipse x="626" y="292" width="74" height="74" originX="0.5" originY="0.5" name="E"/>
+<Shape name="glaze">
+<PointsPath isClosed="true" isClockwise="true" name="Path">
+<CubicMirroredVertex x="624.124" y="270.976" rotation="-1.58" distance="7.926"/>
+<CubicMirroredVertex x="624.795" y="271.003" rotation="0.103" distance="1.367"/>
+<CubicMirroredVertex x="632.282" y="271.818" rotation="0.317" distance="2.428"/>
+<CubicMirroredVertex x="638.633" y="275.55" rotation="0.673" distance="2.48"/>
+<CubicMirroredVertex x="643.921" y="281.087" rotation="0.949" distance="2.506"/>
+<CubicMirroredVertex x="647.396" y="287.772" rotation="1.208" distance="2.444"/>
+<CubicMirroredVertex x="649.121" y="294.795" rotation="1.51" distance="2.482"/>
+<CubicMirroredVertex x="648.3" y="302.638" rotation="1.872" distance="2.443"/>
+<CubicMirroredVertex x="644.775" y="308.792" rotation="2.229" distance="2.46"/>
+<CubicMirroredVertex x="639.268" y="314.312" rotation="2.552" distance="2.571"/>
+<CubicMirroredVertex x="631.948" y="317.366" rotation="2.848" distance="2.442"/>
+<CubicMirroredVertex x="625.241" y="318.554" rotation="-1.738" distance="7.841"/>
+</PointsPath>
 <Fill name="Fill">
-<RadialGradient startX="0" startY="0" endX="40" endY="0" name="G">
-<GradientStop colorValue="BFFFE3A0" position="0"/>
-<GradientStop colorValue="8CFFE3A0" position="0.7"/>
-<GradientStop colorValue="33FFE3A0" position="1"/>
-</RadialGradient>
+<SolidColor colorValue="63F8DC9C" name="C"/>
 </Fill>
+<Stroke thickness="1.3" cap="round" join="round" name="Rim">
+<SolidColor colorValue="5BB39E70" name="C"/>
+</Stroke>
 </Shape>
-<Shape name="doorway" blendModeValue="screen">
-<Ellipse x="620" y="296" width="200" height="176" originX="0.5" originY="0.5" name="E"/>
+</Node>
+<Node name="paint">
+<Shape x="0" y="0" name="grain">
+<Ellipse x="640.682" y="281.303" width="1.749" height="1.749" originX="0.5" originY="0.5" name="d"/>
+<Ellipse x="641.778" y="292.423" width="0.917" height="0.917" originX="0.5" originY="0.5" name="d"/>
+<Ellipse x="642.425" y="285.59" width="0.922" height="0.922" originX="0.5" originY="0.5" name="d"/>
+<Ellipse x="650.9" y="277.873" width="0.855" height="0.855" originX="0.5" originY="0.5" name="d"/>
+<Ellipse x="639.208" y="267.82" width="1.305" height="1.305" originX="0.5" originY="0.5" name="d"/>
+<Ellipse x="621.413" y="292.301" width="1.246" height="1.246" originX="0.5" originY="0.5" name="d"/>
+<Ellipse x="640.719" y="318.802" width="1.409" height="1.409" originX="0.5" originY="0.5" name="d"/>
+<Ellipse x="633.258" y="272.78" width="1.013" height="1.013" originX="0.5" originY="0.5" name="d"/>
 <Fill name="Fill">
-<RadialGradient startX="0" startY="0" endX="92" endY="0" name="G">
-<GradientStop colorValue="C7FFC860" position="0"/>
-<GradientStop colorValue="80FFC860" position="0.42"/>
-<GradientStop colorValue="29FFC860" position="0.72"/>
-<GradientStop colorValue="00FFC860" position="1"/>
-</RadialGradient>
+<SolidColor colorValue="455E4A36" name="C"/>
 </Fill>
 </Shape>
+<Shape name="wet">
+<PointsPath isClosed="true" isClockwise="true" name="Path">
+<CubicMirroredVertex x="623.391" y="265.048" rotation="-1.556" distance="8.992"/>
+<CubicMirroredVertex x="625.588" y="264.32" rotation="0.064" distance="1.705"/>
+<CubicMirroredVertex x="633.601" y="265.699" rotation="0.313" distance="2.704"/>
+<CubicMirroredVertex x="641.025" y="269.311" rotation="0.58" distance="2.83"/>
+<CubicMirroredVertex x="647.809" y="275.001" rotation="0.975" distance="2.875"/>
+<CubicMirroredVertex x="650.708" y="283.586" rotation="1.241" distance="2.796"/>
+<CubicMirroredVertex x="653.238" y="290.875" rotation="1.528" distance="2.739"/>
+<CubicMirroredVertex x="651.416" y="300.004" rotation="1.938" distance="2.825"/>
+<CubicMirroredVertex x="647.159" y="306.701" rotation="2.238" distance="2.585"/>
+<CubicMirroredVertex x="641.814" y="312.181" rotation="2.555" distance="2.904"/>
+<CubicMirroredVertex x="632.652" y="316.349" rotation="2.798" distance="3.012"/>
+<CubicMirroredVertex x="624.798" y="318.268" rotation="-1.749" distance="8.688"/>
+</PointsPath>
+<Fill name="Fill">
+<SolidColor colorValue="5BEDB25C" name="C"/>
+</Fill>
+</Shape>
+<Shape name="glaze">
+<PointsPath isClosed="true" isClockwise="true" name="Path">
+<CubicMirroredVertex x="618.917" y="254.852" rotation="-1.573" distance="12.294"/>
+<CubicMirroredVertex x="620.226" y="255.073" rotation="0.165" distance="2.127"/>
+<CubicMirroredVertex x="631.507" y="256.946" rotation="0.324" distance="3.738"/>
+<CubicMirroredVertex x="641.486" y="262.219" rotation="0.633" distance="3.74"/>
+<CubicMirroredVertex x="649.604" y="270.216" rotation="0.935" distance="3.811"/>
+<CubicMirroredVertex x="655.057" y="280.623" rotation="1.249" distance="3.808"/>
+<CubicMirroredVertex x="656.825" y="291.892" rotation="1.578" distance="3.828"/>
+<CubicMirroredVertex x="654.893" y="303.593" rotation="1.885" distance="3.787"/>
+<CubicMirroredVertex x="649.808" y="313.503" rotation="2.191" distance="3.734"/>
+<CubicMirroredVertex x="641.877" y="321.832" rotation="2.495" distance="3.812"/>
+<CubicMirroredVertex x="631.551" y="327.281" rotation="2.826" distance="3.762"/>
+<CubicMirroredVertex x="620.422" y="328.839" rotation="-1.744" distance="12.254"/>
+</PointsPath>
+<Fill name="Fill">
+<SolidColor colorValue="82EDB25C" name="C"/>
+</Fill>
+<Stroke thickness="1.3" cap="round" join="round" name="Rim">
+<SolidColor colorValue="77AB8042" name="C"/>
+</Stroke>
+</Shape>
+</Node>
+<Node name="paint">
+<Shape x="0" y="0" name="grain">
+<Ellipse x="660.421" y="345.48" width="1.706" height="1.706" originX="0.5" originY="0.5" name="d"/>
+<Ellipse x="633.524" y="351.634" width="1.307" height="1.307" originX="0.5" originY="0.5" name="d"/>
+<Ellipse x="595.378" y="349.958" width="1.085" height="1.085" originX="0.5" originY="0.5" name="d"/>
+<Fill name="Fill">
+<SolidColor colorValue="315E4A36" name="C"/>
+</Fill>
+</Shape>
+<Shape name="wet">
+<PointsPath isClosed="true" isClockwise="true" name="Path">
+<CubicMirroredVertex x="653.216" y="342.962" rotation="0.6" distance="2.308"/>
+<CubicMirroredVertex x="657.066" y="348.853" rotation="2.431" distance="2.321"/>
+<CubicMirroredVertex x="642.656" y="352.041" rotation="3.064" distance="5.03"/>
+<CubicMirroredVertex x="626.974" y="351.184" rotation="-3.12" distance="5.771"/>
+<CubicMirroredVertex x="608.036" y="351.299" rotation="3.111" distance="5.94"/>
+<CubicMirroredVertex x="591.35" y="352.289" rotation="-2.944" distance="4.289"/>
+<CubicMirroredVertex x="582.799" y="346.256" rotation="-2.636" distance="2.23"/>
+<CubicMirroredVertex x="579.646" y="345.805" rotation="-1.239" distance="1.139"/>
+<CubicMirroredVertex x="585.026" y="339.793" rotation="-0.436" distance="3.205"/>
+<CubicMirroredVertex x="597.077" y="337.679" rotation="-0.192" distance="4.542"/>
+<CubicMirroredVertex x="611.78" y="334.606" rotation="-0.069" distance="4.724"/>
+<CubicMirroredVertex x="625.356" y="335.731" rotation="0.081" distance="4.868"/>
+<CubicMirroredVertex x="640.893" y="336.96" rotation="0.256" distance="3.494"/>
+<CubicMirroredVertex x="645.641" y="341.031" rotation="0.453" distance="2.284"/>
+</PointsPath>
+<Fill name="Fill" fillRule="clockwise">
+<SolidColor colorValue="40F8E2A8" name="C"/>
+<Feather strength="3.029" name="F"/>
+</Fill>
+</Shape>
+<Shape name="glaze">
+<PointsPath isClosed="true" isClockwise="true" name="Path">
+<CubicMirroredVertex x="666.406" y="344.607" rotation="0.603" distance="3.093"/>
+<CubicMirroredVertex x="669.435" y="349.833" rotation="2.677" distance="3.126"/>
+<CubicMirroredVertex x="649.639" y="353.018" rotation="3.027" distance="6.713"/>
+<CubicMirroredVertex x="629.425" y="354.444" rotation="3.114" distance="7.254"/>
+<CubicMirroredVertex x="606.135" y="354.23" rotation="-3.128" distance="8.03"/>
+<CubicMirroredVertex x="581.251" y="353.804" rotation="-2.987" distance="5.529"/>
+<CubicMirroredVertex x="573.358" y="349.126" rotation="-2.508" distance="2.516"/>
+<CubicMirroredVertex x="569.086" y="344.867" rotation="-1.565" distance="1.794"/>
+<CubicMirroredVertex x="573.419" y="338.362" rotation="-0.508" distance="3.765"/>
+<CubicMirroredVertex x="588.819" y="333.875" rotation="-0.159" distance="5.844"/>
+<CubicMirroredVertex x="608.04" y="332.812" rotation="-0.019" distance="6.491"/>
+<CubicMirroredVertex x="627.757" y="333.115" rotation="0.012" distance="6.612"/>
+<CubicMirroredVertex x="647.709" y="333.277" rotation="0.23" distance="4.518"/>
+<CubicMirroredVertex x="654.152" y="339.307" rotation="0.545" distance="3.644"/>
+</PointsPath>
+<Fill name="Fill" fillRule="clockwise">
+<SolidColor colorValue="5CF8E2A8" name="C"/>
+<Feather strength="2.12" name="F"/>
+</Fill>
+</Shape>
+</Node>
+<Node name="paint">
+<Shape x="0" y="0" name="grain">
+<Ellipse x="548.532" y="349.87" width="1.59" height="1.59" originX="0.5" originY="0.5" name="d"/>
+<Ellipse x="559.063" y="361.793" width="1.574" height="1.574" originX="0.5" originY="0.5" name="d"/>
+<Ellipse x="593.837" y="361.523" width="1.345" height="1.345" originX="0.5" originY="0.5" name="d"/>
+<Ellipse x="597.228" y="353.561" width="0.821" height="0.821" originX="0.5" originY="0.5" name="d"/>
+<Ellipse x="645.281" y="345.656" width="1.548" height="1.548" originX="0.5" originY="0.5" name="d"/>
+<Ellipse x="661.871" y="346.575" width="1.277" height="1.277" originX="0.5" originY="0.5" name="d"/>
+<Ellipse x="640.954" y="342.445" width="0.85" height="0.85" originX="0.5" originY="0.5" name="d"/>
+<Ellipse x="564.243" y="360.242" width="1.723" height="1.723" originX="0.5" originY="0.5" name="d"/>
+<Ellipse x="626.958" y="367.337" width="0.874" height="0.874" originX="0.5" originY="0.5" name="d"/>
+<Ellipse x="647.837" y="355.876" width="1.377" height="1.377" originX="0.5" originY="0.5" name="d"/>
+<Ellipse x="636.502" y="352.21" width="1.03" height="1.03" originX="0.5" originY="0.5" name="d"/>
+<Ellipse x="564.023" y="358.284" width="1.402" height="1.402" originX="0.5" originY="0.5" name="d"/>
+<Ellipse x="554.043" y="374.772" width="1.163" height="1.163" originX="0.5" originY="0.5" name="d"/>
+<Ellipse x="567.476" y="352.561" width="1.61" height="1.61" originX="0.5" originY="0.5" name="d"/>
+<Ellipse x="680.741" y="351.79" width="1.268" height="1.268" originX="0.5" originY="0.5" name="d"/>
+<Ellipse x="703.365" y="375.201" width="1.14" height="1.14" originX="0.5" originY="0.5" name="d"/>
+<Ellipse x="584.626" y="360.144" width="1.467" height="1.467" originX="0.5" originY="0.5" name="d"/>
+<Ellipse x="618.499" y="353.201" width="1.698" height="1.698" originX="0.5" originY="0.5" name="d"/>
+<Ellipse x="648.937" y="386.976" width="1.75" height="1.75" originX="0.5" originY="0.5" name="d"/>
+<Ellipse x="689.064" y="371.6" width="0.882" height="0.882" originX="0.5" originY="0.5" name="d"/>
+<Fill name="Fill">
+<SolidColor colorValue="295E4A36" name="C"/>
+</Fill>
+</Shape>
+<Shape name="wet">
+<PointsPath isClosed="true" isClockwise="true" name="Path">
+<CubicMirroredVertex x="688.224" y="360.298" rotation="1.243" distance="3.058"/>
+<CubicMirroredVertex x="684.932" y="369.888" rotation="1.769" distance="3.007"/>
+<CubicMirroredVertex x="684.662" y="377.986" rotation="2.923" distance="7.164"/>
+<CubicMirroredVertex x="642.974" y="379.227" rotation="3.133" distance="13.874"/>
+<CubicMirroredVertex x="601.424" y="378.667" rotation="-3.102" distance="14.339"/>
+<CubicMirroredVertex x="557.009" y="375.814" rotation="-2.929" distance="8.47"/>
+<CubicMirroredVertex x="551.752" y="367.934" rotation="-1.718" distance="2.122"/>
+<CubicMirroredVertex x="555.147" y="363.218" rotation="-1.253" distance="2.71"/>
+<CubicMirroredVertex x="556.832" y="352.486" rotation="-0.442" distance="5.244"/>
+<CubicMirroredVertex x="583.586" y="349.756" rotation="-0.18" distance="8.246"/>
+<CubicMirroredVertex x="605.51" y="343.64" rotation="-0.092" distance="8.739"/>
+<CubicMirroredVertex x="635.796" y="344.915" rotation="0.158" distance="8.892"/>
+<CubicMirroredVertex x="658.197" y="352.052" rotation="0.174" distance="7.316"/>
+<CubicMirroredVertex x="679.028" y="352.514" rotation="0.268" distance="5.19"/>
+</PointsPath>
+<Fill name="Fill" fillRule="clockwise">
+<SolidColor colorValue="36F3D48C" name="C"/>
+<Feather strength="6.779" name="F"/>
+</Fill>
+</Shape>
+<Shape name="glaze">
+<PointsPath isClosed="true" isClockwise="true" name="Path">
+<CubicMirroredVertex x="712.211" y="361.301" rotation="1.344" distance="3.66"/>
+<CubicMirroredVertex x="703.58" y="372.67" rotation="1.946" distance="3.887"/>
+<CubicMirroredVertex x="703.657" y="382.995" rotation="2.878" distance="9.218"/>
+<CubicMirroredVertex x="650.189" y="387.096" rotation="-3.135" distance="17.961"/>
+<CubicMirroredVertex x="595.892" y="382.305" rotation="-3.109" distance="19.164"/>
+<CubicMirroredVertex x="535.266" y="383.394" rotation="-2.964" distance="11.032"/>
+<CubicMirroredVertex x="530.746" y="370.588" rotation="-1.466" distance="3.528"/>
+<CubicMirroredVertex x="537.49" y="362.342" rotation="-1.232" distance="3.409"/>
+<CubicMirroredVertex x="537.539" y="351.293" rotation="-0.473" distance="6.759"/>
+<CubicMirroredVertex x="573.59" y="343.863" rotation="-0.191" distance="10.948"/>
+<CubicMirroredVertex x="602.028" y="338.812" rotation="-0.078" distance="11.144"/>
+<CubicMirroredVertex x="640.255" y="338.678" rotation="0.095" distance="11.299"/>
+<CubicMirroredVertex x="669.511" y="345.276" rotation="0.213" distance="9.954"/>
+<CubicMirroredVertex x="698.637" y="351.276" rotation="0.359" distance="7.601"/>
+</PointsPath>
+<Fill name="Fill" fillRule="clockwise">
+<SolidColor colorValue="4DF3D48C" name="C"/>
+<Feather strength="4.745" name="F"/>
+</Fill>
+</Shape>
+</Node>
 </Node>
 <Shape name="glow" x="610" y="360">
 <Ellipse width="150" height="44" originX="0.5" originY="0.5" name="g"/>

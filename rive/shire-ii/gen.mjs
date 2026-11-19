@@ -1209,25 +1209,22 @@ function hill(ids) {
     ]),
   ]));
   tp(litId, 'opacity', LIT);
-  // light out of the open door. By day it's a little pool on the step; as it gets dark
-  // the doorway glows and a fan of lamplight falls out across the path, brightening
-  // the evening rather than tinting it (screen blend)
+  // light out of the open door, painted rather than glowed: by day a little pool on the
+  // step; as it gets dark the room shows warm through the doorway and pale washes of
+  // lamplight lie out across the path, fading off at their soft, uneven edges
   const nightLightId = ids.next();
-  const fan = [P(598, 330), P(642, 330), P(700, 360), P(752, 396), P(500, 396), P(560, 358)];
-  const lightShape = (name, kids, xml) => el('Shape', { name, blendModeValue: 'screen' }, [xml, ...kids]);
+  // the right-hand half of the doorway, the part the open leaf doesn't cover
+  const opening = (r) => { const pts = [P(D.x - 1, D.y - r)]; for (let i = 0; i <= 10; i++) { const a = -Math.PI / 2 + (i / 10) * Math.PI; pts.push(P(D.x + Math.cos(a) * r, D.y + Math.sin(a) * r)); } return pts; };
+  const pool = (cx, cy, rx, ry, seed, widen) =>
+    blobPts(rx, ry, rng(seed), { n: 14, wobble: 0.12 }).map((p) => P(cx + p.x * (1 + Math.max(0, p.y / ry) * widen), cy + p.y));
   s.add(group({ name: 'spill', id: spillId, opacity: 0 }, [
     glow({ x: 610, y: 360, w: 150, h: 44, color: 'FFD77A', alpha: 0.6 }),
     group({ name: 'night light', id: nightLightId, opacity: [0.2, 0, 0.3, 0.8, 1][TIME0] }, [
-      lightShape('doorway', [el('Fill', { name: 'Fill' }, el('RadialGradient', { startX: 0, startY: 0, endX: 92, endY: 0, name: 'G' },
-        [[0, 0.78], [0.42, 0.5], [0.72, 0.16], [1, 0]].map(([p, a]) => el('GradientStop', { colorValue: argb('FFC860', a), position: p }))))],
-        el('Ellipse', { x: 620, y: 296, width: 200, height: 176, originX: 0.5, originY: 0.5, name: 'E' })),
-      // the lit room itself, glowing out through the doorway
-      lightShape('room', [el('Fill', { name: 'Fill' }, el('RadialGradient', { startX: 0, startY: 0, endX: DR, endY: 0, name: 'G' },
-        [[0, 0.75], [0.7, 0.55], [1, 0.2]].map(([p, a]) => el('GradientStop', { colorValue: argb('FFE3A0', a), position: p }))))],
-        el('Ellipse', { x: D.x + 6, y: D.y, width: DR * 2 - 6, height: DR * 2 - 6, originX: 0.5, originY: 0.5, name: 'E' })),
-      lightShape('fan', [el('Fill', { name: 'Fill' }, el('LinearGradient', { startX: 0, startY: 330, endX: 0, endY: 398, name: 'G' },
-        [[0, 0.7], [0.5, 0.34], [1, 0]].map(([p, a]) => el('GradientStop', { colorValue: argb('FFD27A', a), position: p }))))],
-        pathXml(fan, { closed: true, tension: 0.4 })),
+      wc(ids, pool(622, 362, 84, 24, 300, 0.55), 'F3D48C', rng(301), { alpha: 0.5, off: [0, 0], wobble: 1.5, grain: 0.25, soft: true, hazy: true, blend: 'normal' }),
+      wc(ids, pool(618, 344, 44, 12, 302, 0.35), 'F8E2A8', rng(303), { alpha: 0.6, off: [0, 0], wobble: 1, grain: 0.15, soft: true, hazy: true, blend: 'normal' }),
+      // the room, warm through the open half of the doorway (the leaf covers the other half)
+      wc(ids, opening(DR - 3), 'EDB25C', rng(304), { alpha: 0.85, off: [0, 0], wobble: 0.5, grain: 0.3, soft: false, blend: 'normal' }),
+      wc(ids, opening(DR * 0.6).map((p) => P(p.x + 5, p.y + 3)), 'F8DC9C', rng(305), { alpha: 0.65, off: [0, 0], wobble: 0.5, grain: 0.1, soft: false, blend: 'normal' }),
     ]),
   ]));
   tp(nightLightId, 'opacity', [0.2, 0, 0.3, 0.8, 1]);
