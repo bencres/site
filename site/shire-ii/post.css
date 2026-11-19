@@ -49,16 +49,19 @@ a:focus-visible { outline: 2px dashed var(--link); outline-offset: 3px; border-r
 .prose h2 { font-size: 27px; }
 .prose h3 { font-size: 22px; }
 .prose h4 { font-size: 19px; color: var(--soft); }
-/* a quick wash of colour under each section heading, as on the hill's rooms */
-.prose h2::before {
-  content: ''; position: absolute; z-index: -1; left: -0.45em; top: 0.08em; width: 5.4em; height: 1.2em;
-  background: radial-gradient(58% 60% at 42% 55%, rgba(233, 185, 58, 0.34), rgba(233, 185, 58, 0.12) 62%, transparent 74%);
-  border-radius: 46% 54% 52% 48% / 58% 44% 56% 42%;
-  transform: rotate(-2deg);
+/* the hill's watercolor swatch behind each section heading: blooms in, dries a shade lighter */
+.prose h2 .wash { left: -30px; top: -14px; height: 64px; }
+.wash {
+  position: absolute; z-index: -1; pointer-events: none;
+  background: center / 100% 100% no-repeat; mix-blend-mode: multiply;
+  opacity: 0;
 }
-[data-season='spring'] .prose h2::before { background: radial-gradient(58% 60% at 42% 55%, rgba(150, 190, 100, 0.34), rgba(150, 190, 100, 0.12) 62%, transparent 74%); }
-[data-season='winter'] .prose h2::before { background: radial-gradient(58% 60% at 42% 55%, rgba(120, 160, 190, 0.32), rgba(120, 160, 190, 0.1) 62%, transparent 74%); }
-[data-season='autumn'] .prose h2::before { background: radial-gradient(58% 60% at 42% 55%, rgba(208, 130, 60, 0.32), rgba(208, 130, 60, 0.1) 62%, transparent 74%); }
+.bloomed .wash { animation: bloom 1.6s cubic-bezier(0.2, 0.75, 0.25, 1) both; }
+@keyframes bloom {
+  0% { opacity: 0; transform: scale(0.45, 0.6); clip-path: circle(12% at 42% 55%); }
+  30% { opacity: 1; }
+  100% { opacity: 0.86; transform: none; clip-path: circle(80% at 42% 55%); }
+}
 .prose p, .prose ul, .prose ol { margin: 0 0 1em; }
 .prose ul, .prose ol { padding-left: 1.3em; }
 .prose li { margin: 0.2em 0; }
@@ -97,7 +100,12 @@ a:focus-visible { outline: 2px dashed var(--link); outline-offset: 3px; border-r
 }
 @media (max-width: 520px) {
   body { font-size: 17.5px; }
+  .prose h2 .wash { left: -20px; }
   .col { padding: 20px 16px 80px; }
   .sketch { margin: 6px -16px 0; }
   .ink-code { margin: 1.1em -16px 1.4em; border-left: 0; border-right: 0; border-radius: 0; font-size: 15.5px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wash, .bloomed .wash { opacity: 0.86; animation: none; }
 }

@@ -1,6 +1,6 @@
 import { mount, reducedMotion } from '../shared/rive-mount.js';
 import { content as c, h } from '../shared/content.js';
-import { rng, blob, arm, upright, splotch, flick, hatch, drip, icon } from './paint.js';
+import { rng, blob, arm, upright, splotch, flick, hatch, drip, icon, wash, PIGMENTS } from './paint.js';
 import { SEASONS, TIMES, when as whenAt, remember, remembered } from './when.js';
 
 const when = () => whenAt(params);
@@ -25,37 +25,6 @@ try {
 } catch {}
 const regular = visits >= 3 || params.has('regular') || params.has('returning');
 
-// ---------- watercolor swatches, painted as tiny SVGs (no canvases)
-
-const darken = (hex, k) => hex.match(/../g).map((v) => Math.round(parseInt(v, 16) * (1 - k)).toString(16).padStart(2, '0')).join('');
-
-function wash({ w, h: hh, color, accent, seed }) {
-  const r = rng(seed);
-  const body = blob(r, w / 2, hh / 2, w * 0.42, hh * 0.36, 12, 0.13);
-  const inner = blob(r, w / 2 + r.jit(w * 0.06), hh / 2 + r.jit(hh * 0.05), w * 0.3, hh * 0.25, 10, 0.2);
-  const bx = w * (0.28 + r() * 0.44);
-  const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 ${w} ${hh}' width='${w}' height='${hh}'>
-<defs>
-<filter id='d' x='-10%' y='-10%' width='120%' height='120%'><feTurbulence type='fractalNoise' baseFrequency='0.05' numOctaves='2' seed='${seed % 97}'/><feDisplacementMap in='SourceGraphic' scale='${(Math.min(w, hh) * 0.14).toFixed(1)}'/></filter>
-<filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='${seed % 89}'/><feColorMatrix values='0 0 0 0 .33 0 0 0 0 .26 0 0 0 0 .2 -3.2 0 0 0 1.55'/><feComposite in2='SourceGraphic' operator='in'/></filter>
-<radialGradient id='b'><stop offset='0' stop-color='#${accent}' stop-opacity='.5'/><stop offset='1' stop-color='#${accent}' stop-opacity='0'/></radialGradient>
-</defs>
-<g filter='url(#d)'>
-<path d='${body}' fill='#${color}' fill-opacity='.34' stroke='#${darken(color, 0.3)}' stroke-opacity='.42' stroke-width='1.3'/>
-<path d='${inner}' fill='#${color}' fill-opacity='.24'/>
-<ellipse cx='${bx.toFixed(1)}' cy='${(hh * 0.52).toFixed(1)}' rx='${(w * 0.2).toFixed(1)}' ry='${(hh * 0.3).toFixed(1)}' fill='url(#b)'/>
-<path d='${body}' filter='url(#g)' opacity='.4'/>
-</g></svg>`;
-  return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
-}
-
-// each room has its own pigment; the season shifts the box of paints
-const PIGMENTS = {
-  spring: [['E9B93A', 'A6C864'], ['8DBA5E', 'E79CB2'], ['E79CB2', 'E9B93A'], ['86B8DA', 'A6C864'], ['A89CD6', 'E79CB2']],
-  summer: [['E9B93A', 'D9738A'], ['5F9447', 'E9B93A'], ['C8643B', 'E9B93A'], ['6FA8D6', '5F9447'], ['8E86C9', 'D9738A']],
-  autumn: [['E3A23A', 'C4503B'], ['8E9A48', 'D9A93F'], ['C4503B', 'E3A23A'], ['8AA8C0', 'D9A93F'], ['A0708A', 'C4503B']],
-  winter: [['E2B85A', 'B5644A'], ['7E9A88', 'A9C0D6'], ['B5644A', 'E2B85A'], ['8FA7C4', 'C9D6E2'], ['9C8FB4', 'A9C0D6']],
-};
 
 // ---------- copy
 
@@ -345,3 +314,6 @@ showDials(state);
 if (previewing || urlPreview) $('#almanac').classList.add('moved');
 // on a phone the almanac folds away until asked for, so it never sits on the text
 if (phone.matches) $('#almanac-box').open = false;
+
+// once the page has arrived (and any #section in the URL is in place), the signpost's jumps glide
+addEventListener('load', () => requestAnimationFrame(() => document.documentElement.classList.add('settled')));

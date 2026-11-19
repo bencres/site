@@ -1,11 +1,34 @@
-// Tell the page-turn which way it's going: deeper into the site (a post) turns
-// forward, back up toward the hill turns back. Runs on the page being revealed.
+// Remember where a link was pressed, so the next page can spread in from there
+// (see turn.css). Runs as a plain script in <head>, before the page is revealed.
+const KEY = 'turn:at';
+
+addEventListener('click', (e) => {
+  const a = e.target.closest?.('a[href]');
+  if (!a || a.origin !== location.origin || e.defaultPrevented) return;
+  // a keyboard "click" has no pointer position; use the link itself
+  let x = e.clientX, y = e.clientY;
+  if (!e.detail) {
+    const r = a.getBoundingClientRect();
+    x = r.left + r.width / 2;
+    y = r.top + r.height / 2;
+  }
+  try {
+    sessionStorage.setItem(KEY, JSON.stringify({ x: x / innerWidth, y: y / innerHeight }));
+  } catch {}
+}, true);
+
 addEventListener('pagereveal', (e) => {
   if (!e.viewTransition) return;
-  const activation = window.navigation?.activation;
-  const from = activation?.from?.url;
-  const to = activation?.entry?.url;
-  const depth = (u) => new URL(u).pathname.split('/').filter(Boolean).length;
-  const back = from && to ? depth(to) < depth(from) : false;
-  e.viewTransition.types.add(back ? 'back' : 'forward');
+  let at = { x: 0.5, y: 0.35 };
+  try {
+    at = JSON.parse(sessionStorage.getItem(KEY)) || at;
+    sessionStorage.removeItem(KEY);
+  } catch {}
+  const root = document.documentElement.style;
+  root.setProperty('--bloom-x', `${(at.x * 100).toFixed(2)}vw`);
+  root.setProperty('--bloom-y', `${(at.y * 100).toFixed(2)}vh`);
+  e.viewTransition.finished.finally(() => {
+    root.removeProperty('--bloom-x');
+    root.removeProperty('--bloom-y');
+  });
 });
