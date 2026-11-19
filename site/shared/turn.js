@@ -266,6 +266,45 @@ const RECIPES = {
   },
 };
 
+// ---------- how a drop grows (the same curves the keyframes use, so the script
+// can tell when two drops will meet)
+
+function bezier(x1, y1, x2, y2) {
+  const at = (a, b, t) => 3 * a * t * (1 - t) ** 2 + 3 * b * t * t * (1 - t) + t ** 3;
+  return (x) => {
+    let t = x;
+    for (let i = 0; i < 8; i++) {
+      const dx = at(x1, x2, t) - x;
+      const d = 3 * x1 * (1 - t) ** 2 + 6 * (x2 - x1) * t * (1 - t) + 3 * (1 - x2) * t * t;
+      if (Math.abs(dx) < 1e-5 || !d) break;
+      t = Math.min(1, Math.max(0, t - dx / d));
+    }
+    return at(y1, y2, t);
+  };
+}
+const LANDING = bezier(0.2, 0.7, 0.4, 1);
+const SPREADING = bezier(0.45, 0, 0.7, 1);
+// a drop's box size at time u (0–1)
+function sizeAt(d, land, u) {
+  if (u <= d.t) return 0;
+  const landed = d.t + land;
+  if (u < landed) return d.size * LANDING((u - d.t) / land);
+  return d.size + (d.end - d.size) * SPREADING((u - landed) / (1 - landed));
+}
+// when a drop's rim first touches another drop (the drop itself is 60% of its box)
+function meets(drops, k, land) {
+  const a = drops[k];
+  for (let u = a.t; u <= 1; u += 0.005) {
+    const ra = 0.29 * sizeAt(a, land, u);
+    for (let j = 0; j < drops.length; j++) {
+      if (j === k) continue;
+      const b = drops[j];
+      if (ra + 0.29 * sizeAt(b, land, u) >= Math.hypot(a.x - b.x, a.y - b.y)) return u;
+    }
+  }
+  return 1;
+}
+
 // ---------- recipe → css
 
 function compose(recipe, drops, W, H) {
@@ -300,15 +339,26 @@ function compose(recipe, drops, W, H) {
     const res = recipe.edgeRes || 1;
     layers.push([name, wet, res]);
     const s = (v) => (v / (m * res)).toFixed(4);
-    // pigment shows as soon as it lands and soon dries clear; a tide line dries later
-    const dryFrom = recipe.edge === 'faint' ? landed + 0.06 : recipe.edge ? Math.max(landed + 0.15, 0.5) : landed + 0.06;
-    // a faint rim is only seen as its drop lands, then it's gone
-    const dryTo = recipe.edge === 'faint' ? Math.min(1, landed + 0.3) : 1;
-    css += `@keyframes turn-s${k} {
-  0%, ${pct(d.t)} { scale: 0; animation-timing-function: cubic-bezier(0.2, 0.7, 0.4, 1); }
+    let grow, dryFrom, dryTo;
+    if (recipe.edge) {
+      // a tide line forms where the water stops: the rim spreads with its drop
+      // only until it runs into another, then stays put there and dries, while
+      // the page keeps spreading past it (merged drops share no edge)
+      const stop = meets(drops, i, recipe.land);
+      const steps = [];
+      for (let u = d.t; u < stop; u += 0.02) steps.push(`${pct(u)} { scale: ${s(sizeAt(d, recipe.land, u))}; }`);
+      grow = `0% { scale: 0; } ${steps.join(' ')} ${pct(stop)}, 100% { scale: ${s(sizeAt(d, recipe.land, stop))}; }`;
+      dryFrom = stop;
+      dryTo = Math.min(1, stop + (recipe.edge === 'faint' ? 0.16 : 0.3));
+    } else {
+      // pigment spreads with its drop, and dries clear soon after landing
+      grow = `0%, ${pct(d.t)} { scale: 0; animation-timing-function: cubic-bezier(0.2, 0.7, 0.4, 1); }
   ${pct(landed)} { scale: ${s(d.size)}; animation-timing-function: cubic-bezier(0.45, 0, 0.7, 1); }
-  100% { scale: ${s(d.end)}; }
-}
+  100% { scale: ${s(d.end)}; }`;
+      dryFrom = landed + 0.06;
+      dryTo = 1;
+    }
+    css += `@keyframes turn-s${k} { ${grow} }
 @keyframes turn-f${k} { 0%, ${pct(d.t)} { opacity: 0; } ${pct(d.t + 0.02)} { opacity: 1; } ${pct(dryFrom)} { opacity: 1; } ${pct(dryTo)}, 100% { opacity: 0; } }
 ::view-transition-group(${name}) { animation: none; }
 ::view-transition-new(${name}) {
