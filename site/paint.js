@@ -344,8 +344,8 @@ export function letter({ seed = 1 }) {
   const sheet = poly(edge);
   const tie = 50; // where the twine goes round, and the seal sits
   const twine = (dx) => `M${f(tie + dx)} 3C${f(tie + dx + 2)} 40 ${f(tie + dx - 2)} 120 ${f(tie + dx + 1)} ${H - 2}`;
-  // the flourish under the name, and the old hand's habit of a line to close the address
-  const swash = `M96 113C130 107 180 112 236 108C254 107 266 104 272 99`;
+  // the flourish under the addressee, in the old hand's way
+  const swash = `M96 126C130 120 180 125 236 121C254 120 266 117 272 112`;
   return `<svg class='paint' viewBox='0 0 ${W} ${H}' aria-hidden='true' focusable='false'>${DEFS(id, seed, 1.4)}
 <filter id='h${id}' x='-30%' y='-30%' width='160%' height='160%'><feGaussianBlur stdDeviation='2'/></filter>
 <filter id='p${id}'><feTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' seed='${seed % 83}'/><feColorMatrix values='0 0 0 0 .42 0 0 0 0 .32 0 0 0 0 .2 -2.6 0 0 0 1.3'/><feComposite in2='SourceGraphic' operator='in'/></filter>

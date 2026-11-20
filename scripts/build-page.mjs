@@ -45,7 +45,7 @@ const parts = {
   intro: [
     ...c.intro.map((p) => `<p>${prose(p)}</p>`),
     `<p class="hello">Say hello any time:</p>`,
-    `<div class="post-desk"><a href="mailto:${esc(c.email)}" class="letter mail" aria-label="Write to me at ${esc(c.email)}">${letter({ seed: 17 })}<span class="addr" aria-hidden="true"><span class="via">by Quick Post</span><span class="to">To Mr. ${esc(c.name)}</span><span class="at">at the round green door, Under-Hill</span><span class="em">${esc(c.email)}</span></span></a><button type="button" class="copy" data-copy="${esc(c.email)}"><span>or copy the address</span></button></div>`,
+    `<div class="post-desk"><a href="mailto:${esc(c.email)}" class="letter mail" aria-label="Write to me at ${esc(c.email)}">${letter({ seed: 17 })}<span class="addr" aria-hidden="true"><span class="via">by Quick Post</span><span class="to">To <span class="em">${esc(c.email)}</span></span><span class="at">at the round green door, Under-Hill</span></span></a><button type="button" class="copy" data-copy="${esc(c.email)}"><span>or copy the address</span></button></div>`,
   ].join('\n'),
   rooms: ROOMS.map((rm) => `<section class="room-block" aria-labelledby="${rm.id}"><h2 id="${rm.id}"><span class="wash" aria-hidden="true"></span><span class="title">${esc(rm.title)}</span><span class="room">${esc(rm.room)}</span>${rm.note ? `<small>${esc(rm.note)}</small>` : ''}${rm.mark || ''}</h2><ul class="${rm.inline ? 'knobs inline' : 'knobs'}">
 ${rm.items.map((it) => `<li>${it}</li>`).join('\n')}

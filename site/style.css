@@ -349,14 +349,14 @@ main { margin-top: 30px; }
 .letter:hover .paint .c1, .letter:focus-visible .paint .c1 { animation-delay: -0.267s; }
 .letter:hover .paint .c2, .letter:focus-visible .paint .c2 { animation-delay: -0.133s; }
 .letter:focus-visible { outline: 2px dashed var(--link); outline-offset: 4px; }
-/* the address, in an older hand, right of the twine (paint.js letter: the name's
-   flourish runs under it at 108 of 170) */
+/* the address, in an older hand, right of the twine (paint.js letter: the flourish
+   runs under the addressee at 121 of 170) */
 .letter .addr { position: absolute; left: 28%; right: 5%; top: 0; bottom: 0; font: italic 400 1em/1 'Alegreya', 'Alegreya Fallback', Georgia, serif; color: #3a2a1c; }
 .letter .addr > span { position: absolute; left: 0; white-space: nowrap; transform: translateY(-86%); }
 .letter .via { top: 22%; left: auto; right: 0; font-size: 4.4cqw; color: #7a6248; }
-.letter .to { top: 62%; font-size: 7.4cqw; }
-.letter .at { top: 77.5%; font-size: 4.9cqw; color: #5e4a36; }
-.letter .em { top: 91%; font-size: 5.6cqw; color: var(--link); }
+.letter .to { top: 69.5%; font-size: 7cqw; }
+.letter .to .em { color: var(--link); }
+.letter .at { top: 85%; font-size: 4.9cqw; color: #5e4a36; }
 /* posted: up and away toward the hill's postbox, and a fresh envelope comes back */
 .letter.posting { animation: post-off 2.2s cubic-bezier(0.5, 0, 0.3, 1) both; pointer-events: none; }
 @keyframes post-off {
