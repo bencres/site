@@ -1235,17 +1235,21 @@ function hill(ids) {
   // lamplight lie out across the path, fading off at their soft, uneven edges
   const nightLightId = ids.next();
   // the right-hand half of the doorway, the part the open leaf doesn't cover
-  // the part of the doorway the open leaf doesn't cover: the circle right of x0 (the
-  // leaf's free edge, hinged at the left). Calmly the leaf opens to half; flung, to a fifth
-  const opening = (r, x0 = D.x) => {
-    const dx = Math.max(-r + 0.5, Math.min(r - 0.5, x0 - D.x));
-    const a0 = Math.acos(dx / r);
-    const pts = [];
-    for (let i = 0; i <= 14; i++) { const a = -a0 + (i / 14) * 2 * a0; pts.push(P(D.x + Math.cos(a) * r, D.y + Math.sin(a) * r)); }
-    return pts;
+  // the part of the doorway the open leaf doesn't cover. The leaf is a disc squashed toward
+  // its hinge (scaleX = how far open), so its free edge is a half-ellipse; the light runs from
+  // that edge to the doorway's right side. Calmly the leaf opens to half; flung, to a fifth
+  const opening = (r, open) => {
+    const edge = (y) => D.x - DR + open * (DR + Math.sqrt(Math.max(0, DR * DR - y * y))) - 0.6;
+    const right = [], left = [];
+    for (let i = 0; i <= 16; i++) {
+      const y = -r + (i / 16) * 2 * r;
+      const half = Math.sqrt(Math.max(0, r * r - y * y));
+      right.push(P(D.x + half, D.y + y));
+      left.unshift(P(Math.min(edge(y), D.x + half), D.y + y));
+    }
+    return [...right, ...left];
   };
   const roomHalfId = ids.next(), roomWideId = ids.next();
-  const flungEdge = D.x - DR + 2 * DR * 0.22;
   const pool = (cx, cy, rx, ry, seed, widen) =>
     blobPts(rx, ry, rng(seed), { n: 14, wobble: 0.12 }).map((p) => P(cx + p.x * (1 + Math.max(0, p.y / ry) * widen), cy + p.y));
   s.add(group({ name: 'spill', id: spillId, opacity: 0 }, [
@@ -1255,13 +1259,13 @@ function hill(ids) {
       wc(ids, pool(618, 344, 44, 12, 302, 0.35), 'F8E2A8', rng(303), { alpha: 0.6, off: [0, 0], wobble: 1, grain: 0.15, soft: true, hazy: true, blend: 'normal' }),
       // the room, warm through the open half of the doorway (the leaf covers the other half)
       group({ name: 'room, door half open', id: roomHalfId }, [
-        wc(ids, opening(DR - 3), 'EDB25C', rng(304), { alpha: 0.85, off: [0, 0], wobble: 0.5, grain: 0.3, soft: false, blend: 'normal' }),
-        wc(ids, opening(DR * 0.6).map((p) => P(p.x + 5, p.y + 3)), 'F8DC9C', rng(305), { alpha: 0.65, off: [0, 0], wobble: 0.5, grain: 0.1, soft: false, blend: 'normal' }),
+        wc(ids, opening(DR - 0.5, 0.5), 'EDB25C', rng(304), { alpha: 0.85, off: [0, 0], wobble: 0, tension: 0.6, grain: 0.3, soft: false, blend: 'normal' }),
+        wc(ids, opening(DR * 0.62, 0.62).map((p) => P(p.x + 5, p.y + 2)), 'F8DC9C', rng(305), { alpha: 0.65, off: [0, 0], wobble: 0.3, grain: 0.1, soft: false, blend: 'normal' }),
       ]),
       // flung wide: more of the room shows, and its light is fuller
       group({ name: 'room, door flung open', id: roomWideId, opacity: 0 }, [
-        wc(ids, opening(DR - 3, flungEdge + 1.5), 'EDB25C', rng(306), { alpha: 0.88, off: [0, 0], wobble: 0.5, grain: 0.3, soft: false, blend: 'normal' }),
-        wc(ids, opening(DR * 0.72, flungEdge + 8).map((p) => P(p.x + 2, p.y + 3)), 'F8DC9C', rng(307), { alpha: 0.7, off: [0, 0], wobble: 0.5, grain: 0.1, soft: false, blend: 'normal' }),
+        wc(ids, opening(DR - 0.5, 0.22), 'EDB25C', rng(306), { alpha: 0.88, off: [0, 0], wobble: 0, tension: 0.6, grain: 0.3, soft: false, blend: 'normal' }),
+        wc(ids, opening(DR * 0.78, 0.4).map((p) => P(p.x + 2, p.y + 2)), 'F8DC9C', rng(307), { alpha: 0.7, off: [0, 0], wobble: 0.5, grain: 0.1, soft: false, blend: 'normal' }),
       ]),
     ]),
   ]));
