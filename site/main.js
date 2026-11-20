@@ -266,37 +266,53 @@ hello.addEventListener('click', (e) => {
   setTimeout(() => (location.href = hello.href), 650);
   setTimeout(() => hello.classList.remove('posting'), 2200);
 });
-// or just take the address
+// or just take the address. The button keeps its words; what it says back rises off it as
+// smoke, each letter drifting up and away from the others as it thins out
 const copy = $('.post-desk .copy');
-const words = copy?.querySelector('span');
-// one change at a time: what's there is rubbed out right to left, then the new words are
-// written in left to right (a plain cross-fade, for anyone who'd rather nothing moved)
-let rewriting = Promise.resolve();
-const SHOWN = 'inset(-6px -6px -6px -6px)';
-const write = (text) => (rewriting = rewriting.then(async () => {
-  if (words.textContent === text) return;
-  words.style.minWidth ||= `${words.offsetWidth}px`;
-  const out = reducedMotion
-    ? words.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 220, easing: 'ease-in', fill: 'forwards' })
-    : words.animate([{ clipPath: SHOWN, opacity: 1 }, { clipPath: 'inset(-6px 100% -6px -6px)', opacity: 0.3 }], { duration: 300, easing: 'cubic-bezier(0.5, 0, 0.75, 0.6)', fill: 'forwards' });
-  await out.finished;
-  words.textContent = text;
-  const back = reducedMotion
-    ? words.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 260, easing: 'ease-out', fill: 'both' })
-    : words.animate([{ clipPath: 'inset(-6px 100% -6px -6px)', opacity: 1 }, { clipPath: SHOWN, opacity: 1 }], { duration: 520, easing: 'cubic-bezier(0.45, 0, 0.3, 1)', fill: 'both' });
-  await back.finished;
-  out.cancel();
-  back.cancel();
-}));
-copy?.addEventListener('click', async () => {
+function puff(text) {
+  const desk = copy.parentElement;
+  const cloud = h('span', { class: 'puff', 'aria-hidden': 'true' }, ...[...text].map((ch) => h('span', {}, ch)));
+  cloud.style.left = `${copy.offsetLeft + copy.offsetWidth / 2}px`;
+  cloud.style.top = `${copy.offsetTop - 4}px`;
+  desk.append(cloud);
+  const letters = [...cloud.children];
+  const mid = (letters.length - 1) / 2;
+  const runs = letters.map((el, i) => {
+    if (reducedMotion) return el.animate([{ opacity: 0 }, { opacity: 0.9, offset: 0.2 }, { opacity: 0.9, offset: 0.7 }, { opacity: 0 }], { duration: 1400, fill: 'both' });
+    const dx = (i - mid) * (7 + Math.random() * 4) + (Math.random() - 0.5) * 6;
+    const dy = -(24 + Math.random() * 16);
+    const turn = (Math.random() - 0.5) * 34;
+    return el.animate([
+      { transform: 'translate(0, 4px) scale(0.92)', opacity: 0, filter: 'blur(0.5px)' },
+      { transform: `translate(${dx * 0.04}px, ${dy * 0.14}px) scale(1)`, opacity: 1, filter: 'blur(0px)', offset: 0.15 },
+      { transform: `translate(${dx * 0.12}px, ${dy * 0.3}px) rotate(${turn * 0.1}deg) scale(1.02)`, opacity: 0.95, filter: 'blur(0.2px)', offset: 0.34 },
+      { transform: `translate(${dx * 0.65}px, ${dy * 0.7}px) rotate(${turn * 0.6}deg) scale(1.15)`, opacity: 0.45, filter: 'blur(1.6px)', offset: 0.7 },
+      { transform: `translate(${dx}px, ${dy}px) rotate(${turn}deg) scale(1.35)`, opacity: 0, filter: 'blur(4px)' },
+    ], { duration: 1800 + Math.random() * 400, delay: i * 40, easing: 'cubic-bezier(0.3, 0.5, 0.4, 1)', fill: 'both' });
+  });
+  Promise.all(runs.map((a) => a.finished)).then(() => cloud.remove());
+}
+// the clipboard API, or the old way for browsers that don't allow it here
+async function take(text) {
   try {
-    await navigator.clipboard.writeText(copy.dataset.copy);
-    write('copied ✓');
+    await navigator.clipboard.writeText(text);
+    return true;
   } catch {
-    write(copy.dataset.copy);
+    const field = h('textarea', { 'aria-hidden': 'true', style: 'position:fixed;opacity:0;pointer-events:none' }, text);
+    document.body.append(field);
+    field.select();
+    const ok = document.execCommand?.('copy');
+    field.remove();
+    return !!ok;
   }
-  clearTimeout(copy.reset);
-  copy.reset = setTimeout(() => write('or copy the address'), 2400);
+}
+// the smoke is for the eye; a screen reader is told in words
+const heard = h('span', { class: 'visually-hidden', role: 'status' });
+copy?.after(heard);
+copy?.addEventListener('click', async () => {
+  const ok = await take(copy.dataset.copy);
+  puff(ok ? 'copied' : 'couldn’t copy');
+  heard.textContent = ok ? `Copied ${copy.dataset.copy}` : 'Couldn’t copy the address';
 });
 
 // ---------- knocking at the door
