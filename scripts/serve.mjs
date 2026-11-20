@@ -11,7 +11,7 @@ const root = path.resolve(process.argv[3] || path.join(import.meta.dirname, '../
 const TYPES = {
   '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.mjs': 'text/javascript; charset=utf-8',
   '.css': 'text/css; charset=utf-8', '.json': 'application/json', '.svg': 'image/svg+xml', '.wasm': 'application/wasm',
-  '.riv': 'application/octet-stream', '.woff2': 'font/woff2', '.png': 'image/png', '.jpg': 'image/jpeg', '.webp': 'image/webp', '.avif': 'image/avif', '.pdf': 'application/pdf',
+  '.riv': 'application/octet-stream', '.woff2': 'font/woff2', '.png': 'image/png', '.jpg': 'image/jpeg', '.webp': 'image/webp', '.avif': 'image/avif', '.pdf': 'application/pdf', '.ico': 'image/x-icon',
 };
 
 // vercel.json's sources, in the subset of path-to-regexp it uses: (.*), :name, :name*

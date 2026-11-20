@@ -171,6 +171,8 @@ function page({ slug, meta, html }) {
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="../../shared/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="../../shared/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="../../shared/apple-touch-icon.png">
   <link rel="stylesheet" href="../../shared/fonts.css">
   <link rel="stylesheet" href="../../shared/base.css">
   <link rel="stylesheet" href="../../shared/turn.css">

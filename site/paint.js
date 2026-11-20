@@ -300,41 +300,72 @@ export const PIGMENTS = {
 };
 
 /**
- * A letter addressed to the hill, 340 × 170, for the email link: a paper envelope
- * with a stamp (the round door, in miniature), a postmark run over it, and pencil
- * rules for the address, which is real text laid over them (style.css).
+ * A blob of red sealing wax with a B pressed into it (the site's icon is the same
+ * seal), drawn about (0, 0) at radius 25 and placed with `at`/`scale`. `wet`, `grain`
+ * and `blur` name the caller's filters (displaced edge, paper grain, soft bloom).
  */
-export function letter({ seed = 1, tint = 'C0603E' }) {
+export function waxSeal({ seed = 1, x = 0, y = 0, scale = 1, wet, grain, blur }) {
+  const r = rng(seed);
+  const body = smooth(blobPts(r, 0, 0, 25, 24, 14, 0.12));
+  const press = smooth(blobPts(r, 0, 0, 17, 17, 14, 0.03));
+  const bloom = smooth(blobPts(r, 0, 0, 16, 16, 14, 0.03));
+  const B = 'M-6 -11V11M-5.5 -10.5C1 -12 7 -10.5 6.5 -5.5S0 0 -5 0C2 -.5 9 1 8 6.5S0 12 -5.5 11';
+  return `<g transform='translate(${f(x)} ${f(y)}) scale(${scale})'>
+<g filter='url(#${wet})'><path d='${body}' fill='#B5402C' fill-opacity='.9'/><path d='${body}' fill='none' stroke='#7e2b1d' stroke-opacity='.5' stroke-width='1.7'/>${grain ? `<path d='${body}' filter='url(#${grain})' opacity='.4'/>` : ''}</g>
+<path d='${bloom}' fill='#6b1f12' fill-opacity='.5' filter='url(#${blur})'/>
+<path d='${body}' fill='none' stroke='#${INK}' stroke-opacity='.2' stroke-width='3.4'/><path d='${body}' fill='none' stroke='#${INK}' stroke-width='1.6'/>
+<path d='${press}' fill='none' stroke='#5a1408' stroke-opacity='.6' stroke-width='1.6'/>
+<path d='${B}' fill='none' stroke='#F0C9B8' stroke-opacity='.92' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'/>
+</g>`;
+}
+
+/**
+ * A letter to the hill, 340 × 170, for the email link: an old sheet of parchment
+ * folded into a packet, tied with twine and sealed with the B in red wax where the
+ * twine crosses, as letters went before envelopes and stamps. The address is real
+ * text laid over it (style.css).
+ */
+export function letter({ seed = 1 }) {
   const id = `l${++uid}`;
   const r = rng(seed);
   const W = 340, H = 170;
-  const card = [[6, 8], [W - 8, 5], [W - 5, H - 7], [8, H - 5]];
-  const stamp = [[W - 76, 17], [W - 22, 15], [W - 21, 79], [W - 75, 80]];
-  const pm = [W - 96, 47];
-  const waves = [30, 40, 50, 60].map((y) => {
-    let d = `M${f(W - 150)} ${f(y + r.jit(1))}`;
-    for (let x = W - 150; x < W - 30; x += 12) d += `Q${f(x + 3)} ${f(y - 3.2)} ${f(x + 6)} ${f(y)}T${f(x + 12)} ${f(y)}`;
-    return d;
-  }).join('');
-  const rules = [104, 129, 154].map((y) => `M${f(78 + r.jit(2))} ${f(y + r.jit(0.6))}L${f(W - 34 + r.jit(2))} ${f(y + r.jit(0.6))}`).join('');
+  // a deckled sheet: every edge torn a little unevenly
+  const edge = [];
+  const side = (x0, y0, x1, y1, n, amt) => {
+    for (let i = 0; i < n; i++) {
+      const t = i / n;
+      edge.push([x0 + (x1 - x0) * t + (y0 === y1 ? 0 : r.jit(amt)), y0 + (y1 - y0) * t + (x0 === x1 ? 0 : r.jit(amt))]);
+    }
+  };
+  side(7, 9, W - 8, 6, 12, 1.1);
+  side(W - 8, 6, W - 5, H - 8, 6, 1.1);
+  side(W - 5, H - 8, 9, H - 5, 12, 1.1);
+  side(9, H - 5, 7, 9, 6, 1.1);
+  const sheet = poly(edge);
+  const tie = 50; // where the twine goes round, and the seal sits
+  const twine = (dx) => `M${f(tie + dx)} 3C${f(tie + dx + 2)} 40 ${f(tie + dx - 2)} 120 ${f(tie + dx + 1)} ${H - 2}`;
+  // the flourish under the name, and the old hand's habit of a line to close the address
+  const swash = `M96 113C130 107 180 112 236 108C254 107 266 104 272 99`;
   return `<svg class='paint' viewBox='0 0 ${W} ${H}' aria-hidden='true' focusable='false'>${DEFS(id, seed, 1.4)}
+<filter id='h${id}' x='-30%' y='-30%' width='160%' height='160%'><feGaussianBlur stdDeviation='2'/></filter>
+<filter id='p${id}'><feTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' seed='${seed % 83}'/><feColorMatrix values='0 0 0 0 .42 0 0 0 0 .32 0 0 0 0 .2 -2.6 0 0 0 1.3'/><feComposite in2='SourceGraphic' operator='in'/></filter>
+<clipPath id='c${id}'><path d='${sheet}'/></clipPath>
 <g class='soak' filter='url(#d${id})'>
-<path d='${poly(ruled(card, rng(seed + 1), 1))}' fill='#F4EBD6' fill-opacity='.97' stroke='#9C7C58' stroke-opacity='.45' stroke-width='1.2'/>
-<path class='tint' d='${blob(r, 120, 120, 110, 40, 12, 0.16)}' fill='#${tint}' fill-opacity='.13' style='mix-blend-mode:multiply'/>
-<path d='${poly(card)}' filter='url(#g${id})' opacity='.32'/>
-<path d='${poly(stamp)}' fill='#FBF6EA' stroke='#F4EBD6' stroke-width='4.5' stroke-dasharray='.1 5.2' stroke-linecap='round'/>
-<path d='${blob(r, W - 48, 36, 20, 12, 10, 0.2)}' fill='#BFD3DF' fill-opacity='.6'/>
-<path d='${blob(r, W - 46, 66, 26, 16, 10, 0.16)}' fill='#86B35B' fill-opacity='.55' style='mix-blend-mode:multiply'/>
-<circle cx='${W - 48}' cy='56' r='9.5' fill='#8A6A48' fill-opacity='.7'/>
-<circle cx='${W - 48}' cy='56' r='7' fill='#3F6E45' fill-opacity='.9'/>
+<path d='${sheet}' fill='#EBDCB6' fill-opacity='.98' stroke='#A8854E' stroke-opacity='.55' stroke-width='1.4'/>
+<g clip-path='url(#c${id})'>
+<path d='${blob(r, 40, 30, 46, 26, 10, 0.25)}' fill='#C8A46A' fill-opacity='.16' style='mix-blend-mode:multiply'/>
+<path d='${blob(r, W - 50, H - 34, 50, 26, 10, 0.25)}' fill='#B98A50' fill-opacity='.14' style='mix-blend-mode:multiply'/>
 </g>
-<g class='ink'>${cels(id, r, () => poly(ruled(card, r, 1.1)) + poly(stamp.map(([x, y]) => [x + 3.5 + r.jit(0.3), y + 3.5 + r.jit(0.3)]).map(([x, y], i) => [i === 1 || i === 2 ? x - 7 : x, i >= 2 ? y - 7 : y])), { w: 1.3 })}</g>
-<circle cx='${W - 48}' cy='56.5' r='1.1' fill='#${INK}'/>
-<g class='postmark' fill='none' stroke='#${INK}' stroke-opacity='.42' stroke-width='1.1'>
-<circle cx='${pm[0]}' cy='${pm[1]}' r='21'/><circle cx='${pm[0]}' cy='${pm[1]}' r='16' stroke-opacity='.25'/>
-<path d='${waves}' stroke-opacity='.32'/>
+<path d='${sheet}' filter='url(#p${id})' opacity='.28'/>
+<path d='M${f(W * 0.33)} 7L${f(W * 0.33 + 3)} ${H - 6}L${f(W * 0.33 + 14)} ${H - 6}L${f(W * 0.33 + 10)} 7Z' fill='#9C7C58' fill-opacity='.1'/>
+<path d='M${f(W * 0.66)} 6L${f(W * 0.66 - 2)} ${H - 7}L${f(W * 0.66 + 9)} ${H - 7}L${f(W * 0.66 + 11)} 6Z' fill='#9C7C58' fill-opacity='.08'/>
 </g>
-<path d='${rules}' stroke='#${INK}' stroke-opacity='.16' stroke-width='.8' fill='none'/>
+<g class='ink'>${cels(id, r, () => poly(edge.map(([x, y]) => [x + r.jit(0.4), y + r.jit(0.4)])), { w: 1.2, bleed: 0.14 })}</g>
+<path d='M${f(W * 0.33 + 1)} 9L${f(W * 0.33 + 3)} ${H - 7}M${f(W * 0.66)} 8L${f(W * 0.66 - 2)} ${H - 8}' stroke='#7a5a36' stroke-opacity='.28' stroke-width='.9' fill='none'/>
+<path d='${twine(-3)}${twine(3)}' fill='none' stroke='#8A6A48' stroke-width='2.2' stroke-linecap='round'/>
+<path d='${twine(-3)}${twine(3)}' fill='none' stroke='#${INK}' stroke-opacity='.35' stroke-width='.7' stroke-dasharray='2 2.6'/>
+${waxSeal({ seed: seed + 3, x: tie, y: 34, scale: 0.86, wet: `d${id}`, grain: `g${id}`, blur: `h${id}` })}
+<path d='${swash}' fill='none' stroke='#${INK}' stroke-opacity='.55' stroke-width='1.1' stroke-linecap='round'/>
 </svg>`;
 }
 

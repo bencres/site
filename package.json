@@ -10,7 +10,8 @@
     "compress": "node scripts/compress.mjs",
     "build": "npm run vendor && npm run build:rive && npm run build:stills && npm run build:posts && npm run build:page && npm run compress",
     "serve": "node scripts/serve.mjs 4173",
-    "build:stills": "node scripts/build-stills.mjs"
+    "build:stills": "node scripts/build-stills.mjs",
+    "build:icons": "node scripts/build-icons.mjs"
   },
   "devDependencies": {
     "@rive-app/webgl2": "2.51.0",
