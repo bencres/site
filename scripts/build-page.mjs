@@ -22,7 +22,8 @@ const mark = (cls, svg = '') => `<span class="mark ${cls}" aria-hidden="true">${
 const ROOMS = [
   { id: 'now', title: 'Now', room: 'by the fire', note: `updated ${c.now.updated}`, items: c.now.items.map(esc) },
   { id: 'work', title: 'Work', room: 'the study', mark: mark('m-blot', splotch({ seed: 5, dir: 2.5 })),
-    items: c.work.map((w) => `${a(w.url, w.name)}, ${esc(w.role)} <span class="when">${esc(w.when)}</span>`) },
+    // the places I've worked, named but not linked
+    items: c.work.map((w) => `${esc(w.name)}, ${esc(w.role)} <span class="when">${esc(w.when)}</span>`) },
   { id: 'projects', title: 'Projects', room: 'the workshop', mark: mark('m-drip'), items: c.projects.map((p) => `${a(p.url, p.name)}: ${esc(p.blurb)}`) },
   { id: 'writing', title: 'Writing', room: 'the bookshelves', mark: mark('m-hatch', hatch({ seed: 4, n: 5, cross: true })),
     items: c.writing.map((w) => `${a(w.url, w.title)}${w.starred ? '<span class="star" title="A favorite"> ✦</span>' : ''} <span class="when">${esc(w.date)}</span>`) },

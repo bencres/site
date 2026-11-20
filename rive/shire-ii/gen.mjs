@@ -1235,7 +1235,17 @@ function hill(ids) {
   // lamplight lie out across the path, fading off at their soft, uneven edges
   const nightLightId = ids.next();
   // the right-hand half of the doorway, the part the open leaf doesn't cover
-  const opening = (r) => { const pts = [P(D.x - 1, D.y - r)]; for (let i = 0; i <= 10; i++) { const a = -Math.PI / 2 + (i / 10) * Math.PI; pts.push(P(D.x + Math.cos(a) * r, D.y + Math.sin(a) * r)); } return pts; };
+  // the part of the doorway the open leaf doesn't cover: the circle right of x0 (the
+  // leaf's free edge, hinged at the left). Calmly the leaf opens to half; flung, to a fifth
+  const opening = (r, x0 = D.x) => {
+    const dx = Math.max(-r + 0.5, Math.min(r - 0.5, x0 - D.x));
+    const a0 = Math.acos(dx / r);
+    const pts = [];
+    for (let i = 0; i <= 14; i++) { const a = -a0 + (i / 14) * 2 * a0; pts.push(P(D.x + Math.cos(a) * r, D.y + Math.sin(a) * r)); }
+    return pts;
+  };
+  const roomHalfId = ids.next(), roomWideId = ids.next();
+  const flungEdge = D.x - DR + 2 * DR * 0.22;
   const pool = (cx, cy, rx, ry, seed, widen) =>
     blobPts(rx, ry, rng(seed), { n: 14, wobble: 0.12 }).map((p) => P(cx + p.x * (1 + Math.max(0, p.y / ry) * widen), cy + p.y));
   s.add(group({ name: 'spill', id: spillId, opacity: 0 }, [
@@ -1244,8 +1254,15 @@ function hill(ids) {
       wc(ids, pool(622, 362, 84, 24, 300, 0.55), 'F3D48C', rng(301), { alpha: 0.5, off: [0, 0], wobble: 1.5, grain: 0.25, soft: true, hazy: true, blend: 'normal' }),
       wc(ids, pool(618, 344, 44, 12, 302, 0.35), 'F8E2A8', rng(303), { alpha: 0.6, off: [0, 0], wobble: 1, grain: 0.15, soft: true, hazy: true, blend: 'normal' }),
       // the room, warm through the open half of the doorway (the leaf covers the other half)
-      wc(ids, opening(DR - 3), 'EDB25C', rng(304), { alpha: 0.85, off: [0, 0], wobble: 0.5, grain: 0.3, soft: false, blend: 'normal' }),
-      wc(ids, opening(DR * 0.6).map((p) => P(p.x + 5, p.y + 3)), 'F8DC9C', rng(305), { alpha: 0.65, off: [0, 0], wobble: 0.5, grain: 0.1, soft: false, blend: 'normal' }),
+      group({ name: 'room, door half open', id: roomHalfId }, [
+        wc(ids, opening(DR - 3), 'EDB25C', rng(304), { alpha: 0.85, off: [0, 0], wobble: 0.5, grain: 0.3, soft: false, blend: 'normal' }),
+        wc(ids, opening(DR * 0.6).map((p) => P(p.x + 5, p.y + 3)), 'F8DC9C', rng(305), { alpha: 0.65, off: [0, 0], wobble: 0.5, grain: 0.1, soft: false, blend: 'normal' }),
+      ]),
+      // flung wide: more of the room shows, and its light is fuller
+      group({ name: 'room, door flung open', id: roomWideId, opacity: 0 }, [
+        wc(ids, opening(DR - 3, flungEdge + 1.5), 'EDB25C', rng(306), { alpha: 0.88, off: [0, 0], wobble: 0.5, grain: 0.3, soft: false, blend: 'normal' }),
+        wc(ids, opening(DR * 0.72, flungEdge + 8).map((p) => P(p.x + 2, p.y + 3)), 'F8DC9C', rng(307), { alpha: 0.7, off: [0, 0], wobble: 0.5, grain: 0.1, soft: false, blend: 'normal' }),
+      ]),
     ]),
   ]));
   tp(nightLightId, 'opacity', [0.2, 0, 0.3, 0.8, 1]);
@@ -1315,6 +1332,8 @@ function hill(ids) {
     { object: leafId, prop: 'scaleX', keys: [[0, 1, 'cubic', [0.4, 0, 0.3, 1]], [40, 0.5, 'hold'], [228, 0.5, 'cubic', [0.45, 0, 0.35, 1]], [288, 1.006, 'cubic', EASE.out], [300, 1]] },
     { object: insideId, prop: 'opacity', keys: [[0, 0, 'hold'], [4, 0, 'cubic', EASE.out], [36, 1, 'hold'], [236, 1, 'cubic', EASE.in], [284, 0]] },
     { object: spillId, prop: 'opacity', keys: [[0, 0, 'hold'], [8, 0, 'cubic', EASE.out], [44, 1, 'hold'], [228, 1, 'cubic', EASE.in], [280, 0]] },
+    { object: roomHalfId, prop: 'opacity', keys: [[0, 1], [300, 1]] },
+    { object: roomWideId, prop: 'opacity', keys: [[0, 0], [300, 0]] },
   ] }), { fromAny: false, mix: 0 });
   const slam = s.input('trigger', 'slam');
   const jolt = [[88, 0], [91, 2.4], [94, -2], [97, 1.4], [100, -0.8], [104, 0.3], [110, 0]].map(([f, dx]) => [f, D.x - DR + dx, 'cubic', EASE.inOut]);
@@ -1323,6 +1342,8 @@ function hill(ids) {
     { object: leafId, prop: 'x', keys: [[0, D.x - DR, 'hold'], ...jolt, [120, D.x - DR]] },
     { object: insideId, prop: 'opacity', keys: [[0, 0, 'cubic', EASE.out], [6, 1, 'hold'], [82, 1, 'linear'], [88, 0]] },
     { object: spillId, prop: 'opacity', keys: [[0, 0, 'cubic', EASE.out], [8, 1, 'hold'], [80, 1, 'linear'], [88, 0]] },
+    { object: roomHalfId, prop: 'opacity', keys: [[0, 0], [120, 0]] },
+    { object: roomWideId, prop: 'opacity', keys: [[0, 1], [120, 1]] },
   ] }), { fromAny: false, mix: 0 });
   const doorEv = s.event('door');
   s.listen(hDoor, 'click', [Scene.emit(doorEv)]);
