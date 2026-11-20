@@ -18,13 +18,25 @@
 // only run in the season that shows them.
 import {
   Ids, Scene, rng, P, TAU, el, argb, darken, resample, blobPts, pathXml, polyXml,
-  fill, stroke, stippleShape, document, EASE,
+  fill, stroke, stippleShape, document, EASE, thin,
 } from '../lib/ink.mjs';
 
 const SEASON0 = +(process.env.SH_SEASON ?? 2);
 const TIME0 = +(process.env.SH_TIME ?? 1);
 const REGULAR0 = process.env.SH_REGULAR ? 1 : 0;
+// The season and time inputs start unset (-1), so the pose layers wait at Entry until the
+// page sets them and then go straight to the visitor's pose, rather than starting in the
+// default light and cross-fading to it (which would show under the page's still picture).
+// A native screenshot can't set inputs, so SH_SEASON / SH_TIME pick the pose there.
+const SEASON_IN = process.env.SH_SEASON ? SEASON0 : -1;
+const TIME_IN = process.env.SH_TIME ? TIME0 : -1;
 const SPEED = 0.9; // intro frame scale (60 fps)
+// The always-on loops (drift, breathe, smoke, sway, weather...) step at this rate
+// rather than every frame, so the canvas can rest between steps. 15 fps puts the
+// line boil (a new cel every 8 frames at 60) on the same ticks: 8/60 s = 2/15 s.
+// Intro, reactions and pose cross-fades still run at the full frame rate.
+const AMBIENT = 15;
+const TICK = 60 / AMBIENT; // one ambient step, in 60 fps frames
 
 const INK = 'FF2B231C'; // iron-gall brown-black
 const INK_SOFT = 'FF5E554C';
@@ -160,13 +172,21 @@ function hit(id, x, y, w, h) {
   return el('Shape', { x, y, name: 'hit', id }, [el('Rectangle', { width: w, height: h, originX: 0.5, originY: 0.5, name: 'R' }), fill('00000000')]);
 }
 
-// sample a function of phase into keyframes so loops can be authored as curves
+// how far a thinned key may stray from its curve: a tenth of a unit, one level of opacity
+const EPS = { x: 0.1, y: 0.1, rotation: 0.002, scaleX: 0.002, scaleY: 0.002, opacity: 1 / 255 };
+
+// sample a function of phase into keyframes so loops can be authored as curves,
+// then keep only the keys where it bends. Ambient loops sample every TICK, so each
+// step they show lands on a key.
 function sampled(object, prop, frames, step, fn) {
   const keys = [];
   for (let f = 0; f <= frames; f += step) keys.push([Math.min(f, frames), fn(Math.min(f, frames) / frames), 'linear']);
   if (keys.at(-1)[0] !== frames) keys.push([frames, fn(1), 'linear']);
-  return { object, prop, keys };
+  return { object, prop, keys: thin(keys, EPS[prop]) };
 }
+
+// an always-on loop, stepping at the ambient rate
+const ambient = (s, spec) => s.anim({ rate: AMBIENT, ...spec });
 
 function scallop(cx, cy, R, r, { n = 44, bumps = 7, depth = 0.11, squash = 1 } = {}) {
   const pts = [];
@@ -270,14 +290,15 @@ class Kit {
       ]),
       el('AnimationState', { x: 400, y: 0, animationId: done, id: b }),
     ]));
-    s.loopLayer('boil', s.anim({ name: 'boil', duration: 24, loop: 'loop', tracks: this.boilTracks }));
+    s.loopLayer('boil', ambient(s, { name: 'boil', duration: 24, loop: 'loop', tracks: this.boilTracks }));
   }
 }
 
 /**
  * Hold-poses picked by a number input. props: [{ object, prop, type, vals: [per state] }].
  * Entry picks the pose matching the input with no mix (so the first frame is
- * right); later changes cross-fade. Every pose keys every property.
+ * right), waiting there while the input is unset; later changes cross-fade. Every
+ * pose keys every property.
  */
 function poseLayer(s, name, inputId, n, props, { mix = 1600 } = {}) {
   const anims = Array.from({ length: n }, (_, i) =>
@@ -359,8 +380,8 @@ function hill(ids) {
   const s = new Scene(ids, { name: 'Hill', w: W, h: H, x: 0, y: 0, bg: process.env.SH_BG ? 'FFF8F2E4' : undefined });
   const k = new Kit(s);
   const r = rng(1937);
-  const season = s.input('number', 'season', SEASON0);
-  const time = s.input('number', 'time', TIME0);
+  const season = s.input('number', 'season', SEASON_IN);
+  const time = s.input('number', 'time', TIME_IN);
   const still = s.input('bool', 'still', 0);
   const seasonP = [], timeP = [];
   const sp = (object, prop, vals, type) => seasonP.push({ object, prop, vals, type });
@@ -434,7 +455,7 @@ function hill(ids) {
     const base = cloudPts(c.w, c.h, cr);
     const b = k.boil({ name: `cloud${i} ink`, seed: c.seed + 1, draw: (rr) => ink({ pts: base, closed: true }, rr, { w: 1.6, amt: 0.6, fx: fxSky }) });
     cloudKids.push(group({ name: `cloud${i}`, x: c.x, y: c.y, id }, [wc(ids, base, C.slate, cr, { alpha: 0.24, off: [4, 4], grain: 0.4, soft: false, key: 'cloud' }), b]));
-    s.loopLayer(`cloud${i} drift`, s.anim({ name: `cloud${i} drift`, duration: c.dur, loop: 'pingPong', tracks: [{ object: id, prop: 'x', keys: [[0, c.x, 'cubic', EASE.inOut], [c.dur, c.x + c.dx]] }] }));
+    s.loopLayer(`cloud${i} drift`, ambient(s, { name: `cloud${i} drift`, duration: c.dur, loop: 'pingPong', tracks: [{ object: id, prop: 'x', keys: [[0, c.x, 'cubic', EASE.inOut], [c.dur, c.x + c.dx]] }] }));
   });
   const cloudsId = ids.next();
   s.add(k.in({ name: 'clouds in', t0: 50, t1: 110 }, [group({ name: 'clouds', id: cloudsId }, cloudKids)]));
@@ -459,20 +480,20 @@ function hill(ids) {
       return { cid, xml: el('Node', { name: `wing${cel}`, id: cid }, ink([P(-12, up), P(-6, up * 0.4 - 3), P(0, 0), P(6, up * 0.4 - 3), P(12, up)], r0, { w: 1.6, amt: 0.3 })) };
     });
     birdKids.push(group({ name: `flyer${i}`, x: -40, y: f.y, id, scaleX: f.scale, scaleY: f.scale, opacity: 0 }, [el('Solo', { name: 'flap', id: flapId, activeComponentId: cels[0].cid }, cels.map((c) => c.xml))]));
-    s.loopLayer(`flyer${i} flap`, s.anim({ name: `flap${i}`, duration: 22 + i * 2, loop: 'loop', tracks: [{ object: flapId, prop: 'activeComponentId', type: 'Id', keys: [[0, cels[0].cid, 'hold'], [11 + i, cels[1].cid, 'hold']] }] }));
+    s.loopLayer(`flyer${i} flap`, ambient(s, { name: `flap${i}`, duration: 22 + i * 2, loop: 'loop', tracks: [{ object: flapId, prop: 'activeComponentId', type: 'Id', keys: [[0, cels[0].cid, 'hold'], [11 + i, cels[1].cid, 'hold']] }] }));
     const cross = 760;
     const t0 = f.start, t1 = f.start + cross;
     flyTracks.push(
       { object: id, prop: 'x', keys: [[0, -40, 'hold'], [t0, -40, 'linear'], [t1, W + 40, 'hold'], [flyDur, W + 40, 'hold']] },
       { object: id, prop: 'opacity', keys: [[0, 0, 'hold'], [t0 - 1, 1, 'hold'], [t1 + 1, 0, 'hold'], [flyDur, 0, 'hold']] },
-      sampled(id, 'y', flyDur, 20, (t) => {
+      sampled(id, 'y', flyDur, TICK, (t) => {
         const ft = Math.max(0, Math.min(1, (t * flyDur - t0) / cross));
         return f.y + Math.sin(ft * 9 + i) * 8 - ft * 34;
       })
     );
   });
   s.add(group({ name: 'birds' }, birdKids));
-  s.loopLayer('flyers', s.anim({ name: 'flyers', duration: flyDur, loop: 'loop', tracks: flyTracks }));
+  s.loopLayer('flyers', ambient(s, { name: 'flyers', duration: flyDur, loop: 'loop', tracks: flyTracks }));
 
   // --- far hills
   // both ranges run down into the meadow at the left, so the wash ends where it dried, not at a cut
@@ -639,7 +660,7 @@ function hill(ids) {
   sp(blossomId, 'opacity', [1, 0, 0, 0]);
   for (const t of tintTracks('canopy', 'FFFFFF')) sp(t.object, t.prop, CANOPY.map((c) => tintColor('canopy', t.object, c, 1)), 'Color');
   for (const t of tintTracks('canopy2', 'FFFFFF')) sp(t.object, t.prop, CANOPY2.map((c) => tintColor('canopy2', t.object, c, 1)), 'Color');
-  s.loopLayer('breathe', s.anim({ name: 'breathe', duration: 330, loop: 'pingPong', tracks: [
+  s.loopLayer('breathe', ambient(s, { name: 'breathe', duration: 330, loop: 'pingPong', tracks: [
     { object: breatheId, prop: 'scaleX', keys: [[0, 1, 'cubic', EASE.inOut], [330, 1.02]] },
     { object: breatheId, prop: 'scaleY', keys: [[0, 1, 'cubic', EASE.inOut], [330, 1.03]] },
   ] }));
@@ -721,15 +742,15 @@ function hill(ids) {
     const at = (t) => (t + ph) % 1;
     const op = (u) => (u < 0.04 || u > 0.94 ? 0 : u < 0.18 ? (u - 0.04) / 0.14 : Math.max(0, 1 - (u - 0.18) / 0.76));
     smokeTracks.push(
-      sampled(id, 'y', smokeDur, 10, (t) => 140 - at(t) * 74),
-      sampled(id, 'x', smokeDur, 10, (t) => 700 + at(t) * 30 + Math.sin(at(t) * 6) * 4),
-      sampled(id, 'opacity', smokeDur, 10, (t) => op(at(t))),
-      sampled(id, 'scaleX', smokeDur, 10, (t) => 0.6 + at(t) * 0.8),
-      sampled(id, 'scaleY', smokeDur, 10, (t) => 0.6 + at(t) * 0.8)
+      sampled(id, 'y', smokeDur, TICK, (t) => 140 - at(t) * 74),
+      sampled(id, 'x', smokeDur, TICK, (t) => 700 + at(t) * 30 + Math.sin(at(t) * 6) * 4),
+      sampled(id, 'opacity', smokeDur, TICK, (t) => op(at(t))),
+      sampled(id, 'scaleX', smokeDur, TICK, (t) => 0.6 + at(t) * 0.8),
+      sampled(id, 'scaleY', smokeDur, TICK, (t) => 0.6 + at(t) * 0.8)
     );
   }
   s.add(k.in({ name: 'smoke in', t0: 120, t1: 170 }, smokeKids));
-  s.loopLayer('smoke', s.anim({ name: 'smoke', duration: smokeDur, loop: 'loop', tracks: smokeTracks }));
+  s.loopLayer('smoke', ambient(s, { name: 'smoke', duration: smokeDur, loop: 'loop', tracks: smokeTracks }));
 
   // --- the round door
   const D = P(620, 292), DR = 40, RR = 52;
@@ -829,7 +850,7 @@ function hill(ids) {
     const ir = rng(it.seed);
     const itInk = k.boil({ name: `${it.kind} ink`, seed: it.seed + 1, draw: (rr) => [ink({ pts: outline, closed: true }, rr, { w: 1.4, amt: 0.4, fx: fxWash, tension: 0.35 }), ink([...extra, ...pegs], rr, { w: 0.9, amt: 0.3, color: INK_SOFT, fx: fxWash })] });
     const ph = i * 1.7;
-    swayTracks.push(sampled(sway, 'rotation', 360, 12, (t) => Math.sin(t * TAU + ph) * 0.06 + Math.sin(t * TAU * 2 + ph) * 0.02));
+    swayTracks.push(sampled(sway, 'rotation', 360, TICK, (t) => Math.sin(t * TAU + ph) * 0.06 + Math.sin(t * TAU * 2 + ph) * 0.02));
     gustTracks.push({ object: gust, prop: 'rotation', keys: [[0, 0, 'cubic', EASE.out], [10 + i * 3, -0.32 - i * 0.04, 'cubic', EASE.inOut], [34 + i * 3, 0.16, 'cubic', EASE.inOut], [58 + i * 3, -0.07, 'cubic', EASE.inOut], [86 + i * 3, 0]] });
     return k.in({ name: `${it.kind} in`, cx: it.x, cy: y0, t0: 100 + i * 8, t1: 150 + i * 8, dy: -12 }, [
       group({ name: it.kind, x: it.x, y: y0, id: sway }, [
@@ -839,7 +860,7 @@ function hill(ids) {
   });
   s.add(group({ name: 'washing', id: washSeason }, [k.in({ name: 'line in', t0: 70, t1: 110 }, [lineInk]), ...itemXml]));
   sp(washSeason, 'opacity', [1, 1, 1, 0]);
-  s.loopLayer('sway', s.anim({ name: 'sway', duration: 360, loop: 'loop', tracks: swayTracks }));
+  s.loopLayer('sway', ambient(s, { name: 'sway', duration: 360, loop: 'loop', tracks: swayTracks }));
 
   // --- bench, with a pipe left smoking on it
   const bench = [
@@ -866,11 +887,11 @@ function hill(ids) {
     group({ name: 'pipe smoke', id: pipeSmoke, x: 546, y: 318, opacity: 0 }, [pipeCurl]),
     el('Shape', { name: 'ring', id: ringId, x: 546, y: 316, opacity: 0 }, [el('Ellipse', { width: 9, height: 5, originX: 0.5, originY: 0.5, name: 'E' }), stroke('FF6A625A', 1.1)]),
   ]));
-  s.loopLayer('pipe', s.anim({ name: 'pipe', duration: 300, loop: 'loop', tracks: [
-    sampled(pipeSmoke, 'y', 300, 15, (t) => 318 - t * 26),
-    sampled(pipeSmoke, 'opacity', 300, 15, (t) => (t < 0.05 || t > 0.95 ? 0 : t < 0.25 ? (t - 0.05) * 3.5 : Math.max(0, 0.7 * (1 - (t - 0.25) / 0.7)))),
-    sampled(pipeSmoke, 'scaleX', 300, 15, (t) => 0.7 + t * 0.6),
-    sampled(pipeSmoke, 'scaleY', 300, 15, (t) => 0.7 + t * 0.6),
+  s.loopLayer('pipe', ambient(s, { name: 'pipe', duration: 300, loop: 'loop', tracks: [
+    sampled(pipeSmoke, 'y', 300, TICK, (t) => 318 - t * 26),
+    sampled(pipeSmoke, 'opacity', 300, TICK, (t) => (t < 0.05 || t > 0.95 ? 0 : t < 0.25 ? (t - 0.05) * 3.5 : Math.max(0, 0.7 * (1 - (t - 0.25) / 0.7)))),
+    sampled(pipeSmoke, 'scaleX', 300, TICK, (t) => 0.7 + t * 0.6),
+    sampled(pipeSmoke, 'scaleY', 300, TICK, (t) => 0.7 + t * 0.6),
   ] }));
 
   // --- garden path from the step down to the gate
@@ -1059,7 +1080,7 @@ function hill(ids) {
   sp(seedHeadId, 'opacity', [0, 0, 1, 0]);
   sp(gardenSnowId, 'opacity', [0, 0, 0, 1]);
   sp(sunLeavesId, 'opacity', [1, 1, 0.75, 0]);
-  s.loopLayer('sunflower', s.anim({ name: 'sunflower nods', duration: 300, loop: 'pingPong', tracks: [
+  s.loopLayer('sunflower', ambient(s, { name: 'sunflower nods', duration: 300, loop: 'pingPong', tracks: [
     { object: sunflowerId, prop: 'rotation', keys: [[0, -0.035, 'cubic', EASE.inOut], [300, 0.03]] },
   ] }));
   s.add(k.in({ name: 'low shadows in', t0: 110, t1: 150 }, shadowsLow));
@@ -1109,13 +1130,13 @@ function hill(ids) {
       const ph = i / count;
       const at = (t) => (t + ph) % 1;
       tracks.push(
-        sampled(id, 'x', dur, 14, (t) => x0 + at(t) * dx + Math.sin(at(t) * 10 + i) * 12),
-        sampled(id, 'y', dur, 14, (t) => y0 + at(t) * dy),
-        sampled(id, 'rotation', dur, 14, (t) => Math.sin(at(t) * 8 + i) * spin),
-        sampled(id, 'opacity', dur, 14, (t) => { const u = at(t); return u < 0.04 || u > 0.92 ? 0 : u < 0.12 ? (u - 0.04) / 0.08 : u > 0.78 ? (0.92 - u) / 0.14 : 1; })
+        sampled(id, 'x', dur, TICK, (t) => x0 + at(t) * dx + Math.sin(at(t) * 10 + i) * 12),
+        sampled(id, 'y', dur, TICK, (t) => y0 + at(t) * dy),
+        sampled(id, 'rotation', dur, TICK, (t) => Math.sin(at(t) * 8 + i) * spin),
+        sampled(id, 'opacity', dur, TICK, (t) => { const u = at(t); return u < 0.04 || u > 0.92 ? 0 : u < 0.12 ? (u - 0.04) / 0.08 : u > 0.78 ? (0.92 - u) / 0.14 : 1; })
       );
     }
-    gatedLoop(s, loopName, s.anim({ name: loopName, duration: dur, loop: 'loop', tracks }), [[season, 'equal', seasonIdx]]);
+    gatedLoop(s, loopName, ambient(s, { name: loopName, duration: dur, loop: 'loop', tracks }), [[season, 'equal', seasonIdx]]);
     return kids;
   };
   const petals = fallKids('petal', 'EBA2B8', [P(-3, 0), P(0, -2.4), P(3, 0), P(0, 2.4)], 230, 4, 'petals', 0, 0.9);
@@ -1140,14 +1161,14 @@ function hill(ids) {
     const ph = j / 2;
     const at = (t) => (t + ph) % 1;
     snowTracks.push(
-      sampled(id, 'y', sDur, 30, (t) => at(t) * 90),
-      sampled(id, 'x', sDur, 30, (t) => Math.sin(at(t) * TAU) * 8),
-      sampled(id, 'opacity', sDur, 30, (t) => { const u = at(t); return u < 0.03 || u > 0.97 ? 0 : Math.min(1, (u - 0.03) / 0.25, (0.97 - u) / 0.25); })
+      sampled(id, 'y', sDur, TICK, (t) => at(t) * 90),
+      sampled(id, 'x', sDur, TICK, (t) => Math.sin(at(t) * TAU) * 8),
+      sampled(id, 'opacity', sDur, TICK, (t) => { const u = at(t); return u < 0.03 || u > 0.97 ? 0 : Math.min(1, (u - 0.03) / 0.25, (0.97 - u) / 0.25); })
     );
   }
   s.add(group({ name: 'flakes', id: flakesId, opacity: SEASON0 === 3 ? 1 : 0 }, sheets));
   sp(flakesId, 'opacity', [0, 0, 0, 1]);
-  gatedLoop(s, 'snowfall', s.anim({ name: 'snowfall', duration: sDur, loop: 'loop', tracks: snowTracks }), [[season, 'equal', 3]]);
+  gatedLoop(s, 'snowfall', ambient(s, { name: 'snowfall', duration: sDur, loop: 'loop', tracks: snowTracks }), [[season, 'equal', 3]]);
 
 
   // --- spring showers: grey rain clouds drift over, and a light rain falls
@@ -1166,7 +1187,7 @@ function hill(ids) {
   const rainId = ids.next();
   const rainSheets = [];
   const rainTracks = [];
-  const rDur = 54;
+  const rDur = 56;
   for (let j = 0; j < 3; j++) {
     const id = ids.next();
     const fr = rng(280 + j);
@@ -1179,14 +1200,14 @@ function hill(ids) {
     const ph = j / 3;
     const at = (t) => (t + ph) % 1;
     rainTracks.push(
-      sampled(id, 'y', rDur, 6, (t) => at(t) * 70),
-      sampled(id, 'x', rDur, 6, (t) => -at(t) * 20),
-      sampled(id, 'opacity', rDur, 6, (t) => { const u = at(t); return u < 0.05 || u > 0.95 ? 0 : Math.min(1, (u - 0.05) / 0.2, (0.95 - u) / 0.2); })
+      sampled(id, 'y', rDur, TICK, (t) => at(t) * 70),
+      sampled(id, 'x', rDur, TICK, (t) => -at(t) * 20),
+      sampled(id, 'opacity', rDur, TICK, (t) => { const u = at(t); return u < 0.05 || u > 0.95 ? 0 : Math.min(1, (u - 0.05) / 0.2, (0.95 - u) / 0.2); })
     );
   }
   s.add(group({ name: 'rain', id: rainId, opacity: SEASON0 === 0 ? 1 : 0 }, rainSheets));
   sp(rainId, 'opacity', [1, 0, 0, 0]);
-  gatedLoop(s, 'rainfall', s.anim({ name: 'rainfall', duration: rDur, loop: 'loop', tracks: rainTracks }), [[season, 'equal', 0]]);
+  gatedLoop(s, 'rainfall', ambient(s, { name: 'rainfall', duration: rDur, loop: 'loop', tracks: rainTracks }), [[season, 'equal', 0]]);
 
   // --- the light of the hour: one even glaze over the whole painting, edge to edge, so
   // nothing in a corner is left in daylight; the page carries the same colour on out
@@ -1240,14 +1261,14 @@ function hill(ids) {
     flyKids.push(group({ name: 'firefly', id, x: x0, y: y0, opacity: 0 }, [glow({ x: 0, y: 0, w: 14, h: 14, color: 'F9E27A', alpha: 0.95 })]));
     const ph = fr();
     ffTracks.push(
-      sampled(id, 'x', ffDur, 20, (t) => x0 + Math.sin((t + ph) * TAU) * 14),
-      sampled(id, 'y', ffDur, 20, (t) => y0 + Math.sin((t + ph) * TAU * 2) * 6),
-      sampled(id, 'opacity', ffDur, 12, (t) => Math.max(0, Math.sin(((t * 3 + ph) % 1) * TAU)) ** 2)
+      sampled(id, 'x', ffDur, TICK, (t) => x0 + Math.sin((t + ph) * TAU) * 14),
+      sampled(id, 'y', ffDur, TICK, (t) => y0 + Math.sin((t + ph) * TAU * 2) * 6),
+      sampled(id, 'opacity', ffDur, TICK, (t) => Math.max(0, Math.sin(((t * 3 + ph) % 1) * TAU)) ** 2)
     );
   }
   const ffId = ids.next();
   s.add(group({ name: 'fireflies', id: ffId }, flyKids));
-  gatedLoop(s, 'fireflies', s.anim({ name: 'fireflies', duration: ffDur, loop: 'loop', tracks: ffTracks }), [[season, 'equal', 1], [time, 'greaterThanOrEqual', 3]]);
+  gatedLoop(s, 'fireflies', ambient(s, { name: 'fireflies', duration: ffDur, loop: 'loop', tracks: ffTracks }), [[season, 'equal', 1], [time, 'greaterThanOrEqual', 3]]);
 
   // moon and stars
   const moonId = ids.next();
@@ -1270,9 +1291,9 @@ function hill(ids) {
       group({ name: 'twinkle', id: tw }, [el('Shape', { name: 'star' }, [polyXml(starPts(R), { closed: true }), fill(argb('F6E7A8', 0.95)), stroke(INK, 0.9)])]),
     ]));
     tp(id, 'opacity', [0, 0, 0, i === 1 || i === 4 ? 0.9 : 0, 1]);
-    twinkle.push(sampled(tw, 'scaleX', 240, 20, (t) => 1 + 0.25 * Math.sin((t + i * 0.29) * TAU)), sampled(tw, 'scaleY', 240, 20, (t) => 1 + 0.25 * Math.sin((t + i * 0.29) * TAU)));
+    twinkle.push(sampled(tw, 'scaleX', 240, TICK, (t) => 1 + 0.25 * Math.sin((t + i * 0.29) * TAU)), sampled(tw, 'scaleY', 240, TICK, (t) => 1 + 0.25 * Math.sin((t + i * 0.29) * TAU)));
   });
-  gatedLoop(s, 'twinkle', s.anim({ name: 'twinkle', duration: 240, loop: 'loop', tracks: twinkle }), [[time, 'greaterThanOrEqual', 3]]);
+  gatedLoop(s, 'twinkle', ambient(s, { name: 'twinkle', duration: 240, loop: 'loop', tracks: twinkle }), [[time, 'greaterThanOrEqual', 3]]);
 
   // --- hit areas
   const hDoor = ids.next(), hBench = ids.next(), hWash = ids.next(), hTree = ids.next(), hMail = ids.next(), hSun = ids.next();
@@ -1389,8 +1410,8 @@ function gate(ids) {
   const W = 600, H = 210;
   const s = new Scene(ids, { name: 'Gate', w: W, h: H, x: 960, y: 0, bg: process.env.SH_BG ? 'FFF8F2E4' : undefined });
   const k = new Kit(s);
-  const season = s.input('number', 'season', SEASON0);
-  const time = s.input('number', 'time', TIME0);
+  const season = s.input('number', 'season', SEASON_IN);
+  const time = s.input('number', 'time', TIME_IN);
   const still = s.input('bool', 'still', 0);
   const seasonP = [], timeP = [];
   const fxBack = k.fx('back', 0, 50);
@@ -1463,11 +1484,12 @@ function gate(ids) {
   ]));
   const mothOn = s.input('bool', 'moth', 0);
   const mothRest = hold(s, 'moth away', [{ object: mothId, prop: 'opacity', keys: [[0, 0]] }]);
-  const mothLoop = s.anim({ name: 'moth', duration: 200, loop: 'loop', tracks: [
+  // the wings beat at 11 a second, too fast for the ambient rate, so the moth steps at 30
+  const mothLoop = s.anim({ name: 'moth', duration: 200, loop: 'loop', rate: 30, tracks: [
     { object: mothId, prop: 'opacity', keys: [[0, 1], [200, 1]] },
-    sampled(mothId, 'x', 200, 5, (t) => 476 + Math.cos(t * TAU) * 19 + Math.sin(t * TAU * 3) * 3),
-    sampled(mothId, 'y', 200, 5, (t) => 101 + Math.sin(t * TAU) * 12 + Math.cos(t * TAU * 2) * 3),
-    sampled(mothId, 'rotation', 200, 5, (t) => Math.sin(t * TAU) * 0.5),
+    sampled(mothId, 'x', 200, 2, (t) => 476 + Math.cos(t * TAU) * 19 + Math.sin(t * TAU * 3) * 3),
+    sampled(mothId, 'y', 200, 2, (t) => 101 + Math.sin(t * TAU) * 12 + Math.cos(t * TAU * 2) * 3),
+    sampled(mothId, 'rotation', 200, 2, (t) => Math.sin(t * TAU) * 0.5),
     sampled(wingsId, 'scaleY', 200, 2, (t) => 0.35 + Math.abs(Math.sin(t * TAU * 18)) * 0.65),
   ] });
   const m0 = ids.next(), m1 = ids.next();

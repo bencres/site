@@ -4,9 +4,10 @@
 //   sketch:  the artboard in site/riv/sketches.riv drawn above the post
 //   caption: a hand-lettered line under the sketch
 // Images referenced as /blog-images/<file> (as on bencres.dev) are read from
-// posts/images/ and copied beside the posts.
-import { readdirSync, readFileSync, writeFileSync, mkdirSync, copyFileSync, existsSync } from 'node:fs';
-import { join, resolve, basename } from 'node:path';
+// posts/images/ and written beside the posts as WebP at a few widths (cwebp).
+import { readdirSync, readFileSync, writeFileSync, mkdirSync, existsSync, statSync, rmSync } from 'node:fs';
+import { join, resolve, basename, extname } from 'node:path';
+import { execFileSync } from 'node:child_process';
 import { Marked } from 'marked';
 import hljs from 'highlight.js';
 
@@ -15,6 +16,61 @@ const srcDir = join(root, 'posts');
 const outDir = join(root, 'site/shire-ii/blog');
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+// ---- images: screenshots, pinned in the column
+const WIDTHS = [640, 960, 1280];
+// the image's width: the column less its padding and the pinned frame, at most 596px
+const SIZES = '(max-width: 640px) calc(100vw - 44px), 596px';
+const QUALITY = 85; // UI text stays crisp; sharp_yuv keeps coloured edges clean
+
+// pixel size from a PNG or JPEG header
+function imageSize(file) {
+  const b = readFileSync(file);
+  if (b.readUInt32BE(0) === 0x89504e47) return { w: b.readUInt32BE(16), h: b.readUInt32BE(20) };
+  if (b[0] === 0xff && b[1] === 0xd8) {
+    for (let i = 2; i < b.length; ) {
+      const marker = b[i + 1];
+      if (marker >= 0xc0 && marker <= 0xcf && ![0xc4, 0xc8, 0xcc].includes(marker)) return { w: b.readUInt16BE(i + 7), h: b.readUInt16BE(i + 5) };
+      i += 2 + b.readUInt16BE(i + 2);
+    }
+  }
+  throw new Error(`can't read the size of ${file} (PNG or JPEG only)`);
+}
+
+// each source image as WebP at every width up to its own, encoded only when the source changed
+function buildImages(src, out) {
+  const made = new Map();
+  if (!existsSync(src)) return made;
+  mkdirSync(out, { recursive: true });
+  const keep = new Set();
+  for (const f of readdirSync(src).filter((f) => /\.(png|jpe?g)$/i.test(f))) {
+    const file = join(src, f);
+    const { w, h } = imageSize(file);
+    const name = basename(f, extname(f));
+    const widths = WIDTHS.filter((x) => x < w);
+    if (widths.length < WIDTHS.length) widths.push(Math.min(w, WIDTHS.at(-1)));
+    const variants = widths.map((x) => ({ w: x, file: `${name}-${x}.webp` }));
+    for (const v of variants) {
+      const dest = join(out, v.file);
+      keep.add(v.file);
+      if (existsSync(dest) && statSync(dest).mtimeMs >= statSync(file).mtimeMs) continue;
+      const resize = v.w < w ? ['-resize', String(v.w), '0'] : [];
+      try {
+        execFileSync('cwebp', ['-quiet', '-q', String(QUALITY), '-m', '6', '-sharp_yuv', '-metadata', 'none', ...resize, file, '-o', dest]);
+      } catch (e) {
+        throw new Error(`cwebp couldn't encode ${f} (brew install webp): ${e.message}`);
+      }
+    }
+    const big = variants.at(-1);
+    made.set(f, { variants, w: big.w, h: Math.round((h * big.w) / w) });
+  }
+  // drop anything a renamed or removed image left behind
+  for (const f of readdirSync(out)) if (!keep.has(f)) rmSync(join(out, f));
+  return made;
+}
+
+const images = buildImages(join(srcDir, 'images'), join(outDir, 'images'));
+let imageIndex = 0; // within a post: the first image loads straight away, the rest as you near them
 
 function frontMatter(text) {
   const m = text.match(/^---\n([\s\S]*?)\n---\n?/);
@@ -50,8 +106,14 @@ const marked = new Marked({
     },
     // an image is pinned to the page like a photo, its alt text as the caption
     image({ href, title, text }) {
-      const src = href.replace(/^\/blog-images\//, '../images/');
-      return `<figure class="pinned"><img src="${esc(src)}" alt="${esc(text)}" loading="lazy" decoding="async"${title ? ` title="${esc(title)}"` : ''}>${text ? `<figcaption>${esc(text)}</figcaption>` : ''}</figure>`;
+      const local = href.match(/^\/blog-images\/(.+)$/);
+      const img = local && images.get(local[1]);
+      if (local && !img) throw new Error(`no image posts/images/${local[1]}`);
+      const lazy = imageIndex++ > 0 ? ' loading="lazy"' : '';
+      const attrs = img
+        ? `src="../images/${img.variants.at(-1).file}" srcset="${img.variants.map((v) => `../images/${v.file} ${v.w}w`).join(', ')}" sizes="${SIZES}" width="${img.w}" height="${img.h}"`
+        : `src="${esc(href)}"`;
+      return `<figure class="pinned"><img ${attrs} alt="${esc(text)}"${lazy} decoding="async"${title ? ` title="${esc(title)}"` : ''}>${text ? `<figcaption>${esc(text)}</figcaption>` : ''}</figure>`;
     },
     // a paragraph holding only an image shouldn't wrap the figure in <p>
     paragraph({ tokens }) {
@@ -65,6 +127,23 @@ const marked = new Marked({
     },
   },
 });
+
+// the body face (upright Alegreya at 400), fetched alongside the CSS rather than after it,
+// but queued behind the render-blocking files so it never delays the first paint
+function bodyFont() {
+  const css = join(root, 'site/shared/fonts.css');
+  if (!existsSync(css)) return null;
+  for (const face of readFileSync(css, 'utf8').match(/@font-face\s*{[^}]*}/g) || []) {
+    const weights = face.match(/font-weight:\s*(\d+)(?:\s+(\d+))?/);
+    const src = face.match(/url\(['"]?([^'")]+\.woff2)/);
+    if (!/font-family:\s*['"]?Alegreya['"]?\s*;/.test(face) || /font-style:\s*italic/.test(face) || !weights || !src) continue;
+    if (+weights[1] <= 400 && 400 <= +(weights[2] || weights[1])) return new URL(src[1], 'https://x/shared/').pathname.slice(1);
+  }
+  return null;
+}
+const font = bodyFont();
+const FONT_PRELOAD = font ? `  <link rel="preload" href="../../../${font}" as="font" type="font/woff2" crossorigin>\n` : '';
+if (!font) console.warn('no upright Alegreya 400 in site/shared/fonts.css yet: posts go without the font preload');
 
 const longDate = (iso) => new Date(`${iso}T12:00:00`).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
@@ -82,15 +161,13 @@ function page({ slug, meta, html }) {
   <title>${title} · Ben Cressman</title>
   <meta name="description" content="${esc(meta.excerpt || '')}">
   <link rel="icon" href="../../../shared/favicon.svg" type="image/svg+xml">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Caveat:wght@500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../shared/fonts.css">
   <link rel="stylesheet" href="../../../shared/base.css">
   <link rel="stylesheet" href="../../../shared/turn.css">
   <link rel="stylesheet" href="../../post.css">
   <link rel="stylesheet" href="../../wash.css">
   <script src="../../../shared/turn.js"></script>
-</head>
+${FONT_PRELOAD}${meta.sketch ? '  <link rel="modulepreload" href="../../../shared/rive-mount.js">\n' : ''}</head>
 <body class="paper">
   <div class="col">
     <nav class="trail"><a href="../../#writing" class="home">← back to the bookshelves</a></nav>
@@ -109,7 +186,6 @@ ${html}
       <p class="write">Thoughts on this one? <a href="mailto:hello@bencres.dev?subject=${encodeURIComponent(meta.title)}">Write to me</a>.</p>
     </footer>
   </div>
-  <script src="../../../shared/vendor/rive.js"></script>
   <script type="module" src="../../post.js"></script>
   <script type="module" src="../../../shared/turn-tune.js"></script>
 </body>
@@ -117,15 +193,10 @@ ${html}
 `;
 }
 
-mkdirSync(outDir, { recursive: true });
-const images = join(srcDir, 'images');
-if (existsSync(images)) {
-  mkdirSync(join(outDir, 'images'), { recursive: true });
-  for (const f of readdirSync(images)) copyFileSync(join(images, f), join(outDir, 'images', f));
-}
 for (const file of readdirSync(srcDir).filter((f) => f.endsWith('.md'))) {
   const slug = basename(file, '.md');
   const { meta, body } = frontMatter(readFileSync(join(srcDir, file), 'utf8'));
+  imageIndex = 0;
   const html = marked.parse(body);
   mkdirSync(join(outDir, slug), { recursive: true });
   writeFileSync(join(outDir, slug, 'index.html'), page({ slug, meta, html }));

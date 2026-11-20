@@ -2,9 +2,20 @@
 // localStorage so the next arrival uses them. "try it" jumps between the hill
 // and a post so the downpour can be watched; "copy" puts the current values on
 // the clipboard, ready to become the defaults in turn.js.
+//
+// Only for tuning: it shows with ?tune in the URL, which it remembers across pages
+// (localStorage 'turn:tune'), until ?tune=0. Saved settings apply either way.
 const T = globalThis.TURN;
 
-if (T) {
+let tuning = false;
+try {
+  const q = new URLSearchParams(location.search).get('tune');
+  if (q === '0') localStorage.removeItem('turn:tune');
+  else if (q !== null) localStorage.setItem('turn:tune', '1');
+  tuning = localStorage.getItem('turn:tune') === '1';
+} catch {}
+
+if (T && tuning) {
   const values = T.read();
   const save = () => {
     try {

@@ -1,0 +1,65 @@
+/* The site's three hands, self-hosted: Google Fonts' latin subsets of the variable
+   files, each covering the weights in use. Characters outside the subset (✦, ♥)
+   fall back to the system's font, as they did from Google. */
+@font-face {
+  font-family: 'Alegreya';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url(fonts/alegreya.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Alegreya';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url(fonts/alegreya-italic.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Caveat';
+  font-style: normal;
+  font-weight: 500 700;
+  font-display: swap;
+  src: url(fonts/caveat.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url(fonts/jetbrains-mono.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* Fallbacks shaped like the real faces (Georgia, scaled and given the same ascent and
+   descent), so text set before the fonts arrive takes the same room and nothing jumps
+   when they swap in. Measured against the woff2s above in Chrome. */
+@font-face {
+  font-family: 'Alegreya Fallback';
+  font-style: normal;
+  src: local('Georgia'), local('Times New Roman');
+  size-adjust: 92.09%;
+  ascent-override: 110.76%;
+  descent-override: 38.01%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Alegreya Fallback';
+  font-style: italic;
+  src: local('Georgia Italic'), local('Georgia-Italic'), local('Times New Roman Italic');
+  size-adjust: 78.83%;
+  ascent-override: 129.4%;
+  descent-override: 44.4%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Caveat Fallback';
+  src: local('Georgia'), local('Times New Roman');
+  size-adjust: 77.55%;
+  ascent-override: 123.79%;
+  descent-override: 38.69%;
+  line-gap-override: 0%;
+}

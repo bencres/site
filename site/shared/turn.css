@@ -19,7 +19,7 @@
   padding: 8px 12px 9px; color: #2b231c;
   background: color-mix(in srgb, var(--paper, #f3ead9) 94%, white); border: 1px solid rgba(43, 35, 28, 0.28);
   border-radius: 4px 6px 3px 5px; box-shadow: 1px 2px 0 rgba(43, 35, 28, 0.12);
-  font: 600 16px/1 'Caveat', cursive; transform: rotate(0.4deg);
+  font: 600 16px/1 'Caveat', 'Caveat Fallback', cursive; transform: rotate(0.4deg);
 }
 .turn-tune summary { cursor: pointer; list-style: none; color: #6e6152; font-weight: 500; }
 .turn-tune summary::-webkit-details-marker { display: none; }
@@ -29,6 +29,6 @@
 .turn-tune output { font: 500 13px/1 ui-monospace, 'JetBrains Mono', monospace; color: #6e6152; }
 .turn-tune input[type='range'] { width: 100%; margin: 0; accent-color: #8a6a3c; }
 .turn-tune .row { display: flex; gap: 14px; margin-top: 6px; }
-.turn-tune button { padding: 0; border: 0; background: none; cursor: pointer; font: 600 16px/1 'Caveat', cursive; color: #2f6a45; text-decoration: underline wavy rgba(47, 106, 69, 0.35); }
+.turn-tune button { padding: 0; border: 0; background: none; cursor: pointer; font: 600 16px/1 'Caveat', 'Caveat Fallback', cursive; color: #2f6a45; text-decoration: underline wavy rgba(47, 106, 69, 0.35); }
 .turn-tune button.quiet { color: #6e6152; text-decoration-color: rgba(43, 35, 28, 0.3); }
 @media (max-width: 1100px) { .turn-tune { position: static; display: block; margin: 0 auto 16px; transform: none; } }

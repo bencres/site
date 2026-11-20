@@ -1,3 +1,6 @@
 node_modules/
 rive/*/build/
 .DS_Store
+# precompressed copies are made at build/deploy time (npm run compress)
+site/**/*.br
+site/**/*.gz

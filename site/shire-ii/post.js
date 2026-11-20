@@ -1,6 +1,6 @@
 // A post: the same season and light as the hill you came from, its sketch, and
 // the hill's watercolor washes behind the section headings, blooming in as you read.
-import { mount, reducedMotion } from '../shared/rive-mount.js';
+// Only a post with a sketch loads the Rive runtime.
 import { SEASONS, TIMES, when, remembered } from './when.js';
 import { wash, PIGMENTS } from './paint.js';
 
@@ -9,8 +9,18 @@ const season = SEASONS[state.season];
 document.documentElement.dataset.season = season;
 document.documentElement.dataset.time = TIMES[state.time];
 
+const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// the rest waits for the arriving page to finish landing (turn.js), so it never costs the
+// transition a frame: the sketch's canvas already holds its place, and the washes bloom on scroll
+await (window.turnSettled || Promise.resolve());
+
 const sketch = document.getElementById('sketch');
-if (sketch) mount(sketch, { src: 'sketches', artboard: sketch.dataset.artboard, fit: 'contain' });
+if (sketch) {
+  import('../shared/rive-mount.js')
+    .then(({ mount }) => mount(sketch, { src: 'sketches', artboard: sketch.dataset.artboard, fit: 'contain' }))
+    .catch((e) => console.warn('the sketch could not be drawn', e));
+}
 
 // each heading gets a swatch sized to its words, in the season's box of paints
 const heads = [...document.querySelectorAll('.prose h2')];

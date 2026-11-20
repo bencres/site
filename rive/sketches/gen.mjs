@@ -12,6 +12,11 @@ import {
 const INK = 'FF2B231C';
 const INK_SOFT = argb('2B231C', 0.5);
 const BG = process.env.PREVIEW_BG;
+// The boils and the flicker step at 15 fps rather than every frame, all on the same
+// ticks, so the canvas can rest between them; a boil holds each cel for two steps
+// (7.5 fps). The painting itself steps at 30, which still lands on those ticks.
+const AMBIENT = 15;
+const CEL = 8; // a boil cel, in 60 fps frames
 
 // a pointed leaf, `len` long, pointing along `a`
 function leafPts(len, wid, a) {
@@ -46,7 +51,7 @@ function niggle(ids) {
     [P(372, 354), P(372, 304)],
   ];
   const easelInk = boil(s, {
-    name: 'Easel', seed: 6, hold: 8,
+    name: 'Easel', seed: 6, hold: CEL, rate: AMBIENT,
     draw: (rr) => frame.map((pts) => inkShape({ pts: jitterPts(pts, 0.8, rr), tension: 0.3, color: INK, width: 1.7, effect: fx })),
   });
   s.add(easelInk.xml);
@@ -93,7 +98,7 @@ function niggle(ids) {
     [P(282, 312), P(372, 310), P(462, 313)],
   ];
   const ink = boil(s, {
-    name: 'Ink', seed: 5, hold: 8,
+    name: 'Ink', seed: 5, hold: CEL, rate: AMBIENT,
     draw: (rr) => [
       ...easel.map((pts) => inkShape({ pts: jitterPts(pts, 0.8, rr), tension: 0.3, color: INK, width: 1.7, effect: fx })),
       inkShape({ pts: jitterPts([P(C.x0, C.y0), P(C.x1, C.y0 - 2), P(C.x1 + 1, C.y1), P(C.x0 - 1, C.y1 + 1)], 0.7, rr), closed: true, tension: 0.05, color: INK, width: 1.6, effect: fx }),
@@ -110,7 +115,7 @@ function niggle(ids) {
   const palette = [['7FA65A', 590, 290], ['D29A45', 604, 294], ['B9B45A', 584, 297]];
   for (const [col, x, y] of palette) s.add(watercolor({ x, y, rx: 6, ry: 4, color: col, seed: x, alpha: 0.85, grain: false }));
   const stool = boil(s, {
-    name: 'Stool', seed: 11, hold: 9,
+    name: 'Stool', seed: 11, hold: CEL, rate: AMBIENT,
     draw: (rr) => [
       inkShape({ pts: jitterPts([P(522, 300), P(600, 300)], 0.6, rr), color: INK, width: 1.6, effect: fx }),
       inkShape({ pts: jitterPts([P(530, 300), P(524, 354)], 0.6, rr), color: INK, width: 1.5, effect: fx }),
@@ -131,7 +136,7 @@ function niggle(ids) {
   s.add(washShape({ pts: [P(142, 262), P(158, 262), P(159, 330), P(141, 330)], color: 'EFE6D2', alpha: 0.9, edge: 0.4, soft: 0.5, blend: 'srcOver', tension: 0.2 }));
   s.add(el('Node', { name: 'flame', x: 150, y: 250, id: flameId }, [washShape({ pts: [P(0, -14), P(5, -2), P(3, 6), P(-3, 6), P(-5, -2)], color: 'E8993A', alpha: 0.9, edge: 0.8, soft: 0.4, tension: 0.9 })]));
   const candle = boil(s, {
-    name: 'Candle', seed: 17, hold: 6,
+    name: 'Candle', seed: 17, hold: CEL, rate: AMBIENT,
     draw: (rr) => [
       inkShape({ pts: jitterPts([P(142, 262), P(141, 330), P(159, 330), P(158, 262)], 0.4, rr), tension: 0.2, color: INK, width: 1.3, effect: fx }),
       inkShape({ pts: blobPts(30, 7, rr, { n: 10, wobble: 0.08 }).map((q) => P(q.x + 150, q.y + 334)), closed: true, color: INK, width: 1.3, effect: fx }),
@@ -141,7 +146,7 @@ function niggle(ids) {
   s.add(candle.xml);
   s.loopLayer('Candle boil', candle.animId);
   s.loopLayer('Flicker', s.anim({
-    name: 'Flicker', duration: 96, loop: 'loop',
+    name: 'Flicker', duration: 96, loop: 'loop', rate: AMBIENT,
     tracks: [
       { object: flameId, prop: 'scaleY', keys: [[0, 1, 'cubic', EASE.inOut], [24, 1.12, 'cubic', EASE.inOut], [40, 0.94, 'cubic', EASE.inOut], [70, 1.08, 'cubic', EASE.inOut], [96, 1]] },
       { object: flameId, prop: 'rotation', keys: [[0, 0, 'cubic', EASE.inOut], [30, 0.06, 'cubic', EASE.inOut], [62, -0.05, 'cubic', EASE.inOut], [96, 0]] },
@@ -151,7 +156,7 @@ function niggle(ids) {
 
   // the ground
   const ground = boil(s, {
-    name: 'Ground', seed: 19, hold: 9,
+    name: 'Ground', seed: 19, hold: CEL, rate: AMBIENT,
     draw: (rr) => [
       inkShape({ pts: jitterPts(resample([P(70, 356), P(360, 352), P(650, 357)], 9), 0.8, rr), color: INK, width: 1.4, effect: fx }),
       ...[100, 230, 486, 630].map((x) => inkShape({ pts: jitterPts([P(x - 4, 355), P(x, 346), P(x + 3, 355), P(x + 7, 348)], 0.4, rr), tension: 0.3, color: INK, width: 1, effect: fx })),
@@ -187,7 +192,7 @@ function niggle(ids) {
   by.push([last + 30, 210], [D, 210]);
   tracks.push({ object: brushId, prop: 'x', keys: bx.map(([f, v]) => [f, v, 'cubic', EASE.inOut]) });
   tracks.push({ object: brushId, prop: 'y', keys: by.map(([f, v]) => [f, v, 'cubic', EASE.inOut]) });
-  s.loopLayer('Paint', s.anim({ name: 'Paint', duration: D, loop: 'loop', tracks }));
+  s.loopLayer('Paint', s.anim({ name: 'Paint', duration: D, loop: 'loop', rate: 2 * AMBIENT, tracks }));
   return s.toXml();
 }
 

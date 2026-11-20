@@ -1,6 +1,6 @@
-import { mount, reducedMotion } from '../shared/rive-mount.js';
-import { content as c, h } from '../shared/content.js';
-import { rng, blob, arm, upright, splotch, flick, hatch, drip, icon, wash, PIGMENTS } from './paint.js';
+import { mount, holdUntil, reducedMotion } from '../shared/rive-mount.js';
+import { h } from '../shared/content.js';
+import { arm, drip, wash, PIGMENTS } from './paint.js';
 import { SEASONS, TIMES, when as whenAt, remember, remembered } from './when.js';
 
 const when = () => whenAt(params);
@@ -26,63 +26,26 @@ try {
 const regular = visits >= 3 || params.has('regular') || params.has('returning');
 
 
-// ---------- copy
+// ---------- the words are already on the page (scripts/build-page.mjs renders them
+// from content.js); this wires them up
 
-$('#name').textContent = c.name;
-const intro = $('#intro');
-c.intro.forEach((p) => intro.append(h('p', {}, p)));
-const hello = h('a', { href: `mailto:${c.email}`, class: 'mail' }, c.email);
-intro.append(h('p', {}, 'Say hello any time: ', hello, '.'));
+const hello = $('#intro .mail');
 const post = $('#post');
-post.href = `mailto:${c.email}`;
-post.textContent = c.email;
 
-const item = (...kids) => h('li', {}, ...kids);
-const rooms = [
-  { id: 'now', title: 'Now', room: 'by the fire', react: 'puff', note: `updated ${c.now.updated}`, items: c.now.items.map((t) => item(t)) },
-  {
-    id: 'work', title: 'Work', room: 'the study', react: 'glint',
-    items: c.work.map((w) => item(h('a', { href: w.url }, w.name), ', ', w.role, ' ', h('span', { class: 'when' }, w.when))),
-  },
-  { id: 'projects', title: 'Projects', room: 'the workshop', react: 'shine', items: c.projects.map((p) => item(h('a', { href: p.url }, p.name), `: ${p.blurb}`)) },
-  {
-    id: 'writing', title: 'Writing', room: 'the bookshelves', react: 'rustle',
-    items: c.writing.map((w) => item(h('a', { href: w.url }, w.title), w.starred ? h('span', { class: 'star', title: 'A favorite' }, ' ✦') : null, ' ', h('span', { class: 'when' }, w.date))),
-  },
-  { id: 'elsewhere', title: 'Elsewhere', room: 'out the back gate', arm: 'yonder', react: 'gust', items: c.elsewhere.map((l, i) => {
-      const badge = h('a', { href: l.url, class: 'badge', rel: 'me' }, h('span', { class: 'mark-icon' }), h('span', { class: 'label' }, l.name));
-      badge.firstChild.innerHTML = icon({ kind: l.name.toLowerCase(), seed: 61 + i * 13 });
-      return item(badge);
-    }), inline: true },
-];
-const host = $('#rooms');
-rooms.forEach((rm) => {
-  const heading = h('h2', { id: rm.id }, h('span', { class: 'wash', 'aria-hidden': 'true' }), h('span', { class: 'title' }, rm.title), h('span', { class: 'room' }, rm.room), rm.note ? h('small', {}, rm.note) : null);
-  host.append(h('section', { class: 'room-block', 'aria-labelledby': rm.id }, heading, h('ul', { class: rm.inline ? 'knobs inline' : 'knobs' }, rm.items)));
-});
-
-// ---------- the signpost at the verge: an arm for each room, and one for the post
-
-const ARMS = [
-  ...rooms.map((rm) => ({ id: rm.id, title: rm.title, sub: rm.arm || rm.room, react: rm.react, dir: rm.id === 'elsewhere' ? 'l' : 'r' })),
-  { id: 'callers', title: 'Post', sub: 'at the gate', react: 'post', dir: 'r' },
-];
-const TILT = [-2.2, 1.6, -1.1, 2.2, -2.6, 5.5];
+// ---------- the signpost at the verge: an arm for each room, and one for the post.
+// Turning an arm stirs something on the hill:
+const REACT = { now: 'puff', work: 'glint', projects: 'shine', writing: 'rustle', elsewhere: 'gust', callers: 'post' };
 // on a phone the post stands at the left edge of the painting, and on narrow screens there's
 // no room left of the post, so every arm points right
 const phone = matchMedia('(max-width: 600px)');
 const narrow = matchMedia('(max-width: 860px)');
-const dirOf = (i) => (narrow.matches ? 'r' : ARMS[i].dir);
 const signpost = $('#signpost');
-const foot = h('span', { class: 'upright', 'aria-hidden': 'true' });
-foot.innerHTML = upright({ w: 26, h: 262, seed: 7 });
-signpost.append(foot);
-const arms = ARMS.map((a, i) => {
-  const link = h('a', { href: `#${a.id}`, class: `arm ${dirOf(i)}`, style: `--i:${i}; --tilt:${TILT[i]}deg` }, h('b', {}, a.title), ' ', h('small', {}, a.sub));
-  link.addEventListener('animationend', () => link.classList.add('settled'), { once: true });
-  signpost.append(link);
-  return link;
-});
+const arms = [...signpost.querySelectorAll('.arm')];
+const ARMS = arms.map((a) => ({ id: a.hash.slice(1), react: REACT[a.hash.slice(1)], dir: a.classList.contains('l') ? 'l' : 'r' }));
+const dirOf = (i) => (narrow.matches ? 'r' : ARMS[i].dir);
+const pointArms = () => arms.forEach((a, i) => { a.classList.toggle('l', dirOf(i) === 'l'); a.classList.toggle('r', dirOf(i) === 'r'); });
+pointArms();
+arms.forEach((link) => link.addEventListener('animationend', () => link.classList.add('settled'), { once: true }));
 const back = $('#back');
 
 // regulars find a tick inked beside the arm they took last time
@@ -103,21 +66,50 @@ function paintArms(season) {
   back.insertAdjacentHTML('afterbegin', arm({ w: at(back), dir: 'l', tint: PIGMENTS[SEASONS[season]][0][0], seed: 91 }));
 }
 
-// ---------- a few marks the pen left behind
+// ---------- a few marks the pen left behind (in the page already; the drip takes the season's colour)
 
-const mark = (host, cls, svg = '') => {
-  const m = h('span', { class: `mark ${cls}`, 'aria-hidden': 'true' });
-  m.innerHTML = svg;
-  host.append(m);
-  return m;
-};
 const hillFig = $('.hill');
-const heads = [...document.querySelectorAll('.room-block h2')];
-mark($('#sign'), 'm-flick', flick({ seed: 9 }));
-mark(heads[1], 'm-blot', splotch({ seed: 5, dir: 2.5 }));
-const dripMark = mark(heads[2], 'm-drip');
-mark(heads[3], 'm-hatch', hatch({ seed: 4, n: 5, cross: true }));
-mark(heads[4], 'm-spatter', splotch({ seed: 12, dir: -0.5, size: 0.6, spatter: 10 }));
+const dripMark = $('.m-drip');
+
+// ---------- the still: from the first paint, index.html shows the finished painting for
+// this season and hour, until the live one is ready to take over. If that took a while,
+// the live painting skips drawing itself in (it has been looked at already).
+
+const still = hillFig.querySelector('.still');
+// shown: loaded, and put up because the live painting hadn't come yet (index.html)
+const stillShown = () => !!still?.isConnected && still.complete && still.naturalWidth > 0 && hillFig.classList.contains('stilled');
+const LATE = 1200;
+const sinceFirstPaint = () => performance.now() - (performance.getEntriesByName('first-contentful-paint')[0]?.startTime ?? 0);
+let live = false;
+if (still) {
+  const up = () => {
+    if (live) return;
+    hillFig.classList.add('stilled', 'glazed');
+    // if the live painting hasn't come by the time it would have finished drawing in, the arms go up on the still
+    setTimeout(() => !live && stillShown() && plant(0), Math.max(0, LATE - sinceFirstPaint()));
+  };
+  if (still.complete && still.naturalWidth > 0) setTimeout(up, Math.max(0, 650 - sinceFirstPaint()));
+  else {
+    still.addEventListener('load', () => setTimeout(up, Math.max(0, 650 - sinceFirstPaint())), { once: true });
+    // the live painting's downloads (the runtime is most of a megabyte) wait for the still, so
+    // on a slow connection the picture comes first; not for long, if the still is slow too
+    holdUntil(new Promise((go) => {
+      still.addEventListener('load', go, { once: true });
+      still.addEventListener('error', go, { once: true });
+      setTimeout(go, 2500);
+    }));
+  }
+}
+function goLive() {
+  live = true;
+  if (!stillShown()) return still?.remove();
+  // after the live painting's first frame, the still fades from over it
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    hillFig.classList.add('live');
+    still.addEventListener('transitionend', () => still.remove(), { once: true });
+    setTimeout(() => still.remove(), 1500);
+  }));
+}
 
 // ---------- season & hour on the page: paper warmth, pigments, the sign
 
@@ -149,6 +141,8 @@ function paint(next) {
   });
   paintArms(next.season);
   dripMark.innerHTML = drip({ seed: 21, color: PIGMENTS[season][2][0], len: 64 });
+  // (only on a change: setting even the same src again would restart its loading)
+  if (still?.isConnected && still.getAttribute('src') !== `stills/${season}-${time}.webp`) still.src = `stills/${season}-${time}.webp`;
 }
 
 state = (!urlPreview && remembered()) || when();
@@ -173,19 +167,22 @@ const hill = mount($('#hill'), {
     setAll(hill);
     hill.set('regular', regular);
     hill.set('bare', phone.matches);
-    plant(reducedMotion ? 0 : 1750);
-    $('.hill').classList.add('glazed');
+    const late = stillShown() && sinceFirstPaint() > LATE;
+    if (late) hill.set('still', true);
+    plant(reducedMotion || late ? 0 : 1750);
+    hillFig.classList.add('glazed');
+    goLive();
   },
 });
 const gate = mount($('#gate'), { src: 'shire-ii', artboard: 'Gate', fit: 'fill', onLoad: () => { setAll(gate); $('.gate').classList.add('glazed'); } });
 narrow.addEventListener('change', () => {
-  arms.forEach((a, i) => { a.classList.toggle('l', dirOf(i) === 'l'); a.classList.toggle('r', dirOf(i) === 'r'); });
+  pointArms();
   paintArms(state.season);
 });
 phone.addEventListener('change', () => {
   hill.set('bare', phone.matches);
   hill.setLayout(...frame());
-  arms.forEach((a, i) => { a.classList.toggle('l', dirOf(i) === 'l'); a.classList.toggle('r', dirOf(i) === 'r'); });
+  pointArms();
   paintArms(state.season);
 });
 

@@ -22,12 +22,16 @@ export function rng(seed = 1) {
 
 // ---------- xml ----------
 
-const fmt = (v) => (typeof v === 'number' ? +v.toFixed(3) : v);
+// A .riv stores numbers as 32-bit floats. Geometry snaps to 1/32 of a unit (~0.05 px on a
+// 2x screen) and angles to 1/1024 radian, which leaves the floats' low bits zero: it doesn't
+// show, and the file compresses a good deal smaller.
+const SNAP = { x: 32, y: 32, width: 32, height: 32, distance: 32, thickness: 32, rotation: 1024 };
+const fmt = (k, v) => (typeof v !== 'number' ? v : SNAP[k] ? Math.round(v * SNAP[k]) / SNAP[k] : +v.toFixed(3));
 
 export function el(tag, attrs = {}, children = '') {
   const a = Object.entries(attrs)
     .filter(([, v]) => v !== undefined && v !== null && v !== false)
-    .map(([k, v]) => `${k}="${fmt(v)}"`)
+    .map(([k, v]) => `${k}="${fmt(k, v)}"`)
     .join(' ');
   const open = a ? `<${tag} ${a}` : `<${tag}`;
   const body = Array.isArray(children) ? children.join('\n') : children;
@@ -225,7 +229,7 @@ export function stippleShape({ id, name = 'Stipple', x = 0, y = 0, dots, color, 
   return el(
     'Shape',
     { x, y, name, id, opacity },
-    [...dots.map((d) => el('Ellipse', { x: d.x, y: d.y, width: d.r * 2, height: d.r * 2, originX: 0.5, originY: 0.5, name: 'd' })), fill(color)]
+    [...dots.map((d) => el('Ellipse', { x: d.x, y: d.y, width: d.r * 2, height: d.r * 2, originX: 0.5, originY: 0.5 })), fill(color)]
   );
 }
 
@@ -253,8 +257,16 @@ export const EASE = {
 
 /**
  * tracks: [{ object, prop, type = 'Double', keys: [[frame, value, interp?, ease?], ...] }]
+ *
+ * `rate` quantizes playback: the animation steps `rate` times a second instead of
+ * every frame, so a canvas that redraws only on change can rest between steps.
+ * Keys and duration stay authored in `fps` frames and are rescaled here.
  */
-export function anim({ id, name, duration, loop = 'oneShot', fps = 60, tracks }) {
+export function anim({ id, name, duration, loop = 'oneShot', fps = 60, rate, tracks }) {
+  const k = rate ? rate / fps : 1;
+  const at = (f) => Math.round(f * k);
+  // two keys that land on one frame: the later one wins
+  const rescale = (keys) => keys.map(([f, ...rest]) => [at(f), ...rest]).filter((key, i, all) => all[i + 1]?.[0] !== key[0]);
   const byObj = new Map();
   for (const t of tracks) {
     if (!byObj.has(t.object)) byObj.set(t.object, []);
@@ -266,11 +278,38 @@ export function anim({ id, name, duration, loop = 'oneShot', fps = 60, tracks })
       { objectId: obj },
       ts.map((t) => {
         const keyAttr = /^\d+$/.test(String(t.prop)) ? { propertyKey: t.prop } : { property: t.prop };
-        return el('KeyedProperty', keyAttr, t.keys.map(([f, v, i, e]) => kf(t.type || 'Double', f, v, i ?? (t.type && t.type !== 'Double' ? 'hold' : 'linear'), e)));
+        const type = t.type || 'Double';
+        // key values snap like the geometry they move: positions to 1/32, the rest to 1/1024
+        const q = type === 'Double' ? (t.prop === 'x' || t.prop === 'y' ? 32 : 1024) : 0;
+        return el('KeyedProperty', keyAttr, rescale(t.keys).map(([f, v, i, e]) => kf(type, f, q ? Math.round(v * q) / q : v, i ?? (type !== 'Double' ? 'hold' : 'linear'), e)));
       })
     )
   );
-  return el('LinearAnimation', { loopValue: loop, duration, fps, name, id }, objs);
+  return el('LinearAnimation', { loopValue: loop, duration: Math.max(1, at(duration)), fps: rate || fps, quantize: rate ? 'true' : undefined, name, id }, objs);
+}
+
+/**
+ * Drops linear keys that a straight line between their kept neighbours already
+ * passes within `eps` of (Douglas-Peucker on frame/value), so a curve sampled
+ * densely keeps keys only where it bends.
+ */
+export function thin(keys, eps) {
+  if (keys.length < 3) return keys;
+  const keep = new Set([0, keys.length - 1]);
+  const split = (a, b) => {
+    let worst = -1, err = eps;
+    for (let i = a + 1; i < b; i++) {
+      const t = (keys[i][0] - keys[a][0]) / (keys[b][0] - keys[a][0]);
+      const d = Math.abs(keys[i][1] - (keys[a][1] + (keys[b][1] - keys[a][1]) * t));
+      if (d > err) [worst, err] = [i, d];
+    }
+    if (worst < 0) return;
+    keep.add(worst);
+    split(a, worst);
+    split(worst, b);
+  };
+  split(0, keys.length - 1);
+  return keys.filter((_, i) => keep.has(i));
 }
 
 // ---------- scene ----------
@@ -430,7 +469,7 @@ export function document(...artboards) {
  * Line boil: N slightly different redraws of the same drawing, swapped by a Solo
  * at ~8 fps, like re-traced animation cels. `draw(r)` returns the shapes for one cel.
  */
-export function boil(scene, { name = 'Boil', x = 0, y = 0, cels = 3, seed = 1, hold = 7, draw, id, opacity }) {
+export function boil(scene, { name = 'Boil', x = 0, y = 0, cels = 3, seed = 1, hold = 7, rate, draw, id, opacity }) {
   const r = rng(seed);
   const soloId = id || scene.ids.next();
   const celIds = [];
@@ -445,6 +484,7 @@ export function boil(scene, { name = 'Boil', x = 0, y = 0, cels = 3, seed = 1, h
     name: `${name} boil`,
     duration: hold * cels,
     loop: 'loop',
+    rate,
     tracks: [{ object: soloId, prop: 'activeComponentId', type: 'Id', keys: celIds.map((c, i) => [i * hold, c, 'hold']) }],
   });
   return { xml, soloId, animId };

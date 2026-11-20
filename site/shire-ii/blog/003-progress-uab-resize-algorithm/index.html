@@ -6,14 +6,13 @@
   <title>Universal Asset Browser: Browser Resize Algorithm · Ben Cressman</title>
   <meta name="description" content="Writing an algorithm to dynamically resize grid cells and grid dimensions.">
   <link rel="icon" href="../../../shared/favicon.svg" type="image/svg+xml">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Caveat:wght@500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../shared/fonts.css">
   <link rel="stylesheet" href="../../../shared/base.css">
   <link rel="stylesheet" href="../../../shared/turn.css">
   <link rel="stylesheet" href="../../post.css">
   <link rel="stylesheet" href="../../wash.css">
   <script src="../../../shared/turn.js"></script>
+  <link rel="preload" href="../../../shared/fonts/alegreya.woff2" as="font" type="font/woff2" crossorigin>
 </head>
 <body class="paper">
   <div class="col">
@@ -30,9 +29,9 @@
 <ul>
 <li>Users often want to easily see up-close the Preview image of an asset to inspect it for their scene. They also often need to glance at many assets at once to get a quick idea of which ones may be suitable. This algorithm is designed to enable that, smoothly transitioning between zoom levels in the browser.</li>
 </ul>
-<figure class="pinned"><img src="../images/003-default.png" alt="The default size of the UAB's browser." loading="lazy" decoding="async"><figcaption>The default size of the UAB's browser.</figcaption></figure>
-<figure class="pinned"><img src="../images/003-smallest-size.png" alt="The UAB's browser at minimum size." loading="lazy" decoding="async"><figcaption>The UAB's browser at minimum size.</figcaption></figure>
-<figure class="pinned"><img src="../images/003-zoomed-in.png" alt="The UAB's browser zoomed in." loading="lazy" decoding="async"><figcaption>The UAB's browser zoomed in.</figcaption></figure>
+<figure class="pinned"><img src="../images/003-default-1280.webp" srcset="../images/003-default-640.webp 640w, ../images/003-default-960.webp 960w, ../images/003-default-1280.webp 1280w" sizes="(max-width: 640px) calc(100vw - 44px), 596px" width="1280" height="873" alt="The default size of the UAB's browser." decoding="async"><figcaption>The default size of the UAB's browser.</figcaption></figure>
+<figure class="pinned"><img src="../images/003-smallest-size-1280.webp" srcset="../images/003-smallest-size-640.webp 640w, ../images/003-smallest-size-960.webp 960w, ../images/003-smallest-size-1280.webp 1280w" sizes="(max-width: 640px) calc(100vw - 44px), 596px" width="1280" height="882" alt="The UAB's browser at minimum size." loading="lazy" decoding="async"><figcaption>The UAB's browser at minimum size.</figcaption></figure>
+<figure class="pinned"><img src="../images/003-zoomed-in-1280.webp" srcset="../images/003-zoomed-in-640.webp 640w, ../images/003-zoomed-in-960.webp 960w, ../images/003-zoomed-in-1280.webp 1280w" sizes="(max-width: 640px) calc(100vw - 44px), 596px" width="1280" height="878" alt="The UAB's browser zoomed in." loading="lazy" decoding="async"><figcaption>The UAB's browser zoomed in.</figcaption></figure>
 <h2 id="technical-design-specifications">Technical Design Specifications</h2>
 <ul>
 <li>The grid&#39;s cell size is uniform.</li>
@@ -97,7 +96,6 @@
       <p class="write">Thoughts on this one? <a href="mailto:hello@bencres.dev?subject=Universal%20Asset%20Browser%3A%20Browser%20Resize%20Algorithm">Write to me</a>.</p>
     </footer>
   </div>
-  <script src="../../../shared/vendor/rive.js"></script>
   <script type="module" src="../../post.js"></script>
   <script type="module" src="../../../shared/turn-tune.js"></script>
 </body>

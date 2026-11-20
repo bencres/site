@@ -36,6 +36,7 @@ const TURN = (globalThis.TURN = {
 addEventListener('click', (e) => {
   const a = e.target.closest?.('a[href]');
   if (!a || a.origin !== location.origin || e.defaultPrevented) return;
+  warm();
   // a keyboard "click" has no pointer position; use the link itself
   let x = e.clientX, y = e.clientY;
   if (!e.detail) {
@@ -71,8 +72,24 @@ function inked() {
   return out;
 }
 
+// window.turnSettled: a Promise that resolves (never rejects) once this page's
+// arrival is over, for work heavy enough to stutter the drops to wait on. With a
+// transition it's that transition's `finished`; without one (a first visit, a
+// reload, reduced motion, a hidden tab, a browser with no pagereveal) it resolves
+// right away, or at the first frame when only pagereveal can tell. Resolved once
+// per page load; a back/forward restore doesn't reset it.
+let settle;
+globalThis.turnSettled = new Promise((done) => (settle = done));
+{
+  const a = globalThis.navigation?.activation;
+  if (!('onpagereveal' in globalThis) || document.visibilityState === 'hidden' || matchMedia('(prefers-reduced-motion: reduce)').matches || (a && (!a.from || a.navigationType === 'reload'))) settle();
+}
+
 addEventListener('pagereveal', (e) => {
-  if (!e.viewTransition) return;
+  if (!e.viewTransition) return settle();
+  e.viewTransition.finished.then(settle, settle);
+  // and in case it never reports back
+  setTimeout(settle, TURN.read().duration + 1000);
   let at = { x: 0.5, y: 0.35 };
   let ink = [];
   try {
@@ -137,11 +154,18 @@ const SHAPES = [
 ];
 const noise = ({ seed, freq, push }) =>
   `<feTurbulence type='fractalNoise' baseFrequency='${freq}' numOctaves='3' seed='${seed}'/><feDisplacementMap in='SourceGraphic' scale='${push}'/>`;
-const uri = (svg) => `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
-// the mask: a soft-edged drop, 60% of its box across
-const MASKS = SHAPES.map((s) =>
-  uri(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><filter id='w' x='-25%' y='-25%' width='150%' height='150%'>${noise(s)}<feGaussianBlur stdDeviation='3'/></filter><circle cx='100' cy='100' r='60' fill='white' filter='url(#w)'/></svg>`)
-);
+// the mask: a soft-edged drop, 60% of its box across. Each is the shape's noise
+// pre-rendered to a 256px picture (turn/drop-N.webp), so the drops only scale a
+// bitmap as they grow instead of re-running the filters every frame. Drawn from
+//   <svg viewBox='0 0 200 200'><filter id='w' x='-25%' y='-25%' width='150%' height='150%'>
+//   ${noise(s)}<feGaussianBlur stdDeviation='3'/></filter>
+//   <circle cx='100' cy='100' r='60' fill='white' filter='url(#w)'/></svg>
+const MASKS = SHAPES.map((_, i) => new URL(`turn/drop-${i + 1}.webp`, document.currentScript.src).href);
+// fetched once the page has settled (or on the way out, if that's sooner), so the
+// next arrival finds them ready
+let warmed;
+const warm = () => (warmed ||= MASKS.map((src) => Object.assign(new Image(), { src })));
+addEventListener('load', () => (globalThis.requestIdleCallback || setTimeout)(warm));
 
 // the wet rim: water darkening the paper where it stops, a paler band just inside,
 // a little granulation; `o` is how strong the rim line is
@@ -219,7 +243,7 @@ function compose(S, drops, W, H) {
   100% { --d${k}: ${px(d.end)}; }
 }\n`;
     anims.push(`turn-d${k} ${D}ms linear both`);
-    masks.push(`${MASKS[i % MASKS.length]} no-repeat`);
+    masks.push(`url("${MASKS[i % MASKS.length]}") no-repeat`);
     sizes.push(`var(--d${k}) var(--d${k})`);
     spots.push(`calc(${px(d.x)} - var(--d${k}) / 2) calc(${px(d.y)} - var(--d${k}) / 2)`);
 

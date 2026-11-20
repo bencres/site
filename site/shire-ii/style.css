@@ -31,7 +31,7 @@ html.settled { scroll-behavior: smooth; }
 body {
   color: var(--ink);
   background: var(--paper);
-  font: 400 19px/1.62 'Alegreya', ui-serif, Georgia, serif;
+  font: 400 19px/1.62 'Alegreya', 'Alegreya Fallback', ui-serif, Georgia, serif;
   transition: background-color 2s;
 }
 ::selection { background: rgba(233, 185, 58, 0.35); }
@@ -61,18 +61,25 @@ a:focus-visible { outline: 2px dashed var(--link); outline-offset: 3px; border-r
     linear-gradient(to bottom, transparent, rgb(0 0 0 / 0.2) calc(var(--halo) * 0.3), rgb(0 0 0 / 0.65) calc(var(--halo) * 0.62), #000 var(--halo), #000 calc(100% - var(--art) * 0.06), transparent),
     linear-gradient(#000, #000) no-repeat var(--halo) var(--halo) / calc(100% - 2 * var(--halo)) calc(100% - var(--halo));
   mask-composite: intersect, subtract;
-  /* hidden until the painting is up, then it comes up exactly as the painting's glaze
-     does: the painting starts in its default light and cross-fades to the visitor's hour
-     over 1.6s, linearly. Before that it would frame an empty canvas */
+  /* hidden until there's a painting to frame (the still, or the live one, which starts
+     straight in the visitor's hour), then it comes up with it */
   opacity: 0;
-  transition: background-color 1.6s linear, opacity 1.6s linear 0.15s;
+  transition: background-color 1.6s linear, opacity 0.35s ease-out;
 }
 .hill.glazed::before { opacity: 1; }
 .gate.glazed::before { opacity: 0.6; }
 .hill canvas { width: 100%; aspect-ratio: 900 / 400; height: auto; }
+/* the finished painting as a picture, over the canvas until the live one takes over:
+   framed as the canvas is (filling it here; cropped to cover, anchored right, on phones) */
+.hill .still {
+  position: absolute; left: 0; top: 0; width: 100%; aspect-ratio: 900 / 400; height: auto;
+  object-fit: fill; pointer-events: none; opacity: 0; transition: opacity 0.35s ease-out;
+}
+.hill.stilled .still { opacity: 1; }
+.hill.stilled.live .still { opacity: 0; transition-duration: 0.6s; }
 .sign {
   margin: -6px 0 0 calc(90px + 4%);
-  font: 600 22px/1.2 'Caveat', cursive; color: var(--soft);
+  font: 600 22px/1.2 'Caveat', 'Caveat Fallback', cursive; color: var(--soft);
   transform: rotate(-1.4deg); transform-origin: left;
   animation: write 0.9s 0.5s cubic-bezier(0.5, 0, 0.3, 1) both;
 }
@@ -85,13 +92,13 @@ a:focus-visible { outline: 2px dashed var(--link); outline-offset: 3px; border-r
 .arm {
   position: absolute; display: flex; align-items: baseline; gap: 0.32em; white-space: nowrap;
   height: calc(var(--u) * 34); top: calc(var(--u) * (122 + var(--i) * 42));
-  font: 700 calc(var(--u) * 25) / calc(var(--u) * 34) 'Caveat', cursive; color: #33281f; text-decoration: none;
+  font: 700 calc(var(--u) * 25) / calc(var(--u) * 34) 'Caveat', 'Caveat Fallback', cursive; color: #33281f; text-decoration: none;
   pointer-events: auto; isolation: isolate;
   transform: rotate(var(--tilt, 0deg));
   transition: transform 0.9s cubic-bezier(0.3, 2.2, 0.45, 0.8);
 }
 .arm b { font-weight: 700; }
-.arm small { font: 500 calc(var(--u) * 18.5) / 1 'Caveat', cursive; color: #6e5f50; }
+.arm small { font: 500 calc(var(--u) * 18.5) / 1 'Caveat', 'Caveat Fallback', cursive; color: #6e5f50; }
 .arm .paint { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1; overflow: visible; }
 .arm.r { left: calc(var(--u) * 157); padding: 0 calc(var(--u) * 36) 0 calc(var(--u) * 24); transform-origin: calc(var(--u) * 11) 50%; }
 .arm.l { right: calc(100% - var(--u) * 171); padding: 0 calc(var(--u) * 24) 0 calc(var(--u) * 36); transform-origin: calc(100% - var(--u) * 11) 50%; }
@@ -160,7 +167,7 @@ main { margin-top: 30px; }
   display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 12px;
   margin: 0 0 12px; font-size: 22px; font-weight: 700; letter-spacing: 0.005em;
 }
-.room-block h2 .room { font: 500 19px/1 'Caveat', cursive; color: var(--faint); transform: rotate(-2deg) translateY(-1px); }
+.room-block h2 .room { font: 500 19px/1 'Caveat', 'Caveat Fallback', cursive; color: var(--faint); transform: rotate(-2deg) translateY(-1px); }
 .room-block h2 small { flex-basis: 100%; font-size: 14px; font-weight: 400; font-style: italic; color: var(--faint); margin-top: -2px; }
 .room-block h2 .wash { left: -30px; top: -14px; width: 150px; height: 64px; }
 
@@ -186,7 +193,7 @@ main { margin-top: 30px; }
   position: absolute; left: 6.6%; top: 20%; width: 37.6%; height: 39%;
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.1em;
   text-align: center; transform: rotate(-1.1deg);
-  font-family: 'Caveat', cursive; color: #3a2f25; line-height: 1.05;
+  font-family: 'Caveat', 'Caveat Fallback', cursive; color: #3a2f25; line-height: 1.05;
 }
 .board p { margin: 0; font-size: clamp(14px, 3.9cqw, 25px); font-weight: 600; }
 .board a { font-size: clamp(13px, 3.5cqw, 22px); font-weight: 500; }
@@ -194,7 +201,7 @@ main { margin-top: 30px; }
 .colophon a { font-style: normal; }
 .arm.back {
   position: relative; top: auto; height: 32px; padding: 0 16px 0 28px; --tilt: 1.5deg; transform-origin: calc(100% - 11px) 50%;
-  font: 600 18px/32px 'Caveat', cursive; opacity: 1;
+  font: 600 18px/32px 'Caveat', 'Caveat Fallback', cursive; opacity: 1;
 }
 .arm.back .soak, .arm.back b, .arm.back .o { opacity: 1; stroke-dashoffset: 0; }
 .arm.back:hover, .arm.back:focus-visible { transform: rotate(calc(var(--tilt) - 3.5deg)); }
@@ -212,7 +219,8 @@ main { margin-top: 30px; }
    desktop strip) and the post stands at its left edge, arms out over the slope */
 @media (max-width: 600px) {
   .hill { margin: 8px -16px 2px; --art: calc(100cqw * 5 / 6); --halo: 70px; }
-  .hill canvas { aspect-ratio: 6 / 5; }
+  .hill canvas, .hill .still { aspect-ratio: 6 / 5; }
+  .hill .still { object-fit: cover; object-position: 100% 50%; }
   .signpost { --u: 1px; inset: 0; width: auto; aspect-ratio: auto; }
   .upright { display: block; position: absolute; left: 20px; bottom: 6px; width: 26px; }
   .upright .o { stroke-dasharray: 1 1; stroke-dashoffset: 1; transition: stroke-dashoffset 0.9s cubic-bezier(0.45, 0.05, 0.25, 1); }
@@ -258,7 +266,7 @@ main { margin-top: 30px; }
   display: grid; gap: 6px; padding: 10px 12px 9px;
   background: color-mix(in srgb, var(--paper, #f3ead9) 94%, white); border: 1px solid rgba(43, 35, 28, 0.28);
   border-radius: 3px 6px 4px 5px; box-shadow: 1px 2px 0 rgba(43, 35, 28, 0.12);
-  font: 600 17px/1 Caveat, cursive; color: var(--ink, #2b231c);
+  font: 600 17px/1 'Caveat', 'Caveat Fallback', cursive; color: var(--ink, #2b231c);
   transform: rotate(-0.6deg);
 }
 .almanac details { display: grid; gap: 6px; }
@@ -272,7 +280,7 @@ main { margin-top: 30px; }
 .almanac input[type='range'] { width: 100%; margin: 0; accent-color: #8a6a3c; }
 .almanac button {
   justify-self: start; padding: 0; border: 0; background: none; cursor: pointer;
-  font: 500 15px/1 Caveat, cursive; color: var(--soft, #6e6152); text-decoration: underline wavy rgba(43, 35, 28, 0.3);
+  font: 500 15px/1 'Caveat', 'Caveat Fallback', cursive; color: var(--soft, #6e6152); text-decoration: underline wavy rgba(43, 35, 28, 0.3);
   visibility: hidden;
 }
 .almanac.moved button { visibility: visible; }
@@ -292,15 +300,15 @@ main { margin-top: 30px; }
 .badge { display: inline-flex; flex-direction: column; align-items: center; gap: 2px; text-decoration: none; color: var(--ink, #2b231c); }
 .badge .mark-icon { display: block; width: 54px; height: 54px; transition: transform 0.6s cubic-bezier(0.3, 2.2, 0.45, 0.8); }
 .badge .mark-icon .paint { width: 100%; height: 100%; overflow: visible; }
-.badge .label { font: 600 18px/1 'Caveat', cursive; color: var(--soft, #6e6152); }
+.badge .label { font: 600 18px/1 'Caveat', 'Caveat Fallback', cursive; color: var(--soft, #6e6152); }
 .badge:hover, .badge:focus-visible { text-decoration: none; }
 .badge:hover .mark-icon, .badge:focus-visible .mark-icon { transform: rotate(-6deg) translateY(-2px); }
 .badge:hover .label, .badge:focus-visible .label { color: var(--ink, #2b231c); }
 
 /* ---- at the door: a "knock", and whoever answers */
-.say { position: absolute; z-index: 3; pointer-events: none; font-family: 'Caveat', cursive; color: var(--ink); }
+.say { position: absolute; z-index: 3; pointer-events: none; font-family: 'Caveat', 'Caveat Fallback', cursive; color: var(--ink); }
 .say.sfx {
-  font: 700 19px/1 'Caveat', cursive; color: #5a4632; white-space: nowrap;
+  font: 700 19px/1 'Caveat', 'Caveat Fallback', cursive; color: #5a4632; white-space: nowrap;
   transform: translate(-50%, -50%) rotate(var(--tilt, 0deg));
   animation: knock-word 1.2s cubic-bezier(0.2, 0.7, 0.3, 1) both;
 }

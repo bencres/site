@@ -19,7 +19,7 @@
 [data-season='autumn'] { --link: #6a5a24; --link-line: rgba(140, 100, 30, 0.38); }
 
 html { background: var(--paper); }
-body { color: var(--ink); background: var(--paper); font: 400 19px/1.66 'Alegreya', ui-serif, Georgia, serif; }
+body { color: var(--ink); background: var(--paper); font: 400 19px/1.66 'Alegreya', 'Alegreya Fallback', ui-serif, Georgia, serif; }
 ::selection { background: rgba(233, 185, 58, 0.35); }
 a { color: var(--link); text-decoration: underline; text-decoration-color: var(--link-line); text-decoration-thickness: 1px; text-underline-offset: 3px; }
 a:hover { text-decoration-color: currentColor; text-decoration-style: wavy; }
@@ -27,21 +27,21 @@ a:focus-visible { outline: 2px dashed var(--link); outline-offset: 3px; border-r
 
 .col { max-width: var(--col); margin: 0 auto; padding: 26px 20px 96px; }
 
-.trail, .end .home { font: 600 21px/1.2 'Caveat', cursive; }
+.trail, .end .home { font: 600 21px/1.2 'Caveat', 'Caveat Fallback', cursive; }
 .trail a, .end .home { color: var(--soft); text-decoration: none; }
 .trail a:hover, .end .home:hover { color: var(--ink); }
 
 /* ---- the sketch, a little wider than the column */
 .sketch { margin: 10px -60px 0; }
 .sketch canvas { width: 100%; aspect-ratio: 720 / 380; height: auto; }
-.sketch figcaption { margin: -8px 0 0 calc(60px + 4%); font: 600 20px/1.2 'Caveat', cursive; color: var(--soft); transform: rotate(-1.2deg); transform-origin: left; }
+.sketch figcaption { margin: -8px 0 0 calc(60px + 4%); font: 600 20px/1.2 'Caveat', 'Caveat Fallback', cursive; color: var(--soft); transform: rotate(-1.2deg); transform-origin: left; }
 
 /* ---- title */
 .title { margin: 30px 0 34px; }
-.kicker { margin: 0 0 6px; font: 600 19px/1 'Caveat', cursive; color: var(--faint); }
+.kicker { margin: 0 0 6px; font: 600 19px/1 'Caveat', 'Caveat Fallback', cursive; color: var(--faint); }
 .title h1 { margin: 0; font-weight: 700; font-size: clamp(30px, 5.4vw, 40px); line-height: 1.12; letter-spacing: -0.01em; text-wrap: balance; }
 .excerpt { margin: 14px 0 0; font-style: italic; color: var(--soft); }
-.tags { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 12px 0 0; padding: 0; list-style: none; font: 600 18px/1 'Caveat', cursive; color: var(--soft); }
+.tags { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 12px 0 0; padding: 0; list-style: none; font: 600 18px/1 'Caveat', 'Caveat Fallback', cursive; color: var(--soft); }
 .tags li::before { content: '✦ '; color: var(--brass); font-size: 0.75em; }
 
 /* ---- the text */
@@ -102,7 +102,7 @@ a:focus-visible { outline: 2px dashed var(--link); outline-offset: 3px; border-r
 .pinned { position: relative; margin: 1.6em -10px 1.8em; padding: 10px 10px 8px; background: var(--card); border: 1px solid rgba(43, 35, 28, 0.18); box-shadow: 2px 3px 0 rgba(43, 35, 28, 0.1); transform: rotate(-0.4deg); }
 .pinned:nth-of-type(even) { transform: rotate(0.5deg); }
 .pinned img { display: block; width: 100%; height: auto; border: 1px solid rgba(43, 35, 28, 0.25); }
-.pinned figcaption { margin: 8px 2px 0; font: 600 18px/1.25 'Caveat', cursive; color: var(--soft); }
+.pinned figcaption { margin: 8px 2px 0; font: 600 18px/1.25 'Caveat', 'Caveat Fallback', cursive; color: var(--soft); }
 .pinned::before, .pinned::after {
   content: ''; position: absolute; top: -9px; width: 74px; height: 20px;
   background: rgba(233, 222, 190, 0.78); box-shadow: 0 1px 1px rgba(43, 35, 28, 0.12);
