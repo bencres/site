@@ -14,7 +14,7 @@ import hljs from 'highlight.js';
 const root = resolve(import.meta.dirname, '..');
 const srcDir = join(root, 'posts');
 const outDir = join(root, 'site/blog');
-const SITE = 'https://bencres.dev'; // for the canonical and link-preview addresses
+const SITE = 'https://www.bencres.dev'; // for the canonical and link-preview addresses
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
@@ -170,7 +170,6 @@ function page({ slug, meta, html }) {
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
-  <script defer src="/_vercel/insights/script.js"></script>
   <link rel="icon" href="../../shared/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../../shared/fonts.css">
   <link rel="stylesheet" href="../../shared/base.css">

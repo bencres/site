@@ -8,21 +8,52 @@
   "headers": [
     {
       "source": "/shared/vendor/2.51.0/(.*)",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
     },
     {
       "source": "/shared/fonts/(.*)",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
     },
     {
       "source": "/riv/(.*)",
-      "headers": [{ "key": "Content-Type", "value": "application/octet-stream" }]
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/octet-stream"
+        }
+      ]
     }
   ],
   "redirects": [
-    { "source": "/shire-ii/:path*", "destination": "/:path*", "permanent": true },
-    { "source": "/blog/:slug(002-progress-uab-houdini-integration|005-progress-uab-assets-as-objects|007-progress-uab-refactor|00a-pipeline-pxf-prod-manager)/:rest*", "destination": "/#writing", "permanent": false },
-    { "source": "/snippets/:path*", "destination": "/", "permanent": false },
-    { "source": "/demo/django-angular", "destination": "https://github.com/bencres/demo-django-angular", "permanent": true }
+    {
+      "source": "/shire-ii/:rest(.*)",
+      "destination": "/:rest",
+      "permanent": true
+    },
+    {
+      "source": "/blog/:slug(002-progress-uab-houdini-integration|005-progress-uab-assets-as-objects|007-progress-uab-refactor|00a-pipeline-pxf-prod-manager)/",
+      "destination": "/#writing",
+      "permanent": false
+    },
+    {
+      "source": "/snippets/:rest(.*)",
+      "destination": "/",
+      "permanent": false
+    },
+    {
+      "source": "/demo/django-angular/",
+      "destination": "https://github.com/bencres/demo-django-angular",
+      "permanent": true
+    }
   ]
 }
