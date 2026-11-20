@@ -22,7 +22,7 @@ const mark = (cls, svg = '') => `<span class="mark ${cls}" aria-hidden="true">${
 // the rooms of the house, in the order the signpost points to them. `react` (what
 // stirs on the hill when you turn the arm) lives in main.js, keyed by id
 const ROOMS = [
-  { id: 'now', title: 'Now', room: 'by the fire', note: `updated ${c.now.updated}`, items: c.now.items.map(prose) },
+  { id: 'now', title: 'Now', room: 'by the fire', items: c.now.items.map(prose) },
   { id: 'work', title: 'Work', room: 'the study', mark: mark('m-blot', splotch({ seed: 5, dir: 2.5 })),
     // the places I've worked, named but not linked
     items: c.work.map((w) => `<strong>${esc(w.name)}</strong>, ${esc(w.role)} <span class="when">${esc(w.when)}</span>`) },
@@ -45,7 +45,7 @@ const parts = {
   intro: [
     ...c.intro.map((p) => `<p>${prose(p)}</p>`),
     `<p class="hello">Say hello any time:</p>`,
-    `<div class="post-desk"><a href="mailto:${esc(c.email)}" class="letter mail" aria-label="Write to me at ${esc(c.email)}">${letter({ seed: 17 })}<span class="addr" aria-hidden="true"><span class="to">${esc(c.name)}</span><span class="at">the round green door, under the hill</span><span class="em">${esc(c.email)}</span></span></a><button type="button" class="copy" data-copy="${esc(c.email)}">or copy the address</button></div>`,
+    `<div class="post-desk"><a href="mailto:${esc(c.email)}" class="letter mail" aria-label="Write to me at ${esc(c.email)}">${letter({ seed: 17 })}<span class="addr" aria-hidden="true"><span class="to">${esc(c.name)}</span><span class="at">the round green door, under the hill</span><span class="em">${esc(c.email)}</span></span></a><button type="button" class="copy" data-copy="${esc(c.email)}"><span>or copy the address</span></button></div>`,
   ].join('\n'),
   rooms: ROOMS.map((rm) => `<section class="room-block" aria-labelledby="${rm.id}"><h2 id="${rm.id}"><span class="wash" aria-hidden="true"></span><span class="title">${esc(rm.title)}</span><span class="room">${esc(rm.room)}</span>${rm.note ? `<small>${esc(rm.note)}</small>` : ''}${rm.mark || ''}</h2><ul class="${rm.inline ? 'knobs inline' : 'knobs'}">
 ${rm.items.map((it) => `<li>${it}</li>`).join('\n')}

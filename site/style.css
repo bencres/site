@@ -308,36 +308,29 @@ main { margin-top: 30px; }
   70% { opacity: 1; }
   100% { opacity: 0; translate: 0 -18px; }
 }
-/* a speech bubble in the hill's hand: paper, an inked edge, a tail toward the door */
+/* a speech bubble in the hill's hand: the painted bubble (paint.js bubble, laid on by
+   main.js once the words are measured) is the background, its tail in the bottom 12px
+   with the tip at the element's bottom edge, --tail in from its left. The words are
+   sized to the painting, so the bubble keeps its size next to the door on a phone */
 .say.speech, .say.angry {
-  max-width: 11em; padding: 6px 13px 7px; transform: translateY(-100%);
-  font-size: 21px; font-weight: 600; line-height: 1.1; white-space: normal; width: max-content;
-  background: #fbf6ea; border: 1.6px solid var(--ink);
-  border-radius: 18px 22px 20px 6px / 16px 18px 20px 6px;
-  box-shadow: 2px 3px 0 rgba(43, 35, 28, 0.12);
+  padding: 0.3em 0.68em calc(0.36em + 12px); transform: translateY(-100%);
+  font-size: clamp(15px, 1.95cqw, 21px); font-weight: 600; line-height: 1.1; white-space: normal; width: max-content; max-width: 11em;
+  background: no-repeat 0 0 / 100% 100%;
+  filter: drop-shadow(2px 3px 0 rgba(43, 35, 28, 0.1));
   animation: bubble-in 0.42s cubic-bezier(0.34, 1.6, 0.64, 1) both;
-  transform-origin: 0% 100%;
-}
-.say.speech::after, .say.angry::after {
-  content: ''; position: absolute; left: calc(var(--tail, 0px) - 9px); bottom: -1px; width: 14px; height: 12px;
-  background: inherit; border-left: 1.6px solid var(--ink); border-bottom: 1.6px solid var(--ink);
-  clip-path: polygon(0 100%, 100% 0, 100% 100%); transform: skewX(-24deg);
+  transform-origin: var(--tail, 18px) 100%;
 }
 .say.gone { animation: bubble-out 0.5s ease-in both; }
 .say.gone.hushed { animation-duration: 0.2s; }
 @keyframes bubble-in { 0% { opacity: 0; scale: 0.4; } 100% { opacity: 1; scale: 1; } }
 @keyframes bubble-out { to { opacity: 0; translate: 0 -6px; } }
-/* someone very cross */
+/* someone very cross: the same bubble, in red ink, louder and shaking */
 .say.angry {
-  font-size: 30px; font-weight: 700; letter-spacing: 0.02em; color: #8e2a18;
-  background: #fbe6d8; border-color: #8e2a18; border-width: 2.2px;
-  border-radius: 6px 3px 7px 2px;
+  font-size: clamp(20px, 2.7cqw, 29px); font-weight: 700; letter-spacing: 0.02em; color: #8e2a18;
   animation: bubble-in 0.2s cubic-bezier(0.34, 2, 0.64, 1) both, rage 0.32s steps(2) 0.2s 3;
 }
-.say.angry::after { border-color: #8e2a18; }
 .say.angry.gone { animation: bubble-out 0.35s ease-in both; }
 @keyframes rage { 0% { rotate: -3deg; } 50% { rotate: 3deg; } 100% { rotate: 0deg; } }
-@media (max-width: 600px) { .say.speech { font-size: 18px; max-width: 10em; } .say.angry { font-size: 25px; } }
 @media (prefers-reduced-motion: reduce) { .say { animation: none !important; } }
 
 /* ---- saying hello: a letter, addressed to the hill */
@@ -373,10 +366,20 @@ main { margin-top: 30px; }
 }
 .post-desk { position: relative; }
 .post-desk .copy {
-  padding: 0; border: 0; background: none; cursor: pointer; margin-bottom: 6px;
+  padding: 0 0 6px; border: 0; cursor: pointer; margin-bottom: 2px;
   font: 500 18px/1.2 'Caveat', 'Caveat Fallback', cursive; color: var(--soft);
-  text-decoration: underline wavy rgba(43, 35, 28, 0.28); text-underline-offset: 4px;
+  /* a pencilled wave underneath, drifting along like a slow stream */
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6'%3E%3Cpath d='M0 3Q3 .6 6 3T12 3T18 3T24 3' fill='none' stroke='%232b231c' stroke-opacity='.32' stroke-width='1.1'/%3E%3C/svg%3E") repeat-x 0 100% / 24px 6px;
+  animation: drift 7s linear infinite;
+  transition: color 0.2s;
 }
+@keyframes drift { to { background-position: 24px 100%; } }
 .post-desk .copy:hover { color: var(--ink); }
+/* its words are swapped by rubbing out and writing in (main.js), never all at once,
+   so the button keeps the width of its longest words and the wave carries on beneath */
+.post-desk .copy span { display: inline-block; text-align: left; }
 .post-desk .copy:focus-visible { outline: 2px dashed var(--link); outline-offset: 3px; }
-@media (prefers-reduced-motion: reduce) { .letter, .letter:hover { transition: none; transform: rotate(-1.6deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .letter, .letter:hover { transition: none; transform: rotate(-1.6deg); }
+  .post-desk .copy { animation: none; }
+}

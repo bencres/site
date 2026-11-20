@@ -20,9 +20,11 @@ for (const home of document.querySelectorAll('a.home')) {
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button) return;
     let from = null;
     try { from = new URL(document.referrer); } catch {}
-    if (from?.origin !== location.origin || from.pathname !== hill || history.length < 2) return;
     e.preventDefault();
-    history.back();
+    if (from?.origin === location.origin && from.pathname === hill && history.length > 1) return history.back();
+    // otherwise to the hill without a #writing in its address: it scrolls itself there (main.js)
+    try { sessionStorage.setItem('shire-ii:to', 'writing'); } catch {}
+    location.href = hill;
   });
 }
 

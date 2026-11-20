@@ -1,6 +1,6 @@
 import { mount, holdUntil, holdStart, reducedMotion } from './shared/rive-mount.js';
 import { h } from './shared/content.js';
-import { arm, drip, wash, PIGMENTS } from './paint.js';
+import { arm, drip, wash, bubble, PIGMENTS } from './paint.js';
 import { SEASONS, TIMES, when as whenAt } from './when.js';
 
 const when = () => whenAt(params);
@@ -268,15 +268,35 @@ hello.addEventListener('click', (e) => {
 });
 // or just take the address
 const copy = $('.post-desk .copy');
+const words = copy?.querySelector('span');
+// one change at a time: what's there is rubbed out right to left, then the new words are
+// written in left to right (a plain cross-fade, for anyone who'd rather nothing moved)
+let rewriting = Promise.resolve();
+const SHOWN = 'inset(-6px -6px -6px -6px)';
+const write = (text) => (rewriting = rewriting.then(async () => {
+  if (words.textContent === text) return;
+  words.style.minWidth ||= `${words.offsetWidth}px`;
+  const out = reducedMotion
+    ? words.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 220, easing: 'ease-in', fill: 'forwards' })
+    : words.animate([{ clipPath: SHOWN, opacity: 1 }, { clipPath: 'inset(-6px 100% -6px -6px)', opacity: 0.3 }], { duration: 300, easing: 'cubic-bezier(0.5, 0, 0.75, 0.6)', fill: 'forwards' });
+  await out.finished;
+  words.textContent = text;
+  const back = reducedMotion
+    ? words.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 260, easing: 'ease-out', fill: 'both' })
+    : words.animate([{ clipPath: 'inset(-6px 100% -6px -6px)', opacity: 1 }, { clipPath: SHOWN, opacity: 1 }], { duration: 520, easing: 'cubic-bezier(0.45, 0, 0.3, 1)', fill: 'both' });
+  await back.finished;
+  out.cancel();
+  back.cancel();
+}));
 copy?.addEventListener('click', async () => {
   try {
     await navigator.clipboard.writeText(copy.dataset.copy);
-    copy.textContent = 'copied ✓';
+    write('copied ✓');
   } catch {
-    copy.textContent = copy.dataset.copy;
+    write(copy.dataset.copy);
   }
   clearTimeout(copy.reset);
-  copy.reset = setTimeout(() => (copy.textContent = 'or copy the address'), 2400);
+  copy.reset = setTimeout(() => write('or copy the address'), 2400);
 });
 
 // ---------- knocking at the door
@@ -298,7 +318,6 @@ function paintAt(px, py) {
   }
   return { x: c.offsetLeft + ox + px * k, y: c.offsetTop + oy + py * k, k };
 }
-const doorAt = () => paintAt(620, 292);
 // a sound, written rather than heard: a word that pops off a spot and floats away
 function sfx(host, at, text, { spread = 30, cls = '' } = {}) {
   const el = h('span', { class: `say sfx ${cls}`, 'aria-hidden': 'true' }, text);
@@ -308,18 +327,27 @@ function sfx(host, at, text, { spread = 30, cls = '' } = {}) {
   host.append(el);
   setTimeout(() => el.remove(), 1400);
 }
-function say(text, { kind = 'speech', ms = 2600, dx = 0, dy = 0 } = {}) {
-  const d = doorAt();
+// whoever answers speaks in the same painted bubble, its tail always on the same spot just
+// up and right of the door (TAIL px in from the bubble's left edge, unless it had to slide)
+const mouthAt = () => paintAt(642, 254);
+const TAIL = 18;
+const VOICE = { speech: { ink: '2b231c', tint: 'E9B93A', tintA: 0.14 }, angry: { ink: '8e2a18', tint: 'C4503B', tintA: 0.22 } };
+let said = 0;
+function say(text, { kind = 'speech', ms = 2600 } = {}) {
+  const at = mouthAt();
   const el = h('span', { class: `say ${kind}`, role: 'status' }, text);
-  el.style.left = `${d.x + (dx + 26) * d.k}px`;
-  el.style.top = `${d.y + (dy - 48) * d.k}px`;
+  el.style.left = `${at.x - TAIL}px`;
+  el.style.top = `${at.y}px`;
   hillFigEl.append(el);
   // keep it on the page: slide it left if it would run off the painting's right side
+  let tail = TAIL;
   const over = el.offsetLeft + el.offsetWidth - (hillFigEl.clientWidth - 8);
   if (over > 0) {
     el.style.left = `${el.offsetLeft - over}px`;
-    el.style.setProperty('--tail', `${Math.min(over, el.offsetWidth - 40)}px`);
+    tail += over;
   }
+  el.style.setProperty('--tail', `${tail}px`);
+  el.style.backgroundImage = bubble({ w: el.offsetWidth, h: el.offsetHeight, tail, seed: 7 + said++ * 13, ...VOICE[kind] });
   const gone = setTimeout(() => el.classList.add('gone'), ms);
   const removed = setTimeout(() => el.remove(), ms + 600);
   // take it down early, e.g. when what's said next would sit on top of it
@@ -347,7 +375,7 @@ function knockAt() {
     door.bubble?.hush();
     setTimeout(() => {
       hill.fire('slam');
-      say('WHAT?!', { kind: 'angry', ms: 1100, dx: -6, dy: -6 });
+      say('WHAT?!', { kind: 'angry', ms: 1100 });
       // the slam shakes a few leaves off the tree
       setTimeout(() => hill.fire('shake'), 1450);
       setTimeout(() => (door = { state: 'idle', knocks: 0, timer: 0 }), 2600);
@@ -433,5 +461,41 @@ function apply(next) {
   for (const m of [hill, gate]) { m.set('season', state.season); m.set('time', state.time); }
 }
 
+// ---------- getting about: the signpost's arms (and "back to the signpost") jump within
+// the page without writing #room into the address, so the address stays the hill's own and
+// Back leaves the hill rather than retracing every jump. A #room someone links to still
+// works: the browser goes there, then the address is tidied. Coming back from a post
+// (post.js leaves a note) lands on the bookshelves the same way.
+
+function goTo(id, { smooth = true } = {}) {
+  const target = document.getElementById(id);
+  if (!target) return;
+  target.scrollIntoView({ behavior: smooth ? 'smooth' : 'instant', block: 'start' });
+  // keyboard and screen-reader users land where they jumped, as with a real #link
+  if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+  target.focus({ preventScroll: true });
+}
+document.addEventListener('click', (e) => {
+  const a = e.target.closest?.('a[href^="#"]');
+  if (!a || e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+  const id = a.getAttribute('href').slice(1);
+  if (!document.getElementById(id)) return;
+  e.preventDefault();
+  goTo(id);
+});
+let returnTo = null;
+try {
+  returnTo = sessionStorage.getItem('shire-ii:to');
+  sessionStorage.removeItem('shire-ii:to');
+} catch {}
+if (returnTo) goTo(returnTo, { smooth: false });
+const tidy = () => location.hash && history.replaceState(history.state, '', location.pathname + location.search);
+
 // once the page has arrived (and any #section in the URL is in place), the signpost's jumps glide
-addEventListener('load', () => requestAnimationFrame(() => document.documentElement.classList.add('settled')));
+addEventListener('load', () => requestAnimationFrame(() => {
+  document.documentElement.classList.add('settled');
+  // the fonts may have moved things since the first jump; land on it again, then tidy the address
+  if (returnTo) goTo(returnTo, { smooth: false });
+  tidy();
+}));
+addEventListener('hashchange', tidy);

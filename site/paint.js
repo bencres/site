@@ -337,3 +337,35 @@ export function letter({ seed = 1, tint = 'C0603E' }) {
 <path d='${rules}' stroke='#${INK}' stroke-opacity='.16' stroke-width='.8' fill='none'/>
 </svg>`;
 }
+
+/**
+ * A speech bubble from whoever's behind the door, `w` × `h` px with its tail in the
+ * bottom 12px, its tip at (`tail`, h). Paper, a pooled wash and a hand-ruled ink
+ * edge, as a background image sized to the words; angry is the same in red ink.
+ */
+export function bubble({ w, h, tail = 16, seed = 1, ink = INK, tint = 'E9B93A', tintA = 0.14 }) {
+  const r = rng(seed);
+  const T = 12;
+  const x0 = 1.5, y0 = 1.5, x1 = w - 1.5, y1 = h - T;
+  const R = Math.min(15, (y1 - y0) / 2.2);
+  // the tail leans back toward its tip, from a base on the bottom edge
+  const tip = Math.max(x0 + 2, Math.min(x1 - 30, tail));
+  const b0 = Math.max(x0 + R * 0.7, Math.min(x1 - R - 16, tip + 3));
+  const b1 = b0 + 15;
+  const j = (k = 0.7) => r.jit(k);
+  const mid = (a, b) => (a + b) / 2;
+  const d = `M${f(x0 + R)} ${f(y0 + j())}L${f(mid(x0, x1))} ${f(y0 + j(1))}L${f(x1 - R)} ${f(y0 + j())}`
+    + `Q${f(x1 + j())} ${f(y0 + j())} ${f(x1 + j(0.4))} ${f(y0 + R)}L${f(x1 + j(1))} ${f(mid(y0, y1))}L${f(x1 + j(0.4))} ${f(y1 - R)}`
+    + `Q${f(x1 + j())} ${f(y1 + j())} ${f(x1 - R)} ${f(y1 + j(0.4))}L${f(b1)} ${f(y1 + j(0.4))}`
+    + `L${f(tip + j(0.5))} ${f(h - 1.2)}L${f(b0)} ${f(y1 + j(0.4))}L${f(x0 + R)} ${f(y1 + j(0.4))}`
+    + `Q${f(x0 + j())} ${f(y1 + j())} ${f(x0 + j(0.4))} ${f(y1 - R)}L${f(x0 + j(1))} ${f(mid(y0, y1))}L${f(x0 + j(0.4))} ${f(y0 + R)}`
+    + `Q${f(x0 + j())} ${f(y0 + j())} ${f(x0 + R)} ${f(y0 + j(0.4))}Z`;
+  const glaze = blob(r, w * 0.5, (y0 + y1) / 2, w * 0.4, (y1 - y0) * 0.32, 12, 0.16);
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 ${f(w)} ${f(h)}' width='${f(w)}' height='${f(h)}'>
+<path d='${d}' fill='#FBF6EA'/>
+<path d='${glaze}' fill='#${tint}' fill-opacity='${tintA}'/>
+<path d='${d}' fill='none' stroke='#${ink}' stroke-opacity='.14' stroke-width='3.6' stroke-linejoin='round'/>
+<path d='${d}' fill='none' stroke='#${ink}' stroke-width='1.6' stroke-linejoin='round' stroke-linecap='round'/>
+</svg>`;
+  return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
+}
