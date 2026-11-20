@@ -30,7 +30,7 @@ const ROOMS = [
   { id: 'writing', title: 'Writing', room: 'the bookshelves', mark: mark('m-hatch', hatch({ seed: 4, n: 5, cross: true })),
     items: c.writing.map((w) => `${a(w.url, w.title)}${w.starred ? '<span class="star" title="A favorite"> ✦</span>' : ''} <span class="when">${esc(w.date)}</span>`) },
   { id: 'elsewhere', title: 'Elsewhere', room: 'out the back gate', arm: 'yonder', inline: true, mark: mark('m-spatter', splotch({ seed: 12, dir: -0.5, size: 0.6, spatter: 10 })),
-    items: c.elsewhere.map((l, i) => `<a href="${esc(l.url)}" class="badge" rel="me"><span class="mark-icon">${icon({ kind: l.name.toLowerCase(), seed: 61 + i * 13 })}</span><span class="label">${esc(l.name)}</span></a>`) },
+    items: c.elsewhere.map((l, i) => `<a href="${esc(l.url)}" class="badge" target="_blank" rel="me noopener"><span class="mark-icon">${icon({ kind: l.name.toLowerCase(), seed: 61 + i * 13 })}</span><span class="label">${esc(l.name)}</span></a>`) },
 ];
 // the signpost: an arm for each room (Elsewhere points back over the hill), and one for the post
 const ARMS = [

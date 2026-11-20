@@ -151,7 +151,7 @@ median_lum = np.median(luminance[luminance &gt; <span class="hljs-number">0</spa
     exposure = <span class="hljs-built_in">max</span>(<span class="hljs-number">0.1</span>, <span class="hljs-built_in">min</span>(<span class="hljs-number">10.0</span>, exposure))  <span class="hljs-comment"># Clamp to reasonable range</span></code></pre><figcaption>python</figcaption></figure>
 <p>This normalizes brightness across different HDR files and environments, though minor differences persist. Will come back to this.</p>
 <h3 id="4-problem-caching-thousands-of-assets">4. Problem: Caching thousands of assets</h3>
-<p>I&#39;ve implemented a simple <a href="https://redis.io/glossary/lru-cache/" rel="noopener">LRU cache</a> capped at 200, which is pretty arbitrary, but was chosen for:</p>
+<p>I&#39;ve implemented a simple <a href="https://redis.io/glossary/lru-cache/" target="_blank" rel="noopener">LRU cache</a> capped at 200, which is pretty arbitrary, but was chosen for:</p>
 <p>QPixmap Memory Footprint:</p>
 <ul>
 <li>Each thumbnail is a QPixmap stored in GPU/system memory</li>
@@ -174,16 +174,16 @@ median_lum = np.median(luminance[luminance &gt; <span class="hljs-number">0</spa
 <p>Quick reference for my implementation and some places I read about these concepts.</p>
 <h3 id="universal-asset-browser">Universal Asset Browser</h3>
 <ol>
-<li><a href="https://github.com/pxf-lab/uab/blob/main/src/uab/ui/delegates.py" rel="noopener">Delegates</a></li>
-<li><a href="https://github.com/pxf-lab/uab/blob/main/src/uab/ui/utils.py" rel="noopener">Thumbnail loader interface, local implementation, and HDR/EXR conversion</a></li>
-<li><a href="https://github.com/pxf-lab/uab/blob/main/src/uab/presenters/tab_presenter.py" rel="noopener">Network implementation and usage</a></li>
+<li><a href="https://github.com/pxf-lab/uab/blob/main/src/uab/ui/delegates.py" target="_blank" rel="noopener">Delegates</a></li>
+<li><a href="https://github.com/pxf-lab/uab/blob/main/src/uab/ui/utils.py" target="_blank" rel="noopener">Thumbnail loader interface, local implementation, and HDR/EXR conversion</a></li>
+<li><a href="https://github.com/pxf-lab/uab/blob/main/src/uab/presenters/tab_presenter.py" target="_blank" rel="noopener">Network implementation and usage</a></li>
 </ol>
 <h3 id="pyside6-documentation">PySide6 Documentation</h3>
 <ol>
-<li><a href="https://doc.qt.io/qtforpython-6/PySide6/QtWidgets/QStyledItemDelegate.html" rel="noopener">QStyledItemDelegate</a></li>
-<li><a href="https://stackoverflow.com/a/34558/23048824" rel="noopener">What is a mutex?</a> (this is my first time touching threading)</li>
-<li><a href="https://redis.io/glossary/lru-cache/" rel="noopener">LRU Cache Concept</a> (this is also my first time implementing an LRU cache)</li>
-<li><a href="https://www.geeksforgeeks.org/system-design/lru-cache-implementation/" rel="noopener">LRU Cache Implementation</a></li>
+<li><a href="https://doc.qt.io/qtforpython-6/PySide6/QtWidgets/QStyledItemDelegate.html" target="_blank" rel="noopener">QStyledItemDelegate</a></li>
+<li><a href="https://stackoverflow.com/a/34558/23048824" target="_blank" rel="noopener">What is a mutex?</a> (this is my first time touching threading)</li>
+<li><a href="https://redis.io/glossary/lru-cache/" target="_blank" rel="noopener">LRU Cache Concept</a> (this is also my first time implementing an LRU cache)</li>
+<li><a href="https://www.geeksforgeeks.org/system-design/lru-cache-implementation/" target="_blank" rel="noopener">LRU Cache Implementation</a></li>
 </ol>
 
     </article>

@@ -123,8 +123,9 @@ const marked = new Marked({
     },
     link({ href, title, tokens }) {
       const text = this.parser.parseInline(tokens);
+      // links off the site open in a new tab; the site's own pages open in place
       const external = /^https?:/.test(href);
-      return `<a href="${esc(href)}"${title ? ` title="${esc(title)}"` : ''}${external ? ' rel="noopener"' : ''}>${text}</a>`;
+      return `<a href="${esc(href)}"${title ? ` title="${esc(title)}"` : ''}${external ? ' target="_blank" rel="noopener"' : ''}>${text}</a>`;
     },
   },
 });
