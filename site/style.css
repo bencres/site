@@ -334,7 +334,7 @@ main { margin-top: 30px; }
 @media (prefers-reduced-motion: reduce) { .say { animation: none !important; } }
 
 /* ---- saying hello: a letter, addressed to the hill */
-.intro p.hello { margin-bottom: 10px; }
+.intro p.hello { position: relative; display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 14px; margin-bottom: 10px; }
 .post-desk { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 6px 18px; margin: 0 0 1em; }
 .letter {
   position: relative; display: block; width: min(100%, 340px); aspect-ratio: 2 / 1; container-type: inline-size;
@@ -367,8 +367,8 @@ main { margin-top: 30px; }
   100% { transform: rotate(-1.6deg); opacity: 1; }
 }
 .post-desk { position: relative; }
-.post-desk .copy {
-  padding: 0 0 6px; border: 0; cursor: pointer; margin-bottom: 2px;
+.hello .copy {
+  padding: 0 0 6px; border: 0; cursor: pointer;
   font: 500 18px/1.2 'Caveat', 'Caveat Fallback', cursive; color: var(--soft);
   /* a pencilled wave underneath, drifting along like a slow stream */
   background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6'%3E%3Cpath d='M0 3Q3 .6 6 3T12 3T18 3T24 3' fill='none' stroke='%232b231c' stroke-opacity='.32' stroke-width='1.1'/%3E%3C/svg%3E") repeat-x 0 100% / 24px 6px;
@@ -376,7 +376,7 @@ main { margin-top: 30px; }
   transition: color 0.2s;
 }
 @keyframes drift { to { background-position: 24px 100%; } }
-.post-desk .copy:hover { color: var(--ink); }
+.hello .copy:hover { color: var(--ink); }
 /* "copied", let go as smoke above the button (main.js puff), a letter at a time */
 .puff {
   position: absolute; z-index: 2; display: flex; transform: translate(-50%, -100%); pointer-events: none; white-space: pre;
@@ -384,8 +384,8 @@ main { margin-top: 30px; }
   text-shadow: 0 0 6px rgba(110, 97, 82, 0.35);
 }
 .puff span { display: inline-block; }
-.post-desk .copy:focus-visible { outline: 2px dashed var(--link); outline-offset: 3px; }
+.hello .copy:focus-visible { outline: 2px dashed var(--link); outline-offset: 3px; }
 @media (prefers-reduced-motion: reduce) {
   .letter, .letter:hover { transition: none; transform: rotate(-1.6deg); }
-  .post-desk .copy { animation: none; }
+  .hello .copy { animation: none; }
 }

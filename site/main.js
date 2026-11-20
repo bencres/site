@@ -291,13 +291,13 @@ hello.addEventListener('click', (e) => {
 });
 // or just take the address. The button keeps its words; what it says back rises off it as
 // smoke, each letter drifting up and away from the others as it thins out
-const copy = $('.post-desk .copy');
+const copy = $('.hello .copy');
 function puff(text) {
-  const desk = copy.parentElement;
+  const line = copy.parentElement;
   const cloud = h('span', { class: 'puff', 'aria-hidden': 'true' }, ...[...text].map((ch) => h('span', {}, ch)));
   cloud.style.left = `${copy.offsetLeft + copy.offsetWidth / 2}px`;
   cloud.style.top = `${copy.offsetTop - 4}px`;
-  desk.append(cloud);
+  line.append(cloud);
   const letters = [...cloud.children];
   const mid = (letters.length - 1) / 2;
   const runs = letters.map((el, i) => {
