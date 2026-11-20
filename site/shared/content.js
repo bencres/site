@@ -47,9 +47,9 @@ export const content = {
   writing: [
     { title: "Dynamically loading EXR and HDR files during Qt's paint", date: 'Jan 2026', url: 'blog/008-swe-dynamic-exr-hdr/', local: true },
     { title: 'Universal Asset Browser: plugins, external libraries, and the registry pattern', date: 'Dec 2025', url: 'blog/006-progress-uab-plugins/', local: true, starred: true },
-    { title: 'Universal Asset Browser: GUI enhancements, launcher shenanigans, and a new server/client model', date: 'Nov 2025', url: 'https://bencres.dev/blog/004-progress-uab-gui-enhancements' },
+    { title: 'Universal Asset Browser: GUI enhancements, launcher shenanigans, and a new server/client model', date: 'Nov 2025', url: 'blog/004-progress-uab-gui-enhancements/', local: true },
     { title: 'Universal Asset Browser: browser resize algorithm', date: 'Nov 2025', url: 'blog/003-progress-uab-resize-algorithm/', local: true },
-    { title: 'Houdini 21: how to create a package', date: 'Nov 2025', url: 'https://bencres.dev/blog/001-guide-houdini-package', starred: true },
+    { title: 'Houdini 21: how to create a package', date: 'Nov 2025', url: 'blog/001-guide-houdini-package/', local: true, starred: true },
   ],
 
   elsewhere: [

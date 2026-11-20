@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Houdini 21: How to Create a Package · Ben Cressman</title>
+  <meta name="description" content="A quick guide to creating a Houdini package in Houdini 21 with a custom Python library and Python panel.">
+  <link rel="icon" href="../../../shared/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../../shared/fonts.css">
+  <link rel="stylesheet" href="../../../shared/base.css">
+  <link rel="stylesheet" href="../../../shared/turn.css">
+  <link rel="stylesheet" href="../../post.css">
+  <link rel="stylesheet" href="../../wash.css">
+  <script src="../../../shared/turn.js"></script>
+  <link rel="preload" href="../../../shared/fonts/alegreya.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="modulepreload" href="../../../shared/rive-mount.js">
+</head>
+<body class="paper">
+  <div class="col">
+    <nav class="trail"><a href="../../#writing" class="home">← back to the bookshelves</a></nav>
+    <figure class="sketch"><canvas id="sketch" data-artboard="Pack" aria-hidden="true"></canvas><figcaption>everything in its proper pocket</figcaption></figure>
+    <header class="title">
+      <p class="kicker">from the bookshelves · <time datetime="2025-11-01">November 1, 2025</time></p>
+      <h1>Houdini 21: How to Create a Package</h1>
+      <p class="excerpt">A quick guide to creating a Houdini package in Houdini 21 with a custom Python library and Python panel.</p>
+      <ul class="tags" aria-label="Tags"><li>houdini</li><li>python</li><li>tech art</li></ul>
+    </header>
+    <article class="prose">
+<p>Check out the template <a href="https://github.com/bencres/houdini-package-template" rel="noopener">here</a>.</p>
+<hr>
+<p>There are a bunch of different ways to create one; what I&#39;m going to show here is the easiest for one individual user. You can check out SideFX&#39;s <a href="https://www.sidefx.com/docs/houdini/ref/plugins.html" rel="noopener">Houdini Package documentation</a> for more detailed information.</p>
+<ol>
+<li>Navigate to <code>$HOUDINI_USER_PREF_DIR</code>, a <a href="https://www.sidefx.com/docs/houdini/ref/env.html" rel="noopener">Houdini environment variable</a> and create a <code>packages</code> directory if it doesn&#39;t already exist.</li>
+</ol>
+<blockquote>
+<p>Windows: <code>C:\Users\&lt;your username&gt;\Documents\houdini&lt;version&gt;</code></p>
+</blockquote>
+<blockquote>
+<p>MacOS: <code>~/Library/Preferences/houdini/&lt;version&gt;</code></p>
+</blockquote>
+<ol start="2">
+<li><p>Create a directory to hold your package in the <code>packages</code> directory. Name it whatever you want your package to be named. I&#39;ll use <code>my_package</code>.</p>
+</li>
+<li><p>Create a <code>my_package.json</code> file, named the same as your package directory/package name, and copy/paste the following in, changing <code>my_package</code> to whatever your package is named:</p>
+</li>
+</ol>
+<figure class="pinned code"><pre class="ink-code" tabindex="0"><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;hpath&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;$HOUDINI_USER_PREF_DIR/packages/my_package&quot;</span>
+<span class="hljs-punctuation">}</span></code></pre><figcaption>json</figcaption></figure>
+<p>When Houdini is starting, it will search <code>$HOUDINI_USER_PREF_DIR/packages</code> for <code>.json</code> files and modify <code>$HOUDINI_PATH</code> as described within them. In this case, all we&#39;re doing is letting Houdini know that it needs to look in <code>my_package</code> for stuff, along with its own installation.</p>
+<ol start="4">
+<li><p>Add whatever contents you need to your tool. What we&#39;ll do in this guide is set up a Python panel that talks to a custom Python library. Inside your package, create two directories: <code>python3.11libs</code> and <code>python_panels</code>. Note that these must match the naming conventions in <code>$HFS/houdini</code>, so HDA&#39;s need to go in an <code>otls</code> directory, shelves must go in <code>toolbar</code>, etc.</p>
+</li>
+<li><p>In <code>python3.11libs</code>, create a directory named <code>my_lib</code>. Add an empty <code>__init__.py</code> file and <code>my_script.py</code>, with the following contents:</p>
+</li>
+</ol>
+<figure class="pinned code"><pre class="ink-code" tabindex="0"><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">hello_world</span>():
+    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;Hello, world!&quot;</span></code></pre><figcaption>python</figcaption></figure>
+<ol start="6">
+<li><p>In Houdini, go to Window &gt; Python Panel Editor &gt; New Interface.</p>
+<ul>
+<li>Save To: wherever your package is / python_panels, ex &quot;/Users/Ben/Library/Preferences/packages/my_package/python_panels/my_panel.pypanel&quot;</li>
+<li>Name: my_interface</li>
+<li>Label: My Interface</li>
+<li>Check &quot;Include in Pane Tab Menu&quot;</li>
+<li>Check &quot;Create Preceding Separator&quot;</li>
+<li>Hit Apply</li>
+<li>Hit Accept</li>
+<li>Quit Houdini</li>
+</ul>
+</li>
+<li><p>You should now have a <code>.pypanel</code> file that looks something like this (likely your default script is a little different):</p>
+</li>
+</ol>
+<figure class="pinned code"><pre class="ink-code" tabindex="0"><code class="hljs language-xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;UTF-8&quot;</span>?&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">pythonPanelDocument</span>&gt;</span>
+  <span class="hljs-comment">&lt;!-- This file contains definitions of Python interfaces and the
+ interfaces menu.  It should not be hand-edited when it is being
+ used by the application.  Note, that two definitions of the
+ same interface or of the interfaces menu are not allowed
+ in a single file. --&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">interface</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;my_interface&quot;</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;My Interface&quot;</span> <span class="hljs-attr">icon</span>=<span class="hljs-string">&quot;MISC_python&quot;</span> <span class="hljs-attr">showNetworkNavigationBar</span>=<span class="hljs-string">&quot;false&quot;</span> <span class="hljs-attr">help_url</span>=<span class="hljs-string">&quot;&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript">&lt;![<span class="hljs-variable constant_">CDATA</span>[########################################################################
+########################################################################
+# <span class="hljs-title class_">Replace</span> the sample code below <span class="hljs-keyword">with</span> your own to create a
+# <span class="hljs-title class_">PySide</span> interface.  <span class="hljs-title class_">Your</span> code must define an
+# <span class="hljs-title function_">onCreateInterface</span>() <span class="hljs-keyword">function</span> that returns the root widget <span class="hljs-keyword">of</span>
+# your interface.
+#
+# <span class="hljs-title class_">The</span> <span class="hljs-string">&#x27;hutil.PySide&#x27;</span> is <span class="hljs-keyword">for</span> internal-use only.
+#
+# <span class="hljs-title class_">When</span> developing your own <span class="hljs-title class_">Python</span> <span class="hljs-title class_">Panel</span>, <span class="hljs-keyword">import</span> directly <span class="hljs-keyword">from</span> <span class="hljs-title class_">PySide</span>
+# instead <span class="hljs-keyword">of</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;hutil.PySide&#x27;</span>.
+########################################################################
+
+#
+# <span class="hljs-variable constant_">SAMPLE</span> <span class="hljs-variable constant_">CODE</span>
+#
+<span class="hljs-keyword">from</span> hutil.<span class="hljs-property">PySide</span> <span class="hljs-keyword">import</span> <span class="hljs-title class_">QtWidgets</span>
+
+def <span class="hljs-title function_">onCreateInterface</span>():
+    widget = <span class="hljs-title class_">QtWidgets</span>.<span class="hljs-title class_">QLabel</span>(<span class="hljs-string">&#x27;Hello World!&#x27;</span>)
+    <span class="hljs-keyword">return</span> widget
+
+]]&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">includeInPaneTabMenu</span> <span class="hljs-attr">menu_position</span>=<span class="hljs-string">&quot;0&quot;</span> <span class="hljs-attr">create_separator</span>=<span class="hljs-string">&quot;true&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">includeInToolbarMenu</span> <span class="hljs-attr">menu_position</span>=<span class="hljs-string">&quot;201&quot;</span> <span class="hljs-attr">create_separator</span>=<span class="hljs-string">&quot;false&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">help</span>&gt;</span>&lt;![CDATA[]]&gt;<span class="hljs-tag">&lt;/<span class="hljs-name">help</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">interface</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">pythonPanelDocument</span>&gt;</span></code></pre><figcaption>xml</figcaption></figure>
+<ol start="8">
+<li>Copy/paste this into the script section to replace the current contents, so your new file looks something like this:</li>
+</ol>
+<figure class="pinned code"><pre class="ink-code" tabindex="0"><code class="hljs language-python"><span class="hljs-keyword">from</span> PySide6 <span class="hljs-keyword">import</span> QtWidgets
+<span class="hljs-keyword">from</span> my_houdini_lib <span class="hljs-keyword">import</span> my_script
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">onCreateInterface</span>():
+    <span class="hljs-comment"># Must return the root QtWidget of your pane.</span>
+    widget = QtWidgets.QLabel(my_script.hello_world())
+    <span class="hljs-keyword">return</span> widget</code></pre><figcaption>python</figcaption></figure>
+<hr>
+<figure class="pinned code"><pre class="ink-code" tabindex="0"><code class="hljs language-xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;UTF-8&quot;</span>?&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">pythonPanelDocument</span>&gt;</span>
+  <span class="hljs-comment">&lt;!-- This file contains definitions of Python interfaces and the
+ interfaces menu.  It should not be hand-edited when it is being
+ used by the application.  Note, that two definitions of the
+ same interface or of the interfaces menu are not allowed
+ in a single file. --&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">interface</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;my_interface&quot;</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;My Interface&quot;</span> <span class="hljs-attr">icon</span>=<span class="hljs-string">&quot;MISC_python&quot;</span> <span class="hljs-attr">showNetworkNavigationBar</span>=<span class="hljs-string">&quot;false&quot;</span> <span class="hljs-attr">help_url</span>=<span class="hljs-string">&quot;&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript">&lt;![<span class="hljs-variable constant_">CDATA</span>[
+<span class="hljs-keyword">from</span> <span class="hljs-title class_">PySide6</span> <span class="hljs-keyword">import</span> <span class="hljs-title class_">QtWidgets</span>
+<span class="hljs-keyword">from</span> my_houdini_lib <span class="hljs-keyword">import</span> my_script
+
+def <span class="hljs-title function_">onCreateInterface</span>():
+    # <span class="hljs-title class_">Must</span> <span class="hljs-keyword">return</span> the root <span class="hljs-title class_">QtWidget</span> <span class="hljs-keyword">of</span> your pane.
+    widget = <span class="hljs-title class_">QtWidgets</span>.<span class="hljs-title class_">QLabel</span>(my_script.<span class="hljs-title function_">hello_world</span>())
+    <span class="hljs-keyword">return</span> widget
+]]&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">includeInPaneTabMenu</span> <span class="hljs-attr">menu_position</span>=<span class="hljs-string">&quot;0&quot;</span> <span class="hljs-attr">create_separator</span>=<span class="hljs-string">&quot;true&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">includeInToolbarMenu</span> <span class="hljs-attr">menu_position</span>=<span class="hljs-string">&quot;212&quot;</span> <span class="hljs-attr">create_separator</span>=<span class="hljs-string">&quot;false&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">help</span>&gt;</span>&lt;![CDATA[]]&gt;<span class="hljs-tag">&lt;/<span class="hljs-name">help</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">interface</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">pythonPanelDocument</span>&gt;</span>
+
+</code></pre><figcaption>xml</figcaption></figure>
+<ol start="9">
+<li>Open Houdini and in the menu for a new pane, you&#39;ll see &quot;My Interface&quot;. It displays a label that says &quot;Hello, world!&quot;.</li>
+</ol>
+<p>Now you can write whatever Python logic you&#39;d like in your library and build a UI to interact with it.</p>
+
+    </article>
+    <footer class="end">
+      <p><a href="../../#writing" class="home">← back to the bookshelves</a></p>
+      <p class="write">Thoughts on this one? <a href="mailto:hello@bencres.dev?subject=Houdini%2021%3A%20How%20to%20Create%20a%20Package">Write to me</a>.</p>
+    </footer>
+  </div>
+  <script type="module" src="../../post.js"></script>
+  <script type="module" src="../../../shared/turn-tune.js"></script>
+</body>
+</html>

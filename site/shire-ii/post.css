@@ -110,3 +110,9 @@ a:focus-visible { outline: 2px dashed var(--link); outline-offset: 3px; border-r
 .pinned::before { left: 18px; transform: rotate(-4deg); }
 .pinned::after { right: 18px; transform: rotate(5deg); }
 @media (max-width: 520px) { .pinned { margin: 1.4em -6px 1.6em; } }
+
+/* a quoted aside, ruled in brass; a break between parts, three small stars */
+.prose blockquote { margin: 0 0 1em; padding: 1px 0 1px 16px; border-left: 2px solid rgba(201, 154, 46, 0.55); color: var(--soft); }
+.prose blockquote p { margin: 0.3em 0; }
+.prose hr { border: 0; margin: 1.8em 0; text-align: center; overflow: visible; }
+.prose hr::before { content: '✦ ✦ ✦'; color: var(--brass); font-size: 12px; letter-spacing: 0.9em; }

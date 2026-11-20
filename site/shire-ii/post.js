@@ -18,7 +18,7 @@ await (window.turnSettled || Promise.resolve());
 const sketch = document.getElementById('sketch');
 if (sketch) {
   import('../shared/rive-mount.js')
-    .then(({ mount }) => mount(sketch, { src: 'sketches', artboard: sketch.dataset.artboard, fit: 'contain' }))
+    .then(({ mount }) => mount(sketch, { src: `sketches/${sketch.dataset.artboard.toLowerCase()}`, artboard: sketch.dataset.artboard, fit: 'contain' }))
     .catch((e) => console.warn('the sketch could not be drawn', e));
 }
 
