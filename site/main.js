@@ -289,23 +289,9 @@ hello.addEventListener('click', (e) => {
   setTimeout(() => (location.href = hello.href), 650);
   setTimeout(() => hello.classList.remove('posting'), 2200);
 });
-// or just take the address. The button keeps its words; a pencilled "copied ✓" fades in
-// just after it, rests a moment and fades away (from wherever it had got to, if clicked again)
+// or just take the address. The button keeps its words; "copied!" pops up off it and floats
+// away, the way a knock rises off the door (sfx)
 const copy = $('.hello .copy');
-const note = h('span', { class: 'copied', 'aria-hidden': 'true' });
-copy?.after(note);
-function jot(text) {
-  note.textContent = text;
-  const line = copy.parentElement;
-  // beside the link, or just over it if there's no room left on the line (under it is the letter)
-  const beside = copy.offsetLeft + copy.offsetWidth + 12;
-  const over = beside + note.offsetWidth > line.clientWidth;
-  note.style.left = `${over ? copy.offsetLeft + copy.offsetWidth - note.offsetWidth : beside}px`;
-  note.style.top = `${over ? copy.offsetTop - note.offsetHeight - 2 : copy.offsetTop}px`;
-  const from = +getComputedStyle(note).opacity;
-  note.getAnimations().forEach((a) => a.cancel());
-  note.animate([{ opacity: from }, { opacity: 1, offset: 0.12 }, { opacity: 1, offset: 0.72 }, { opacity: 0 }], { duration: 2200, easing: 'ease-in-out', fill: 'forwards' });
-}
 // the clipboard API, or the old way for browsers that don't allow it here
 async function take(text) {
   try {
@@ -325,7 +311,10 @@ const heard = h('span', { class: 'visually-hidden', role: 'status' });
 copy?.after(heard);
 copy?.addEventListener('click', async () => {
   const ok = await take(copy.dataset.copy);
-  jot(ok ? 'copied ✓' : 'couldn’t copy');
+  // just past the link's end, where the line is empty; over its end if the line has no room
+  const line = copy.parentElement, end = copy.offsetLeft + copy.offsetWidth;
+  const at = end + 70 < line.clientWidth ? { x: end + 34, y: copy.offsetTop + 10, k: 1 } : { x: end - 24, y: copy.offsetTop - 6, k: 1 };
+  sfx(line, at, ok ? 'copied!' : 'couldn’t copy', { spread: 10 });
   heard.textContent = ok ? `Copied ${copy.dataset.copy}` : 'Couldn’t copy the address';
 });
 

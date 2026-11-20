@@ -301,6 +301,8 @@ main { margin-top: 30px; }
 [data-time='dusk'] .say.sfx, [data-time='night'] .say.sfx {
   color: #fdeab8; text-shadow: 0 0 2px rgba(28, 22, 16, 0.9), 0 0 6px rgba(28, 22, 16, 0.7), 0 0 12px rgba(255, 190, 90, 0.35);
 }
+/* off the page rather than the painting ("copied!", "posted!"), it's ink on paper at any hour */
+[data-time] .intro .say.sfx { color: #5a4632; text-shadow: 0 0 2px #f8f2e4, 0 0 5px #f8f2e4, 0 0 9px rgba(248, 242, 228, 0.8); }
 @keyframes knock-word {
   0% { opacity: 0; translate: 0 4px; scale: 0.7; }
   14% { opacity: 1; translate: 0 0; scale: 1.08; }
@@ -378,12 +380,6 @@ main { margin-top: 30px; }
 }
 @keyframes drift { to { background-position: 24px 100%; } }
 .hello .copy:hover { color: var(--ink); }
-/* "copied ✓", pencilled in beside it for a moment (main.js jot) */
-.hello .copied {
-  position: absolute; opacity: 0; pointer-events: none; white-space: nowrap;
-  font: 600 18px/1.2 'Caveat', 'Caveat Fallback', cursive; color: var(--link);
-  transform: rotate(-2.5deg); transform-origin: left center;
-}
 .hello .copy:focus-visible { outline: 2px dashed var(--link); outline-offset: 3px; }
 @media (prefers-reduced-motion: reduce) {
   .letter, .letter:hover { transition: none; transform: rotate(-1.6deg); }
