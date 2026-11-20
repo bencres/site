@@ -341,6 +341,7 @@ main { margin-top: 30px; }
   clip-path: polygon(0 100%, 100% 0, 100% 100%); transform: skewX(-24deg);
 }
 .say.gone { animation: bubble-out 0.5s ease-in both; }
+.say.gone.hushed { animation-duration: 0.2s; }
 @keyframes bubble-in { 0% { opacity: 0; scale: 0.4; } 100% { opacity: 1; scale: 1; } }
 @keyframes bubble-out { to { opacity: 0; translate: 0 -6px; } }
 /* someone very cross */

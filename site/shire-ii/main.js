@@ -272,8 +272,15 @@ function say(text, { kind = 'speech', ms = 2600, dx = 0, dy = 0 } = {}) {
     el.style.left = `${el.offsetLeft - over}px`;
     el.style.setProperty('--tail', `${Math.min(over, el.offsetWidth - 40)}px`);
   }
-  setTimeout(() => el.classList.add('gone'), ms);
-  setTimeout(() => el.remove(), ms + 600);
+  const gone = setTimeout(() => el.classList.add('gone'), ms);
+  const removed = setTimeout(() => el.remove(), ms + 600);
+  // take it down early, e.g. when what's said next would sit on top of it
+  el.hush = () => {
+    clearTimeout(gone);
+    clearTimeout(removed);
+    el.classList.add('gone', 'hushed');
+    setTimeout(() => el.remove(), 250);
+  };
   return el;
 }
 const knockWord = () => sfx(hillFigEl, paintAt(608, 288), 'knock', { spread: 36 });
@@ -285,10 +292,11 @@ function knockAt() {
   knockWord();
   if (door.state === 'idle') {
     door = { state: 'coming', knocks: 0, timer: setTimeout(answer, 3600), regular: knockedThisWeek() >= 3 };
-    setTimeout(() => door.state === 'coming' && say('I’m coming!', { ms: 2200 }), 500);
+    setTimeout(() => door.state === 'coming' && (door.bubble = say('I’m coming!', { ms: 2200 })), 500);
   } else if (door.state === 'coming' && ++door.knocks >= 2) {
     clearTimeout(door.timer);
     door.state = 'angry';
+    door.bubble?.hush();
     setTimeout(() => {
       hill.fire('slam');
       say('WHAT?!', { kind: 'angry', ms: 1100, dx: -6, dy: -6 });
