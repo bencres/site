@@ -289,8 +289,8 @@ hello.addEventListener('click', (e) => {
   setTimeout(() => (location.href = hello.href), 650);
   setTimeout(() => hello.classList.remove('posting'), 2200);
 });
-// or just take the address. The button keeps its words; "copied!" pops up off it and floats
-// away, the way a knock rises off the door (sfx)
+// or just take the address. The button keeps its words; "copied!" pops up somewhere around it
+// and floats away, the way a knock rises off the door (sfx)
 const copy = $('.hello .copy');
 // the clipboard API, or the old way for browsers that don't allow it here
 async function take(text) {
@@ -309,12 +309,25 @@ async function take(text) {
 // the smoke is for the eye; a screen reader is told in words
 const heard = h('span', { class: 'visually-hidden', role: 'status' });
 copy?.after(heard);
+let lastTurn = Math.random();
 copy?.addEventListener('click', async () => {
   const ok = await take(copy.dataset.copy);
-  // just past the link's end, where the line is empty; over its end if the line has no room
-  const line = copy.parentElement, end = copy.offsetLeft + copy.offsetWidth;
-  const at = end + 70 < line.clientWidth ? { x: end + 34, y: copy.offsetTop + 10, k: 1 } : { x: end - 24, y: copy.offsetTop - 6, k: 1 };
-  sfx(line, at, ok ? 'copied!' : 'couldn’t copy', { spread: 10 });
+  const word = ok ? 'copied!' : 'couldn’t copy';
+  // somewhere around the link, just clear of it: anywhere on a ring about its middle, never
+  // twice in the same quarter, and kept on the page at the sides
+  const line = copy.parentElement, half = word.length * 4.5;
+  const cx = copy.offsetLeft + copy.offsetWidth / 2, cy = copy.offsetTop + copy.offsetHeight / 2;
+  const turn = (lastTurn + 0.25 + Math.random() * 0.5) % 1;
+  lastTurn = turn;
+  const ring = turn * 2 * Math.PI;
+  let x = cx + Math.cos(ring) * (copy.offsetWidth / 2 + half + 4);
+  let y = cy + Math.sin(ring) * (copy.offsetHeight / 2 + 12);
+  const kept = Math.min(Math.max(x, half + 4), line.clientWidth - half - 4);
+  // pulled back over the link by the page's edge: lift it above, or drop it below, instead
+  if (Math.abs(kept - x) > 8) y = cy + Math.sign(Math.sin(ring) || 1) * (copy.offsetHeight / 2 + 12);
+  x = kept;
+  const at = { x, y, k: 1 };
+  sfx(line, at, word, { spread: 0 });
   heard.textContent = ok ? `Copied ${copy.dataset.copy}` : 'Couldn’t copy the address';
 });
 
