@@ -18,14 +18,14 @@ export const content = {
   now: {
     updated: 'November 2026',
     items: [
-      "I'm a senior engineer at The Axle Group solving problems for lenders.",
+      "I'm a senior engineer at The Axle Group building products and solving problems for lenders.",
       "I'm an adjunct professor at UTD teaching a tools development course that I developed with Prof. Nelson Lim.",
     ],
   },
 
   work: [
     { name: 'The Axle Group', role: 'Software Engineer III', when: 'Aug 2026 – present', url: '#', blurb: 'Shipping fintech applications from idea to launch with Next.js and AWS.', tags: ['Python', 'Next.js', 'TypeScript', 'AWS', 'PostgreSQL', 'Docker'] },
-    { name: 'UT Dallas', role: 'Lecturer', when: 'Aug 2026 – present', url: '#' },
+    { name: 'UT Dallas', role: 'Adjunct Professor', when: 'Aug 2026 – present', url: '#' },
     { name: 'The Axle Group', role: 'Software Engineer II', when: 'Mar – Aug 2026', url: '#', blurb: 'Shipping fintech applications from idea to launch with Next.js and AWS.', tags: ['Python', 'Next.js', 'TypeScript', 'AWS', 'PostgreSQL', 'Docker'] },
     { name: 'HytaleModding', role: 'Freelance full-stack developer', when: 'Dec 2025 – Mar 2026', url: 'https://hytalemodding.dev/', blurb: 'Shipped hytalemodding.dev as one of two front-end engineers, plus several real-time server back-ends in Python, FastAPI, Redis and Docker.', tags: ['TypeScript', 'Next.js', 'Python'] },
     { name: 'Pixel Foundry', role: 'Tools Developer', when: 'Aug 2025 – Mar 2026', url: 'https://github.com/pxf-lab', blurb: "Developed the photo-real effects and photogrammetry pipeline, including the environment launcher and a variety of small scripts and tools.", tags: ['Python', 'SQL', 'Houdini', 'Nuke', 'Maya', 'Unreal'] },
@@ -41,7 +41,6 @@ export const content = {
     { name: 'Grimhook', blurb: 'shaders and tools for a hand-painted bullet-hell', url: 'https://store.steampowered.com/app/2667430/Grimhook/', description: 'Technical artist on Grimhook at Unlimited Fries: tools and shaders like a fast Fourier transform ocean and a procedural hand-painted generator.', tags: ['Python', 'HLSL', 'Unreal'] },
     { name: 'HytaleModding', blurb: 'the home of a 10,000-developer modding community', url: 'https://hytalemodding.dev/', description: "HytaleModding's main site: docs, guides, forums, game jams and partner project back-ends for 10,000+ developers modding Hytale.", tags: ['TypeScript', 'Python', 'Next.js', 'React', 'Tailwind', 'nginx', 'Redis', 'Docker', 'FastAPI'], links: [{ label: 'GitHub', url: 'https://github.com/HytaleModding/site' }, { label: 'Live', url: 'https://hytalemodding.dev/' }] },
     { name: 'vfxdirs', blurb: 'a Python library for VFX software paths on any OS', url: 'https://github.com/bencres/vfxdirs', description: 'Easy access to the useful paths of visual effects software on any operating system. Implements common packages and is easily extensible with others. Work in progress.', tags: ['Python', 'WIP'] },
-    { name: 'Pixel Foundry Environment Manager', blurb: "the effects pipeline's environment manager, open source soon", url: '#', description: "The Pixel Foundry's photo-real effects and photogrammetry environment manager, integrated with Houdini for the studio's environment variable scheme.", tags: ['Python', 'Houdini', 'Nuke'] },
     { name: 'Death Bloom', blurb: 'lead artist on a realistic horror game', url: 'https://www.atec-animgames.com/game-lab', description: 'Lead artist on Death Bloom at UTD: art direction, tools and shaders, and a team of 13 artists.', tags: ['Python', 'HLSL', 'Unreal'], links: [{ label: 'Play', url: 'https://www.atec-animgames.com/game-lab' }, { label: 'Trailer', url: 'https://vimeo.com/825557758' }] },
   ],
 
