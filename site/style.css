@@ -369,6 +369,7 @@ main { margin-top: 30px; }
 .post-desk { position: relative; }
 .hello .copy {
   padding: 0 0 6px; border: 0; cursor: pointer;
+  transform: rotate(-2.5deg) translateY(-1px); transform-origin: left center; /* jotted in beside the line, a little askew */
   font: 500 18px/1.2 'Caveat', 'Caveat Fallback', cursive; color: var(--soft);
   /* a pencilled wave underneath, drifting along like a slow stream */
   background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6'%3E%3Cpath d='M0 3Q3 .6 6 3T12 3T18 3T24 3' fill='none' stroke='%232b231c' stroke-opacity='.32' stroke-width='1.1'/%3E%3C/svg%3E") repeat-x 0 100% / 24px 6px;
