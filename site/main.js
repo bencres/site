@@ -12,8 +12,9 @@ const $ = (s) => document.querySelector(s);
 const params = new URLSearchParams(location.search);
 const urlPreview = ['season', 'time', 'day'].some((k) => params.has(k));
 
-// third visit and after: the hill knows you (a doormat appears, the sign changes,
-// and the arm you took last time has a tick inked beside it)
+// third visit and after: the hill knows you (a doormat appears, and the arm you took
+// last time has a tick inked beside it). Only the door says so out loud, when a regular
+// knocks (answer()), so that's the one place it's said
 let visits = 0, lastArm = null;
 try {
   visits = +localStorage.getItem('shire-ii:visits') || 0;
@@ -173,7 +174,6 @@ function paint(next) {
   root.dataset.time = time;
   let sign = SIGN[time];
   if (season === 'winter' && (time === 'day' || time === 'afternoon')) sign = 'Knock the snow off your boots and come in.';
-  if (regular) sign = 'Oh, it’s you again. You know the way in.';
   $('#sign-text').textContent = `${sign} ${meal(next.hour, time)}`;
   $('#sign').title = SCHEDULE;
   document.querySelectorAll('.room-block .wash').forEach((el, i) => {
@@ -261,9 +261,9 @@ arms.forEach((a, i) => {
 });
 
 // look at the clock again every few minutes; the hill cross-fades if the hour turned.
-// A preview (?season= / ?time= / ?day=) holds.
+// A preview (?season= / ?time= / ?day=, or the almanac's dials) holds.
 setInterval(() => {
-  if (urlPreview) return;
+  if (previewing || ['season', 'time', 'day'].some((k) => params.has(k))) return;
   const next = when();
   if (next.season === state.season && next.time === state.time && meal(next.hour, TIMES[next.time]) === meal(state.hour, TIMES[state.time])) return;
   apply(next);
@@ -428,7 +428,7 @@ function knockedThisWeek() {
 function answer() {
   door.state = 'open';
   hill.fire('welcome');
-  const line = door.regular ? 'Back again? The kettle’s on.' : 'Oh, it’s just you. Welcome in, welcome in…';
+  const line = door.regular ? 'Back again? The kettle’s on.' : 'Oh! A visitor. Welcome in, welcome in…';
   setTimeout(() => say(line, { ms: 3200 }), 500);
   setTimeout(() => (door = { state: 'idle', knocks: 0, timer: 0 }), 5200);
 }
@@ -491,7 +491,91 @@ function apply(next) {
   state = next;
   paint(state);
   for (const m of [hill, gate]) { m.set('season', state.season); m.set('time', state.time); }
+  almanac?.show(state);
 }
+
+// ---------- the almanac, for anyone who finds it: double-click (or double-tap) the middle
+// cloud and a card of dials comes up in the corner to paint the hill in any season and light.
+// The dials step through the painting's whole-number poses. The same again, or its ×, puts
+// it away; "back to now" goes back to the visitor's own clock.
+const CLOUDS = [{ x: 402, y: 50, w: 96, h: 26, dx: -20 }, { x: 668, y: 74, w: 86, h: 24, dx: 18 }];
+// the middle one of the three, or on a phone (cropped to the door, the middle one only just
+// showing at the edge) the one in the middle of what's showing
+const cloud = () => CLOUDS[phone.matches ? 1 : 0];
+function onCloud(e) {
+  const c = cloud(), r = hillFigEl.getBoundingClientRect();
+  const a = paintAt(Math.min(c.x, c.x + c.dx) - c.w / 2 - 10, c.y - c.h - 12), b = paintAt(Math.max(c.x, c.x + c.dx) + c.w / 2 + 10, c.y + 12);
+  const x = e.clientX - r.left, y = e.clientY - r.top;
+  return x >= a.x && x <= b.x && y >= a.y && y <= b.y;
+}
+let tapped = null;
+hillFigEl.addEventListener('pointerup', (e) => {
+  if (e.target.closest('a, button') || !onCloud(e)) return (tapped = null);
+  if (tapped && e.timeStamp - tapped.t < 450 && Math.hypot(e.clientX - tapped.x, e.clientY - tapped.y) < 40) {
+    tapped = null;
+    almanac.toggle();
+  } else tapped = { t: e.timeStamp, x: e.clientX, y: e.clientY };
+});
+
+let previewing = false;
+const almanac = (() => {
+  const SEASON_WORD = ['spring', 'summer', 'autumn', 'winter'];
+  const TIME_WORD = ['morning', 'midday', 'afternoon', 'dusk', 'night'];
+  let card = null;
+  const dial = (name, max) => {
+    const word = h('b');
+    const input = h('input', { type: 'range', min: 0, max, step: 1, 'aria-label': name });
+    input.addEventListener('input', scrub);
+    return { word, input, label: h('label', {}, h('span', {}, `${name} `, word), input) };
+  };
+  let season, time, now;
+  function build() {
+    season = dial('season', 3);
+    time = dial('time', 4);
+    now = h('button', { type: 'button', class: 'now' }, 'back to now');
+    now.addEventListener('click', () => {
+      previewing = false;
+      for (const k of ['season', 'time', 'day']) params.delete(k);
+      history.replaceState(history.state, '', location.pathname);
+      apply(when());
+      card.classList.remove('moved');
+    });
+    const shut = h('button', { type: 'button', class: 'shut', 'aria-label': 'Put the almanac away' }, '×');
+    shut.addEventListener('click', () => toggle(false));
+    card = h('aside', { class: 'almanac', 'aria-label': 'Preview a season and time' }, shut, h('p', { class: 'head' }, 'season & time'), season.label, time.label, now);
+    card.addEventListener('keydown', (e) => e.key === 'Escape' && toggle(false));
+    if (urlPreview) card.classList.add('moved');
+    document.body.append(card);
+    show(state);
+    void card.offsetWidth;
+  }
+  function show(s) {
+    if (!card) return;
+    for (const [d, v, words] of [[season, s.season, SEASON_WORD], [time, s.time, TIME_WORD]]) {
+      d.input.value = v;
+      d.word.textContent = words[v];
+      d.input.setAttribute('aria-valuetext', words[v]);
+    }
+  }
+  function scrub() {
+    const next = { season: +season.input.value, time: +time.input.value, hour: null };
+    previewing = true;
+    card.classList.add('moved');
+    if (next.season === state.season && next.time === state.time) return;
+    apply(next);
+    const q = new URLSearchParams(location.search);
+    q.set('season', SEASONS[next.season]);
+    q.set('time', TIMES[next.time]);
+    q.delete('day');
+    history.replaceState(history.state, '', `?${q}`);
+  }
+  function toggle(open = !card?.classList.contains('open')) {
+    if (!card) build();
+    card.classList.toggle('open', open);
+    card.inert = !open;
+  }
+  return { show, toggle };
+})();
 
 // ---------- getting about: the signpost's arms (and "back to the signpost") jump within
 // the page without writing #room into the address, so the address stays the hill's own and

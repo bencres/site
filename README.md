@@ -28,7 +28,7 @@ redirects the old site's addresses: `/shire-ii/…` from the drafts, the posts a
 that were taken down, and `/demo/django-angular`. The résumé PDF stays at its old address, `/ben-cressman-software-engineer.pdf`. The `.br`/`.gz` copies are only for
 `npm run serve` (Vercel compresses on its own); they're generated, so git ignores them.
 
-Preview any season and time with `?season=winter&time=dusk` (seasons: spring, summer, autumn, winter; times: morning, day, afternoon, dusk, night).
+Preview any season and time with `?season=winter&time=dusk` (seasons: spring, summer, autumn, winter; times: morning, day, afternoon, dusk, night). Or double-click (double-tap on a phone) the middle cloud over the hill: a card of season and time dials comes up in the bottom-left corner; the same again, or its ×, puts it away.
 
 ## How it's put together
 

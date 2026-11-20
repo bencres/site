@@ -75,6 +75,8 @@ a:focus-visible { outline: 2px dashed var(--link); outline-offset: 3px; border-r
 .hill.stilled canvas { transition: none; opacity: 1; }
 .gate.glazed::before { opacity: 0.6; }
 .hill canvas { width: 100%; aspect-ratio: 900 / 400; height: auto; }
+/* a double-tap on the painting is for the cloud (the almanac, main.js), not a zoom */
+.hill { touch-action: manipulation; }
 /* the finished painting as a picture, over the canvas until the live one takes over:
    framed as the canvas is (filling it here; cropped to cover, anchored right, on phones) */
 .hill .still {
@@ -384,4 +386,39 @@ main { margin-top: 30px; }
 @media (prefers-reduced-motion: reduce) {
   .letter, .letter:hover { transition: none; transform: rotate(-1.6deg); }
   .hello .copy { animation: none; }
+}
+
+/* ---- the almanac: a card of dials in the corner, found by double-clicking the middle cloud
+   (main.js). It settles in and lifts away rather than blinking on and off */
+.almanac {
+  position: fixed; left: 14px; bottom: 14px; z-index: 150; width: 214px;
+  display: grid; gap: 6px; padding: 10px 12px 9px;
+  background: color-mix(in srgb, var(--paper) 94%, white); border: 1px solid rgba(43, 35, 28, 0.28);
+  border-radius: 3px 6px 4px 5px; box-shadow: 1px 2px 0 rgba(43, 35, 28, 0.12);
+  font: 600 17px/1 'Caveat', 'Caveat Fallback', cursive; color: var(--ink);
+  opacity: 0; visibility: hidden; transform: translateY(10px) rotate(0.8deg);
+  transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.34, 1.4, 0.64, 1), visibility 0s 0.4s;
+}
+.almanac.open { opacity: 1; visibility: visible; transform: rotate(-0.6deg); transition-delay: 0s; }
+.almanac .head { margin: 0 0 4px; padding-right: 22px; color: var(--soft); font-weight: 500; }
+.almanac .shut {
+  position: absolute; top: 2px; right: 4px; width: 26px; height: 26px; padding: 0; border: 0; background: none; cursor: pointer;
+  font: 500 24px/1 'Caveat', 'Caveat Fallback', cursive; color: var(--soft); transition: color 0.2s, transform 0.3s;
+}
+.almanac .shut:hover { color: var(--ink); transform: rotate(90deg); }
+.almanac label { display: grid; gap: 2px; margin-bottom: 6px; }
+.almanac label span { display: flex; justify-content: space-between; }
+.almanac b { font-weight: 500; color: var(--soft); }
+.almanac input[type='range'] { width: 100%; margin: 0; accent-color: #8a6a3c; }
+.almanac .now {
+  justify-self: start; padding: 0; border: 0; background: none; cursor: pointer;
+  font: 500 15px/1 'Caveat', 'Caveat Fallback', cursive; color: var(--soft); text-decoration: underline wavy rgba(43, 35, 28, 0.3);
+  /* folded away until the dials have moved, then it opens out below them */
+  max-height: 0; margin-top: -6px; overflow: hidden;
+  opacity: 0; visibility: hidden; transition: opacity 0.3s, max-height 0.3s, margin-top 0.3s, visibility 0s 0.3s;
+}
+.almanac.open.moved .now { max-height: 1.2em; margin-top: 0; opacity: 1; visibility: visible; transition-delay: 0s; }
+.almanac :focus-visible { outline: 2px dashed var(--link); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) {
+  .almanac, .almanac.open { transform: rotate(-0.6deg); }
 }
