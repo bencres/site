@@ -25,6 +25,7 @@ export const content = {
 
   work: [
     { name: 'The Axle Group', role: 'Software Engineer III', when: 'Aug 2026 – present', url: '#', blurb: 'Shipping fintech applications from idea to launch with Next.js and AWS.', tags: ['Python', 'Next.js', 'TypeScript', 'AWS', 'PostgreSQL', 'Docker'] },
+    { name: 'UT Dallas', role: 'Lecturer', when: 'Aug 2026 – present', url: '#' },
     { name: 'The Axle Group', role: 'Software Engineer II', when: 'Mar – Aug 2026', url: '#', blurb: 'Shipping fintech applications from idea to launch with Next.js and AWS.', tags: ['Python', 'Next.js', 'TypeScript', 'AWS', 'PostgreSQL', 'Docker'] },
     { name: 'HytaleModding', role: 'Freelance full-stack developer', when: 'Dec 2025 – Mar 2026', url: 'https://hytalemodding.dev/', blurb: 'Shipped hytalemodding.dev as one of two front-end engineers, plus several real-time server back-ends in Python, FastAPI, Redis and Docker.', tags: ['TypeScript', 'Next.js', 'Python'] },
     { name: 'Pixel Foundry', role: 'Tools Developer', when: 'Aug 2025 – Mar 2026', url: 'https://github.com/pxf-lab', blurb: "Developed the photo-real effects and photogrammetry pipeline, including the environment launcher and a variety of small scripts and tools.", tags: ['Python', 'SQL', 'Houdini', 'Nuke', 'Maya', 'Unreal'] },
