@@ -2,12 +2,206 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Ben Cressman</title>
   <link rel="icon" href="shared/favicon.svg" type="image/svg+xml">
-  <meta http-equiv="refresh" content="0; url=shire-ii/">
-  <link rel="canonical" href="shire-ii/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ben Cressman</title>
+  <meta name="description" content="Software engineer in Dallas, shipping fintech from idea to launch.">
+  <link rel="canonical" href="https://bencres.dev/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Ben Cressman">
+  <meta property="og:description" content="Software engineer in Dallas, shipping fintech from idea to launch.">
+  <meta property="og:url" content="https://bencres.dev/">
+  <meta property="og:image" content="https://bencres.dev/og.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <script defer src="/_vercel/insights/script.js"></script>
+  <link rel="preload" href="shared/fonts/alegreya.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="shared/fonts/caveat.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="shared/fonts.css">
+  <link rel="stylesheet" href="shared/base.css">
+  <link rel="stylesheet" href="shared/turn.css">
+  <script src="shared/turn.js"></script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="wash.css">
+  <link rel="modulepreload" href="main.js">
+  <link rel="modulepreload" href="shared/rive-mount.js">
+  <link rel="modulepreload" href="shared/content.js">
+  <link rel="modulepreload" href="paint.js">
+  <link rel="modulepreload" href="when.js">
 </head>
-<body>
-  <p><a href="shire-ii/">Ben Cressman</a></p>
+<body class="paper">
+  <!-- The words below are rendered from site/shared/content.js by scripts/build-page.mjs
+       (npm run build:page); edit the copy there, not between the build markers. -->
+  <div class="col">
+    <header id="top"><h1 class="visually-hidden" id="name"><!-- build:name -->Ben Cressman<!-- /build:name --></h1></header>
+
+    <figure class="hill">
+      <img class="still" alt="" fetchpriority="high" onerror="this.remove()">
+      <!-- build:still --><script>(() => {
+const SEASONS = ['spring', 'summer', 'autumn', 'winter'];
+const TIMES = ['morning', 'day', 'afternoon', 'dusk', 'night'];
+
+function when(params = new URLSearchParams(location.search), now = new Date()) {
+  let month = now.getMonth();
+  let hours = now.getHours() + now.getMinutes() / 60;
+  const day = params.get('day')?.match(/^(\d{1,2})-(\d{1,2})$/);
+  if (day) month = Math.min(11, Math.max(0, +day[1] - 1));
+  let season = [3, 3, 0, 0, 0, 1, 1, 1, 2, 2, 2, 3][month];
+  if (SEASONS.includes(params.get('season'))) season = SEASONS.indexOf(params.get('season'));
+  const t = params.get('time') || '';
+  const hm = t.match(/^(\d{1,2}):(\d{2})$/);
+  if (hm) hours = +hm[1] + +hm[2] / 60;
+  // the light keeps different hours through the year
+  const dawn = [5.5, 5, 6.5, 7.25][season];
+  const golden = [16.5, 17.5, 15.5, 14.5][season];
+  const dusk = [18.75, 19.75, 17.5, 16.5][season];
+  const night = dusk + 2.25;
+  let time = hours >= night || hours < dawn ? 4 : hours >= dusk ? 3 : hours >= golden ? 2 : hours >= 10 ? 1 : 0;
+  if (TIMES.includes(t)) time = TIMES.indexOf(t);
+  // the clock's hour, unless a named time (?time=day) stands in for it
+  return { season, time, hour: TIMES.includes(t) ? null : hours, elevenses: hours >= 11 && hours < 12 && !TIMES.includes(t) };
+}
+const params = new URLSearchParams(location.search);
+const s = when(params);
+document.documentElement.dataset.season = SEASONS[s.season];
+document.documentElement.dataset.time = TIMES[s.time];
+const still = document.currentScript.previousElementSibling;
+still.src = `stills/${SEASONS[s.season]}-${TIMES[s.time]}.webp`;
+// the still only shows if the live painting isn't there within a moment; on a quick
+// load the painting draws itself in, as it always has, with no picture before it
+const hill = still.closest('.hill');
+setTimeout(() => still.isConnected && !hill.classList.contains('live') && hill.classList.add('stilled'), 650);
+})();</script><!-- /build:still -->
+      <canvas id="hill" aria-hidden="true"></canvas>
+      <nav class="signpost" id="signpost" aria-label="Sections"><!-- build:signpost --><span class="upright" aria-hidden="true"><svg class='paint' viewBox='0 0 26 262' width='26' height='262' overflow='visible' aria-hidden='true' focusable='false'><defs>
+<filter id='du6' x='-6%' y='-20%' width='112%' height='140%'><feTurbulence type='fractalNoise' baseFrequency='0.06' numOctaves='2' seed='7'/><feDisplacementMap in='SourceGraphic' scale='1.4'/></filter>
+<filter id='gu6'><feTurbulence type='fractalNoise' baseFrequency='0.9 0.12' numOctaves='2' seed='7'/><feColorMatrix values='0 0 0 0 .37 0 0 0 0 .29 0 0 0 0 .21 -3 0 0 0 1.4'/><feComposite in2='SourceGraphic' operator='in'/></filter>
+<filter id='bu6' x='-10%' y='-30%' width='120%' height='160%'><feGaussianBlur stdDeviation='1.1'/></filter>
+</defs>
+<g class='soak'>
+<path d='M7.5 12L18.5 12L19 256L6.8 256Z' fill='#B89470' fill-opacity='.92' filter='url(#du6)'/>
+<path d='M7.5 12L18.5 12L19 256L6.8 256Z' filter='url(#gu6)' opacity='.5'/>
+<path d='M5 12L21 12L17 4L9 4Z' fill='#8A6A4A' fill-opacity='.92'/>
+<path d='M11.4 52.4L11.8 70.4M15 110L15.4 128M11.4 172.9L11.8 190.9M15 220.1L15.4 238.1' stroke='#5E554C' stroke-opacity='.55' stroke-width='.9' fill='none'/>
+<path class='bank' d='M-8.1 257.4C-7.8 256.4 -5.6 255.2 -2.7 254.6C0.2 254 5.2 253.7 9.4 253.5C13.6 253.3 18.6 253.1 22.7 253.4C26.8 253.7 32.3 254.6 34 255.4C35.7 256.3 34.1 257.7 32.9 258.6C31.7 259.5 29.5 260.2 27 261C24.4 261.8 21.3 263.1 17.3 263.4C13.4 263.6 7 263.1 3.4 262.5C-0.2 262 -2.3 261 -4.2 260.1C-6.2 259.3 -8.3 258.3 -8.1 257.4Z' fill='#86B35B' fill-opacity='.4' filter='url(#du6)' style='mix-blend-mode:multiply'/>
+</g>
+<g class='ink'><g class='cel c0'><path class='o' pathLength='1' d='M7.4 12C7.3 31.8 6.9 90.3 6.8 131C6.7 171.7 6.8 235.2 6.8 256M18.3 12C18.5 31.8 19.2 90.3 19.3 131C19.4 171.7 18.9 235.2 18.8 256M5.2 11.8L20.8 11.8L16.9 4L9.2 3.7ZM1 258L-4 249M4 259L3.1 247M21 259L23 246M24 258L29.4 250' fill='none' stroke='#2b231c' stroke-opacity='0.18' stroke-width='4.08' filter='url(#bu6)' stroke-linejoin='round' stroke-linecap='round'/><path class='o' pathLength='1' d='M7.4 12C7.3 31.8 6.9 90.3 6.8 131C6.7 171.7 6.8 235.2 6.8 256M18.3 12C18.5 31.8 19.2 90.3 19.3 131C19.4 171.7 18.9 235.2 18.8 256M5.2 11.8L20.8 11.8L16.9 4L9.2 3.7ZM1 258L-4 249M4 259L3.1 247M21 259L23 246M24 258L29.4 250' fill='none' stroke='#2b231c' stroke-width='1.7' stroke-linejoin='round' stroke-linecap='round'/></g><g class='cel c1'><path class='o' pathLength='1' d='M7.8 12C7.7 31.8 7.2 90.3 7.1 131C6.9 171.7 6.9 235.2 6.9 256M18.6 12C18.7 31.8 19.2 90.3 19.3 131C19.3 171.7 19.1 235.2 19.1 256M5.3 12.2L20.7 11.8L16.9 4L8.7 3.8ZM1 258L-4 249M4 259L3.1 247M21 259L23 246M24 258L29.4 250' fill='none' stroke='#2b231c' stroke-opacity='0.18' stroke-width='4.08' filter='url(#bu6)' stroke-linejoin='round' stroke-linecap='round'/><path class='o' pathLength='1' d='M7.8 12C7.7 31.8 7.2 90.3 7.1 131C6.9 171.7 6.9 235.2 6.9 256M18.6 12C18.7 31.8 19.2 90.3 19.3 131C19.3 171.7 19.1 235.2 19.1 256M5.3 12.2L20.7 11.8L16.9 4L8.7 3.8ZM1 258L-4 249M4 259L3.1 247M21 259L23 246M24 258L29.4 250' fill='none' stroke='#2b231c' stroke-width='1.7' stroke-linejoin='round' stroke-linecap='round'/></g><g class='cel c2'><path class='o' pathLength='1' d='M7.7 12C7.6 31.8 7 90.3 6.9 131C6.7 171.7 6.8 235.2 6.7 256M18.5 12C18.6 31.8 19.1 90.3 19.2 131C19.4 171.7 19.2 235.2 19.2 256M5.1 11.9L20.9 11.8L16.8 4.2L8.9 3.8ZM1 258L-4 249M4 259L3.1 247M21 259L23 246M24 258L29.4 250' fill='none' stroke='#2b231c' stroke-opacity='0.18' stroke-width='4.08' filter='url(#bu6)' stroke-linejoin='round' stroke-linecap='round'/><path class='o' pathLength='1' d='M7.7 12C7.6 31.8 7 90.3 6.9 131C6.7 171.7 6.8 235.2 6.7 256M18.5 12C18.6 31.8 19.1 90.3 19.2 131C19.4 171.7 19.2 235.2 19.2 256M5.1 11.9L20.9 11.8L16.8 4.2L8.9 3.8ZM1 258L-4 249M4 259L3.1 247M21 259L23 246M24 258L29.4 250' fill='none' stroke='#2b231c' stroke-width='1.7' stroke-linejoin='round' stroke-linecap='round'/></g></g>
+</svg></span>
+<a href="#now" class="arm r" style="--i:0; --tilt:-2.2deg"><b>Now</b> <small>by the fire</small></a>
+<a href="#work" class="arm r" style="--i:1; --tilt:1.6deg"><b>Work</b> <small>the study</small></a>
+<a href="#projects" class="arm r" style="--i:2; --tilt:-1.1deg"><b>Projects</b> <small>the workshop</small></a>
+<a href="#writing" class="arm r" style="--i:3; --tilt:2.2deg"><b>Writing</b> <small>the bookshelves</small></a>
+<a href="#elsewhere" class="arm l" style="--i:4; --tilt:-2.6deg"><b>Elsewhere</b> <small>yonder</small></a>
+<a href="#callers" class="arm r" style="--i:5; --tilt:5.5deg"><b>Post</b> <small>at the gate</small></a><!-- /build:signpost --></nav>
+      <figcaption class="sign" id="sign"><span id="sign-text"></span><!-- build:flick --><span class="mark m-flick" aria-hidden="true"><svg class='paint' viewBox='0 0 130 50' aria-hidden='true' focusable='false'><defs>
+<filter id='df7' x='-20%' y='-20%' width='140%' height='140%'><feTurbulence type='fractalNoise' baseFrequency='0.09' numOctaves='2' seed='9'/><feDisplacementMap in='SourceGraphic' scale='1.4'/></filter>
+<filter id='bf7' x='-30%' y='-30%' width='160%' height='160%'><feGaussianBlur stdDeviation='2.2'/></filter>
+</defs>
+<g fill='#2b231c' opacity='.82'><path d='M8 30.9C9 30.9 11.8 30.3 13.9 29.9C15.9 29.6 18.3 29.2 20.3 28.9C22.3 28.5 24 28.3 25.9 28C27.7 27.6 29.6 27.2 31.6 26.8C33.5 26.5 35.8 26.1 37.7 25.8C39.6 25.6 41.2 25.4 43.1 25.1C44.9 24.9 46.9 24.5 48.8 24.2C50.7 23.8 52.7 23.4 54.6 23.2C56.5 23 58.2 23.1 60.1 23C62.1 22.8 64.2 22.5 66.1 22.3C68.1 22.1 69.9 22 71.7 21.9C73.6 21.9 75.4 21.9 77.2 22C79 22.1 80.6 22.5 82.5 22.6C84.4 22.8 86.5 22.8 88.5 23C90.5 23.2 92.5 23.4 94.5 23.8C96.5 24.3 98.6 25.2 100.5 25.8C102.4 26.3 103.9 26.6 105.8 27.1C107.7 27.7 110.7 29.1 111.8 29.2C112.9 29.4 113.1 28.7 112.2 28.1C111.3 27.6 108 26.5 106.2 25.9C104.3 25.3 102.8 25.1 100.9 24.5C99 23.9 96.9 23 94.8 22.5C92.8 21.9 90.8 21.6 88.8 21.2C86.8 20.7 84.8 20.3 83 19.8C81.2 19.3 79.6 18.6 77.8 18.2C75.9 17.7 74 17.3 72 17.1C70 16.8 68 16.6 66 16.6C64 16.5 61.9 16.6 59.9 16.5C57.9 16.5 56.1 16.2 54.1 16.3C52 16.4 49.8 16.8 47.7 17.1C45.7 17.3 43.8 17.7 41.9 18.1C40 18.4 38.4 18.6 36.4 19.1C34.4 19.5 32.1 20.1 30.1 20.7C28.1 21.3 26.2 22.1 24.4 22.8C22.6 23.4 21.1 24 19.2 24.7C17.3 25.5 15 26.3 13.1 27.1C11.2 27.9 8.4 28.9 7.6 29.5C6.7 30.2 6.9 30.8 8 30.9Z' filter='url(#df7)'/>
+<circle cx='113' cy='28.7' r='1.9'/><circle cx='120' cy='31.2' r='1.1'/><circle cx='125' cy='32.7' r='.7'/></g></svg></span><!-- /build:flick --></figcaption>
+    </figure>
+
+    <main>
+      <section class="intro" id="intro"><!-- build:intro --><p>Hi, I'm Ben. I'm a software engineer in fintech. Prior, I was a technical artist in visual effects and game development. Here, you'll find whatever's going on in my head and life.</p>
+<p>Say hello any time: <a href="mailto:hello@bencres.dev" class="mail">hello@bencres.dev</a>.</p><!-- /build:intro --></section>
+      <div id="rooms"><!-- build:rooms --><section class="room-block" aria-labelledby="now"><h2 id="now"><span class="wash" aria-hidden="true"></span><span class="title">Now</span><span class="room">by the fire</span><small>updated November 2026</small></h2><ul class="knobs">
+<li>I'm a senior engineer at The Axle Group building products and solving problems for lenders.</li>
+<li>I'm an adjunct professor at UTD teaching a tools development course that I developed with Prof. Nelson Lim.</li>
+</ul></section>
+<section class="room-block" aria-labelledby="work"><h2 id="work"><span class="wash" aria-hidden="true"></span><span class="title">Work</span><span class="room">the study</span><span class="mark m-blot" aria-hidden="true"><svg class='paint' viewBox='0 0 100 100' aria-hidden='true' focusable='false'><defs>
+<filter id='ds1' x='-20%' y='-20%' width='140%' height='140%'><feTurbulence type='fractalNoise' baseFrequency='0.09' numOctaves='2' seed='5'/><feDisplacementMap in='SourceGraphic' scale='3'/></filter>
+<filter id='bs1' x='-30%' y='-30%' width='160%' height='160%'><feGaussianBlur stdDeviation='2.2'/></filter>
+</defs>
+<path d='M44.3 37.8C45.8 37.4 48.4 40.6 50.4 40.8C52.4 41.1 55 38.5 56.2 39.2C57.3 39.8 56.2 43.5 57.3 44.7C58.5 46 62 45.6 63.2 46.8C64.5 48 65.1 50.3 64.7 51.8C64.3 53.3 61.6 54.1 60.7 55.8C59.8 57.4 60.6 61.1 59.1 61.7C57.6 62.3 54 58.9 51.8 59.1C49.7 59.3 48.1 62.6 46.2 62.8C44.4 63 42.2 61.3 40.7 60.1C39.2 59 37.3 57.4 37.3 55.8C37.4 54.1 40.9 52.1 41.1 50.5C41.2 48.9 37.9 47.4 38.1 46.2C38.2 45 40.8 44.6 41.9 43.2C42.9 41.8 42.9 38.2 44.3 37.8Z' fill='#2b231c' opacity='.16' filter='url(#bs1)' transform='translate(1.5 1.5) scale(1.06)' transform-origin='50 50'/>
+<g fill='#2b231c' filter='url(#ds1)'><path d='M44.3 37.8C45.8 37.4 48.4 40.6 50.4 40.8C52.4 41.1 55 38.5 56.2 39.2C57.3 39.8 56.2 43.5 57.3 44.7C58.5 46 62 45.6 63.2 46.8C64.5 48 65.1 50.3 64.7 51.8C64.3 53.3 61.6 54.1 60.7 55.8C59.8 57.4 60.6 61.1 59.1 61.7C57.6 62.3 54 58.9 51.8 59.1C49.7 59.3 48.1 62.6 46.2 62.8C44.4 63 42.2 61.3 40.7 60.1C39.2 59 37.3 57.4 37.3 55.8C37.4 54.1 40.9 52.1 41.1 50.5C41.2 48.9 37.9 47.4 38.1 46.2C38.2 45 40.8 44.6 41.9 43.2C42.9 41.8 42.9 38.2 44.3 37.8Z' opacity='.86'/><path d='M32.8 46.4C33.7 46.5 34.8 47.5 35.3 48.1C35.8 48.8 35.7 49.4 35.8 50.2C35.9 51 36.4 52.4 35.9 52.9C35.3 53.4 33.5 53.1 32.5 53C31.5 52.8 30.5 52.6 29.9 52.1C29.4 51.7 29.3 50.8 29.3 50C29.2 49.3 29.2 48.3 29.8 47.7C30.4 47.1 31.9 46.4 32.8 46.4Z' opacity='.8'/><path d='M31.8 48.3C31.3 48.9 30.1 49 29.3 49.1C28.5 49.2 27.7 49.3 27 49C26.2 48.8 24.8 48.3 24.6 47.7C24.4 47.2 25.4 46.3 26 45.7C26.5 45.2 27 44.6 27.6 44.5C28.3 44.4 29.1 44.7 29.8 44.9C30.6 45.2 31.8 45.4 32.2 46C32.5 46.6 32.3 47.8 31.8 48.3Z' opacity='.8'/><path d='M19.7 58C19.7 57.5 20.3 56.8 20.7 56.6C21.2 56.4 21.9 56.5 22.5 56.6C23.1 56.6 23.9 56.5 24.3 56.8C24.7 57.1 24.9 57.8 24.8 58.3C24.7 58.7 24.2 59.1 23.8 59.4C23.3 59.7 22.7 60.2 22.2 60.2C21.7 60.2 20.9 59.8 20.5 59.4C20.1 59 19.7 58.4 19.7 58Z' opacity='.8'/></g>
+<g fill='#2b231c' opacity='.8'><circle cx='48' cy='96.1' r='0.8'/><circle cx='22.7' cy='85.2' r='0.7'/><circle cx='35.4' cy='90.8' r='0.7'/><circle cx='30.8' cy='45' r='1.1'/><circle cx='22' cy='55' r='1.4'/><circle cx='46.4' cy='71.5' r='1.7'/><circle cx='27.9' cy='65' r='1.8'/><circle cx='45.2' cy='90.2' r='1.4'/><circle cx='32.1' cy='79.8' r='1.5'/><circle cx='13.9' cy='50.6' r='1.6'/><circle cx='16.4' cy='59.6' r='0.6'/><circle cx='31.6' cy='79.4' r='0.7'/><circle cx='30.8' cy='86.7' r='0.6'/><circle cx='45' cy='78.4' r='1.6'/></g>
+<path d='M43.8 44.7C44.5 44.2 46.1 44.3 47.2 44.4C48.3 44.5 49.4 44.7 50.3 45.3C51.2 45.9 52.7 47.1 52.6 47.9C52.4 48.7 50.7 49.5 49.6 50C48.5 50.6 47.3 51.3 46.2 51.3C45 51.3 43.1 50.6 42.5 49.9C41.9 49.2 42.4 47.9 42.6 47.1C42.8 46.2 43 45.1 43.8 44.7Z' fill='#fff' opacity='.07'/></svg></span></h2><ul class="knobs">
+<li><strong>The Axle Group</strong>, Software Engineer III <span class="when">Aug 2026 – present</span></li>
+<li><strong>UT Dallas</strong>, Adjunct Professor <span class="when">Aug 2026 – present</span></li>
+<li><strong>The Axle Group</strong>, Software Engineer II <span class="when">Mar – Aug 2026</span></li>
+<li><strong>HytaleModding</strong>, Freelance full-stack developer <span class="when">Dec 2025 – Mar 2026</span></li>
+<li><strong>Pixel Foundry</strong>, Tools Developer <span class="when">Aug 2025 – Mar 2026</span></li>
+<li><strong>Multimodal Interaction Lab</strong>, Software Engineer <span class="when">Jan – May 2025</span></li>
+<li><strong>UT Dallas</strong>, Python teaching assistant <span class="when">Aug 2023 – May 2026</span></li>
+<li><strong>Unlimited Fries Studios</strong>, Technical artist <span class="when">May – Sep 2023</span></li>
+<li><strong>UT Dallas</strong>, Lead artist <span class="when">Jan – May 2023</span></li>
+</ul></section>
+<section class="room-block" aria-labelledby="projects"><h2 id="projects"><span class="wash" aria-hidden="true"></span><span class="title">Projects</span><span class="room">the workshop</span><span class="mark m-drip" aria-hidden="true"></span></h2><ul class="knobs">
+<li><a href="https://github.com/pxf-lab/uab" target="_blank" rel="noopener">Universal Asset Browser</a>: one asset browser for every content creation app</li>
+<li><a href="https://dl.acm.org/doi/10.1145/3772318.3791596" target="_blank" rel="noopener">SensoryBlox</a>: modular VR controllers with haptic, olfactory, thermal and air feedback (accepted to CHI 2026)</li>
+<li><a href="https://store.steampowered.com/app/2667430/Grimhook/" target="_blank" rel="noopener">Grimhook</a>: shaders and tools for a hand-painted bullet-hell</li>
+<li><a href="https://hytalemodding.dev/" target="_blank" rel="noopener">HytaleModding</a>: the home of a 10,000-developer modding community</li>
+<li><a href="https://github.com/bencres/vfxdirs" target="_blank" rel="noopener">vfxdirs</a>: a Python library for VFX software paths on any OS</li>
+<li><a href="https://www.atec-animgames.com/game-lab" target="_blank" rel="noopener">Death Bloom</a>: lead artist on a realistic horror game</li>
+</ul></section>
+<section class="room-block" aria-labelledby="writing"><h2 id="writing"><span class="wash" aria-hidden="true"></span><span class="title">Writing</span><span class="room">the bookshelves</span><span class="mark m-hatch" aria-hidden="true"><svg class='paint' viewBox='0 0 60 50' aria-hidden='true' focusable='false'><defs>
+<filter id='dh2' x='-20%' y='-20%' width='140%' height='140%'><feTurbulence type='fractalNoise' baseFrequency='0.09' numOctaves='2' seed='4'/><feDisplacementMap in='SourceGraphic' scale='1.2'/></filter>
+<filter id='bh2' x='-30%' y='-30%' width='160%' height='160%'><feGaussianBlur stdDeviation='2.2'/></filter>
+</defs><path d='M17.2 7Q11.5 22.4 8.2 37.8M23.3 8.1Q21.2 22.3 14.3 36.6M32.3 9.1Q27.8 25.6 23.3 42.1M40.7 10.3Q37.6 25.2 31.7 40.2M47.8 7.9Q45.5 24.9 38.8 41.9M4 31.9Q30 19.8 54 13.4' fill='none' stroke='#2b231c' stroke-width='1.7' stroke-linecap='round' opacity='.72' filter='url(#dh2)'/></svg></span></h2><ul class="knobs">
+<li><a href="blog/008-swe-dynamic-exr-hdr/">Dynamically loading EXR and HDR files during Qt's paint</a> <span class="when">Jan 2026</span></li>
+<li><a href="blog/006-progress-uab-plugins/">Universal Asset Browser: plugins, external libraries, and the registry pattern</a><span class="star" title="A favorite"> ✦</span> <span class="when">Dec 2025</span></li>
+<li><a href="blog/004-progress-uab-gui-enhancements/">Universal Asset Browser: GUI enhancements, launcher shenanigans, and a new server/client model</a> <span class="when">Nov 2025</span></li>
+<li><a href="blog/003-progress-uab-resize-algorithm/">Universal Asset Browser: browser resize algorithm</a> <span class="when">Nov 2025</span></li>
+<li><a href="blog/001-guide-houdini-package/">Houdini 21: how to create a package</a><span class="star" title="A favorite"> ✦</span> <span class="when">Nov 2025</span></li>
+</ul></section>
+<section class="room-block" aria-labelledby="elsewhere"><h2 id="elsewhere"><span class="wash" aria-hidden="true"></span><span class="title">Elsewhere</span><span class="room">out the back gate</span><span class="mark m-spatter" aria-hidden="true"><svg class='paint' viewBox='0 0 100 100' aria-hidden='true' focusable='false'><defs>
+<filter id='ds3' x='-20%' y='-20%' width='140%' height='140%'><feTurbulence type='fractalNoise' baseFrequency='0.09' numOctaves='2' seed='12'/><feDisplacementMap in='SourceGraphic' scale='3'/></filter>
+<filter id='bs3' x='-30%' y='-30%' width='160%' height='160%'><feGaussianBlur stdDeviation='2.2'/></filter>
+</defs>
+<path d='M48.7 54.7C47.6 54.5 46.2 55.7 45 55.6C43.7 55.5 41.4 54.9 41.2 54.1C41 53.2 43.3 51.3 44 50.4C44.6 49.5 45 49.4 44.9 48.4C44.9 47.5 43.3 45.7 43.7 44.8C44 43.9 45.7 43.5 46.8 43.2C47.9 43 49.1 43.1 50.2 43.1C51.4 43 53.2 42.4 53.9 43C54.5 43.7 53.2 46.2 54.2 47C55.1 47.7 59.1 47 59.5 47.6C60 48.2 57.3 49.8 56.9 50.8C56.4 51.8 57 52.6 56.7 53.6C56.4 54.5 56 55.8 55.1 56.4C54.2 57 52.6 57.5 51.5 57.2C50.5 57 49.7 55 48.7 54.7Z' fill='#2b231c' opacity='.16' filter='url(#bs3)' transform='translate(1.5 1.5) scale(1.06)' transform-origin='50 50'/>
+<g fill='#2b231c' filter='url(#ds3)'><path d='M48.7 54.7C47.6 54.5 46.2 55.7 45 55.6C43.7 55.5 41.4 54.9 41.2 54.1C41 53.2 43.3 51.3 44 50.4C44.6 49.5 45 49.4 44.9 48.4C44.9 47.5 43.3 45.7 43.7 44.8C44 43.9 45.7 43.5 46.8 43.2C47.9 43 49.1 43.1 50.2 43.1C51.4 43 53.2 42.4 53.9 43C54.5 43.7 53.2 46.2 54.2 47C55.1 47.7 59.1 47 59.5 47.6C60 48.2 57.3 49.8 56.9 50.8C56.4 51.8 57 52.6 56.7 53.6C56.4 54.5 56 55.8 55.1 56.4C54.2 57 52.6 57.5 51.5 57.2C50.5 57 49.7 55 48.7 54.7Z' opacity='.86'/><path d='M62.6 44.9C62.6 45.4 62.4 45.8 62.1 46.2C61.7 46.6 61.1 47.3 60.5 47.3C60 47.4 59.2 46.7 58.8 46.3C58.4 45.9 58 45.4 58.1 45C58.1 44.6 58.5 44 58.9 43.7C59.3 43.5 59.9 43.3 60.4 43.3C61 43.3 61.7 43.3 62.1 43.6C62.5 43.8 62.6 44.5 62.6 44.9Z' opacity='.8'/><path d='M54.1 39.1C53.7 39 53.4 38.6 53.2 38.3C52.9 38 52.5 37.6 52.6 37.2C52.7 36.9 53.2 36.4 53.6 36.3C54 36.1 54.6 36.3 55.1 36.4C55.5 36.5 56.1 36.7 56.3 37C56.5 37.3 56.5 37.8 56.3 38.1C56.2 38.5 55.8 38.8 55.4 38.9C55 39.1 54.4 39.2 54.1 39.1Z' opacity='.8'/><path d='M63.9 40.3C63.7 40.5 63.3 40.7 63 40.7C62.7 40.7 62.3 40.4 62.2 40.1C62 39.9 62.2 39.5 62.3 39.3C62.4 39.1 62.6 38.9 62.9 38.8C63.1 38.6 63.6 38.3 63.8 38.4C64.1 38.4 64.4 38.8 64.6 39.1C64.7 39.3 64.6 39.6 64.5 39.8C64.4 40.1 64.2 40.2 63.9 40.3Z' opacity='.8'/></g>
+<g fill='#2b231c' opacity='.8'><circle cx='64.1' cy='37.6' r='1.6'/><circle cx='57.2' cy='26.7' r='0.9'/><circle cx='60.2' cy='34.2' r='0.6'/><circle cx='61.7' cy='49.6' r='0.6'/><circle cx='69.5' cy='43.4' r='1'/><circle cx='61.9' cy='41' r='0.6'/><circle cx='69.4' cy='41' r='1.6'/><circle cx='66' cy='49.3' r='1.4'/><circle cx='66.7' cy='50.4' r='1.8'/><circle cx='63.7' cy='27' r='0.6'/></g>
+<path d='M49.9 47.3C50.3 47.6 50.6 48.1 50.7 48.6C50.8 49.1 50.8 50.1 50.3 50.4C49.9 50.7 48.6 50.5 47.8 50.4C47.1 50.3 46.2 50.2 45.8 49.9C45.4 49.5 45.3 48.8 45.3 48.3C45.4 47.8 45.6 47.1 46.1 46.8C46.6 46.4 47.6 46.3 48.3 46.4C48.9 46.4 49.5 46.9 49.9 47.3Z' fill='#fff' opacity='.07'/></svg></span></h2><ul class="knobs inline">
+<li><a href="https://github.com/bencres" class="badge" rel="me"><span class="mark-icon"><svg class='paint' viewBox='0 0 56 56' aria-hidden='true' focusable='false'><defs>
+<filter id='di4' x='-6%' y='-20%' width='112%' height='140%'><feTurbulence type='fractalNoise' baseFrequency='0.06' numOctaves='2' seed='61'/><feDisplacementMap in='SourceGraphic' scale='1.6'/></filter>
+<filter id='gi4'><feTurbulence type='fractalNoise' baseFrequency='0.9 0.12' numOctaves='2' seed='61'/><feColorMatrix values='0 0 0 0 .37 0 0 0 0 .29 0 0 0 0 .21 -3 0 0 0 1.4'/><feComposite in2='SourceGraphic' operator='in'/></filter>
+<filter id='bi4' x='-10%' y='-30%' width='120%' height='160%'><feGaussianBlur stdDeviation='1.1'/></filter>
+</defs>
+<clipPath id='ki4'><path d='M6.1 21.2C7 18 8.6 14.5 10.9 12.1C13.2 9.6 16.5 7.5 19.6 6.6C22.7 5.6 26.4 6.2 29.6 6.6C32.9 7 36.1 7.7 38.9 9.1C41.8 10.6 44.9 12.7 46.7 15.3C48.6 17.9 49.7 21.5 50.1 24.7C50.5 27.9 50.2 31.5 49.3 34.6C48.3 37.7 46.6 40.9 44.5 43.4C42.4 45.9 39.5 48.3 36.4 49.6C33.4 50.8 29.6 51 26.3 50.7C22.9 50.4 19.2 49.6 16.5 47.9C13.7 46.2 11.5 43.3 9.6 40.5C7.7 37.8 5.8 34.6 5.2 31.4C4.6 28.2 5.1 24.4 6.1 21.2Z'/></clipPath>
+<g class='soak' filter='url(#di4)'>
+<path d='M6.1 21.2C7 18 8.6 14.5 10.9 12.1C13.2 9.6 16.5 7.5 19.6 6.6C22.7 5.6 26.4 6.2 29.6 6.6C32.9 7 36.1 7.7 38.9 9.1C41.8 10.6 44.9 12.7 46.7 15.3C48.6 17.9 49.7 21.5 50.1 24.7C50.5 27.9 50.2 31.5 49.3 34.6C48.3 37.7 46.6 40.9 44.5 43.4C42.4 45.9 39.5 48.3 36.4 49.6C33.4 50.8 29.6 51 26.3 50.7C22.9 50.4 19.2 49.6 16.5 47.9C13.7 46.2 11.5 43.3 9.6 40.5C7.7 37.8 5.8 34.6 5.2 31.4C4.6 28.2 5.1 24.4 6.1 21.2Z' fill='#3a2f26' fill-opacity='.82'/>
+<path d='M23.5 36.3C20.7 36.6 16 36.2 14.2 34.6C12.5 33 13.8 29.2 13 26.7C12.3 24.1 9 21.3 9.7 19.5C10.4 17.6 15 17.1 17.4 15.6C19.9 14.1 21.9 10.7 24.6 10.3C27.4 9.9 31.3 11.5 33.9 13.2C36.5 14.8 39.7 17.6 40.1 20.1C40.5 22.6 38 25.8 36.5 27.9C34.9 30.1 33.2 31.6 31 33C28.9 34.4 26.2 36 23.5 36.3Z' fill='#5a4a3c' fill-opacity='.5'/>
+<path d='M6.1 21.2C7 18 8.6 14.5 10.9 12.1C13.2 9.6 16.5 7.5 19.6 6.6C22.7 5.6 26.4 6.2 29.6 6.6C32.9 7 36.1 7.7 38.9 9.1C41.8 10.6 44.9 12.7 46.7 15.3C48.6 17.9 49.7 21.5 50.1 24.7C50.5 27.9 50.2 31.5 49.3 34.6C48.3 37.7 46.6 40.9 44.5 43.4C42.4 45.9 39.5 48.3 36.4 49.6C33.4 50.8 29.6 51 26.3 50.7C22.9 50.4 19.2 49.6 16.5 47.9C13.7 46.2 11.5 43.3 9.6 40.5C7.7 37.8 5.8 34.6 5.2 31.4C4.6 28.2 5.1 24.4 6.1 21.2Z' filter='url(#gi4)' opacity='.5'/>
+<g clip-path='url(#ki4)'>
+<path d='M17.9 12.8C19.2 12.2 20.8 18.1 22.5 19C24.2 19.8 26.4 17.8 28.3 17.9C30.1 17.9 32 20.3 33.6 19.4C35.2 18.4 36.7 11.6 37.8 12.1C38.9 12.6 39.9 19.4 40.2 22.4C40.5 25.3 40.6 27.7 39.7 29.6C38.9 31.6 36.5 33.2 35.3 34.2C34 35.1 32.8 32.7 32.3 35.3C31.8 37.9 33.7 47.4 32.2 49.8C30.8 52.2 24.8 52 23.5 49.6C22.1 47.2 24.6 38.1 24 35.5C23.5 32.9 21.4 34.8 20.2 33.8C19 32.8 17.6 31.5 16.7 29.6C15.9 27.6 14.9 25 15.1 22.2C15.3 19.4 16.7 13.3 17.9 12.8Z' fill='#F1E6CB' fill-opacity='.95'/>
+<path d='M24.5 42C20 42 17.5 40.5 15 36.5' fill='none' stroke='#F1E6CB' stroke-opacity='.95' stroke-width='2.6' stroke-linecap='round'/>
+</g>
+</g>
+<g class='ink'><g class='cel c0'><path class='o' pathLength='1' d='M6.3 21.6C7.2 18.5 8.3 14.9 10.6 12.4C12.8 9.9 16.7 7.4 19.9 6.4C23 5.5 26.2 6.4 29.4 6.8C32.7 7.3 36.6 7.6 39.4 9C42.2 10.5 44.4 12.6 46.3 15.3C48.1 18 50.1 21.8 50.5 25.1C51 28.4 49.9 31.8 48.9 34.9C47.9 37.9 46.9 41 44.8 43.4C42.7 45.8 39.4 48.1 36.4 49.3C33.3 50.4 29.9 50.7 26.5 50.4C23.2 50.2 19.1 49.3 16.3 47.7C13.5 46.1 11.6 43.6 9.7 40.8C7.8 38.1 5.6 34.5 5 31.3C4.4 28 5.4 24.7 6.3 21.6Z' fill='none' stroke='#2b231c' stroke-opacity='0.18' stroke-width='3.36' filter='url(#bi4)' stroke-linejoin='round' stroke-linecap='round'/><path class='o' pathLength='1' d='M6.3 21.6C7.2 18.5 8.3 14.9 10.6 12.4C12.8 9.9 16.7 7.4 19.9 6.4C23 5.5 26.2 6.4 29.4 6.8C32.7 7.3 36.6 7.6 39.4 9C42.2 10.5 44.4 12.6 46.3 15.3C48.1 18 50.1 21.8 50.5 25.1C51 28.4 49.9 31.8 48.9 34.9C47.9 37.9 46.9 41 44.8 43.4C42.7 45.8 39.4 48.1 36.4 49.3C33.3 50.4 29.9 50.7 26.5 50.4C23.2 50.2 19.1 49.3 16.3 47.7C13.5 46.1 11.6 43.6 9.7 40.8C7.8 38.1 5.6 34.5 5 31.3C4.4 28 5.4 24.7 6.3 21.6Z' fill='none' stroke='#2b231c' stroke-width='1.4' stroke-linejoin='round' stroke-linecap='round'/></g><g class='cel c1'><path class='o' pathLength='1' d='M5.9 21.6C6.8 18.4 8.4 14.9 10.8 12.3C13.1 9.7 16.9 7.1 20 6.2C23.1 5.3 26.2 6.3 29.3 6.9C32.4 7.4 35.8 8.1 38.6 9.5C41.5 10.8 44.5 12.5 46.5 15C48.4 17.5 49.9 21 50.4 24.2C50.8 27.5 50.2 31.2 49.2 34.4C48.2 37.6 46.7 41 44.5 43.5C42.3 46 39 48.3 35.9 49.5C32.9 50.7 29.5 50.9 26.2 50.6C22.9 50.3 18.8 49.4 16 47.7C13.2 46 11.1 43 9.3 40.2C7.4 37.5 5.6 34.3 5.1 31.2C4.5 28.1 4.9 24.7 5.9 21.6Z' fill='none' stroke='#2b231c' stroke-opacity='0.18' stroke-width='3.36' filter='url(#bi4)' stroke-linejoin='round' stroke-linecap='round'/><path class='o' pathLength='1' d='M5.9 21.6C6.8 18.4 8.4 14.9 10.8 12.3C13.1 9.7 16.9 7.1 20 6.2C23.1 5.3 26.2 6.3 29.3 6.9C32.4 7.4 35.8 8.1 38.6 9.5C41.5 10.8 44.5 12.5 46.5 15C48.4 17.5 49.9 21 50.4 24.2C50.8 27.5 50.2 31.2 49.2 34.4C48.2 37.6 46.7 41 44.5 43.5C42.3 46 39 48.3 35.9 49.5C32.9 50.7 29.5 50.9 26.2 50.6C22.9 50.3 18.8 49.4 16 47.7C13.2 46 11.1 43 9.3 40.2C7.4 37.5 5.6 34.3 5.1 31.2C4.5 28.1 4.9 24.7 5.9 21.6Z' fill='none' stroke='#2b231c' stroke-width='1.4' stroke-linejoin='round' stroke-linecap='round'/></g><g class='cel c2'><path class='o' pathLength='1' d='M6.1 21.7C7.1 18.4 9.1 14.8 11.3 12.2C13.6 9.6 16.6 7.2 19.6 6.2C22.6 5.2 26.2 5.7 29.4 6.2C32.6 6.7 36 7.9 38.8 9.4C41.7 10.9 44.6 12.3 46.5 14.9C48.3 17.6 49.4 21.8 49.9 25.1C50.3 28.4 49.8 31.6 49 34.7C48.1 37.8 47 41.3 44.9 43.8C42.8 46.3 39.3 48.5 36.3 49.5C33.3 50.6 29.9 50.5 26.6 50.3C23.4 50.1 19.6 50.1 16.7 48.4C13.8 46.8 11 43.2 9.1 40.4C7.1 37.6 5.5 34.6 5 31.5C4.5 28.4 5 24.9 6.1 21.7Z' fill='none' stroke='#2b231c' stroke-opacity='0.18' stroke-width='3.36' filter='url(#bi4)' stroke-linejoin='round' stroke-linecap='round'/><path class='o' pathLength='1' d='M6.1 21.7C7.1 18.4 9.1 14.8 11.3 12.2C13.6 9.6 16.6 7.2 19.6 6.2C22.6 5.2 26.2 5.7 29.4 6.2C32.6 6.7 36 7.9 38.8 9.4C41.7 10.9 44.6 12.3 46.5 14.9C48.3 17.6 49.4 21.8 49.9 25.1C50.3 28.4 49.8 31.6 49 34.7C48.1 37.8 47 41.3 44.9 43.8C42.8 46.3 39.3 48.5 36.3 49.5C33.3 50.6 29.9 50.5 26.6 50.3C23.4 50.1 19.6 50.1 16.7 48.4C13.8 46.8 11 43.2 9.1 40.4C7.1 37.6 5.5 34.6 5 31.5C4.5 28.4 5 24.9 6.1 21.7Z' fill='none' stroke='#2b231c' stroke-width='1.4' stroke-linejoin='round' stroke-linecap='round'/></g></g>
+</svg></span><span class="label">GitHub</span></a></li>
+<li><a href="https://linkedin.com/in/bencres" class="badge" rel="me"><span class="mark-icon"><svg class='paint' viewBox='0 0 56 56' aria-hidden='true' focusable='false'><defs>
+<filter id='di5' x='-6%' y='-20%' width='112%' height='140%'><feTurbulence type='fractalNoise' baseFrequency='0.06' numOctaves='2' seed='74'/><feDisplacementMap in='SourceGraphic' scale='1.6'/></filter>
+<filter id='gi5'><feTurbulence type='fractalNoise' baseFrequency='0.9 0.12' numOctaves='2' seed='74'/><feColorMatrix values='0 0 0 0 .37 0 0 0 0 .29 0 0 0 0 .21 -3 0 0 0 1.4'/><feComposite in2='SourceGraphic' operator='in'/></filter>
+<filter id='bi5' x='-10%' y='-30%' width='120%' height='160%'><feGaussianBlur stdDeviation='1.1'/></filter>
+</defs>
+<g class='soak' filter='url(#di5)'>
+<path d='M6.8 7.6L28.1 6.7L47.9 7.1L49.3 28.2L48.6 47.7L28.1 48.5L7.7 49.1L8 28.4Z' fill='#F1E6CB' fill-opacity='.96'/>
+<path d='M40.2 43.2C37.8 45.5 34 48.1 30.7 48.3C27.4 48.6 23.7 46.1 20.6 44.6C17.6 43.1 14.1 41.6 12.4 39.2C10.6 36.8 10.7 33.3 10.1 30.1C9.4 27 7.3 22.7 8.6 20.3C9.9 17.8 15.1 17.3 17.9 15.4C20.7 13.4 22.4 9.5 25.4 8.6C28.5 7.7 33 8.4 36.1 9.7C39.2 11.1 41.8 14 43.9 16.6C46 19.2 48.6 22.5 48.8 25.5C49 28.6 46.6 31.9 45.1 34.8C43.7 37.8 42.6 41 40.2 43.2Z' fill='#5C86B4' fill-opacity='.5' style='mix-blend-mode:multiply'/>
+<path d='M25.3 40.7C23.4 40.8 21.1 38.9 19.4 37.8C17.6 36.7 16.1 35.7 14.8 34C13.5 32.4 11.2 29.6 11.6 27.7C12 25.8 15.1 23.7 17.3 22.7C19.5 21.6 22.2 21.6 24.7 21.6C27.2 21.5 30.5 21.1 32.2 22.2C33.9 23.3 34.2 26.2 34.8 28.1C35.3 30 36.2 32 35.6 33.6C35 35.2 32.8 36.4 31.1 37.6C29.4 38.8 27.3 40.7 25.3 40.7Z' fill='#3F6C9E' fill-opacity='.32' style='mix-blend-mode:multiply'/>
+<path d='M7 8L48 7L49 48L7.5 49Z' filter='url(#gi5)' opacity='.35'/>
+</g>
+<g class='ink'><g class='cel c0'><path class='o' pathLength='1' d='M6.8 7.8L27.7 7.4L47.9 6.8L49.4 28.4L49.4 48.2L28.4 49.3L7 48.6L6.4 28.7Z' fill='none' stroke='#2b231c' stroke-opacity='0.18' stroke-width='3.36' filter='url(#bi5)' stroke-linejoin='round' stroke-linecap='round'/><path class='o' pathLength='1' d='M6.8 7.8L27.7 7.4L47.9 6.8L49.4 28.4L49.4 48.2L28.4 49.3L7 48.6L6.4 28.7Z' fill='none' stroke='#2b231c' stroke-width='1.4' stroke-linejoin='round' stroke-linecap='round'/></g><g class='cel c1'><path class='o' pathLength='1' d='M7.1 7.8L26.9 6.6L48.3 7L47.7 27.5L48.8 48L28.9 49L7.6 48.9L6.3 27.8Z' fill='none' stroke='#2b231c' stroke-opacity='0.18' stroke-width='3.36' filter='url(#bi5)' stroke-linejoin='round' stroke-linecap='round'/><path class='o' pathLength='1' d='M7.1 7.8L26.9 6.6L48.3 7L47.7 27.5L48.8 48L28.9 49L7.6 48.9L6.3 27.8Z' fill='none' stroke='#2b231c' stroke-width='1.4' stroke-linejoin='round' stroke-linecap='round'/></g><g class='cel c2'><path class='o' pathLength='1' d='M7.1 7.9L27.2 8.1L47.8 6.8L49.4 26.6L48.9 48.2L28.9 48.5L7.7 49.4L7.2 29.3Z' fill='none' stroke='#2b231c' stroke-opacity='0.18' stroke-width='3.36' filter='url(#bi5)' stroke-linejoin='round' stroke-linecap='round'/><path class='o' pathLength='1' d='M7.1 7.9L27.2 8.1L47.8 6.8L49.4 26.6L48.9 48.2L28.9 48.5L7.7 49.4L7.2 29.3Z' fill='none' stroke='#2b231c' stroke-width='1.4' stroke-linejoin='round' stroke-linecap='round'/></g></g>
+<circle cx='18.5' cy='17.5' r='2.5' fill='#2b231c'/>
+<path d='M18.6 24.5L18.4 39.5' fill='none' stroke='#2b231c' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'/>
+<path d='M26.5 39.5L26.6 25M26.7 30C28.2 25.8 31.5 24.6 34 24.8C37.2 25.1 38.4 27.6 38.3 31L38.2 39.5' fill='none' stroke='#2b231c' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'/>
+</svg></span><span class="label">LinkedIn</span></a></li>
+</ul></section><!-- /build:rooms --></div>
+    </main>
+
+    <footer class="leaving" id="callers">
+      <figure class="gate">
+        <canvas id="gate" aria-hidden="true"></canvas>
+        <div class="board">
+          <p>Callers welcome on any business</p>
+          <!-- build:post --><a href="mailto:hello@bencres.dev" id="post">hello@bencres.dev</a><!-- /build:post -->
+        </div>
+      </figure>
+      <p class="colophon"><a class="arm back" id="back" href="#signpost"><span>back to the signpost&nbsp;↑</span></a></p>
+    </footer>
+  </div>
+
+  <script type="module" src="main.js"></script>
+  <script type="module" src="shared/turn-tune.js"></script>
 </body>
 </html>

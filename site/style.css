@@ -266,35 +266,6 @@ main { margin-top: 30px; }
   .m-drip { transform: none; }
 }
 
-/* ---- the almanac: preview season and time */
-.almanac {
-  position: fixed; left: 14px; bottom: 14px; z-index: 150; width: 214px;
-  display: grid; gap: 6px; padding: 10px 12px 9px;
-  background: color-mix(in srgb, var(--paper, #f3ead9) 94%, white); border: 1px solid rgba(43, 35, 28, 0.28);
-  border-radius: 3px 6px 4px 5px; box-shadow: 1px 2px 0 rgba(43, 35, 28, 0.12);
-  font: 600 17px/1 'Caveat', 'Caveat Fallback', cursive; color: var(--ink, #2b231c);
-  transform: rotate(-0.6deg);
-}
-.almanac details { display: grid; gap: 6px; }
-.almanac details[open] { display: grid; }
-.almanac summary { cursor: pointer; list-style: none; color: var(--soft, #6e6152); font-weight: 500; }
-.almanac summary::-webkit-details-marker { display: none; }
-.almanac details[open] summary { margin-bottom: 4px; }
-.almanac label { display: grid; gap: 2px; margin-bottom: 6px; }
-.almanac label span { display: flex; justify-content: space-between; }
-.almanac b { font-weight: 500; color: var(--soft, #6e6152); }
-.almanac input[type='range'] { width: 100%; margin: 0; accent-color: #8a6a3c; }
-.almanac button {
-  justify-self: start; padding: 0; border: 0; background: none; cursor: pointer;
-  font: 500 15px/1 'Caveat', 'Caveat Fallback', cursive; color: var(--soft, #6e6152); text-decoration: underline wavy rgba(43, 35, 28, 0.3);
-  visibility: hidden;
-}
-.almanac.moved button { visibility: visible; }
-/* below ~1100px the margin is too narrow to hold the cards beside the column, so
-   they settle at the foot of the page instead of floating over the text */
-@media (max-width: 1100px) {
-  .almanac { position: static; margin: 8px auto 40px; transform: none; }
-}
 /* without a wide margin, the blot comes in beside the heading instead of past the page's edge */
 @media (max-width: 860px) {
   .m-blot { right: -4px; top: -40px; width: 40px; }

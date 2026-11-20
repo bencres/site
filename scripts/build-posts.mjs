@@ -1,4 +1,4 @@
-// Renders posts/*.md into site/shire-ii/blog/<slug>/index.html, in the hill's
+// Renders posts/*.md into site/blog/<slug>/index.html, in the hill's
 // hand: same paper, type and palette, a sketch at the top, and code coloured
 // in inks. Front matter is the bencres.dev format plus two optional fields:
 //   sketch:  the artboard in site/riv/sketches.riv drawn above the post
@@ -13,7 +13,8 @@ import hljs from 'highlight.js';
 
 const root = resolve(import.meta.dirname, '..');
 const srcDir = join(root, 'posts');
-const outDir = join(root, 'site/shire-ii/blog');
+const outDir = join(root, 'site/blog');
+const SITE = 'https://bencres.dev'; // for the canonical and link-preview addresses
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
@@ -142,7 +143,7 @@ function bodyFont() {
   return null;
 }
 const font = bodyFont();
-const FONT_PRELOAD = font ? `  <link rel="preload" href="../../../${font}" as="font" type="font/woff2" crossorigin>\n` : '';
+const FONT_PRELOAD = font ? `  <link rel="preload" href="../../${font}" as="font" type="font/woff2" crossorigin>\n` : '';
 if (!font) console.warn('no upright Alegreya 400 in site/shared/fonts.css yet: posts go without the font preload');
 
 const longDate = (iso) => new Date(`${iso}T12:00:00`).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -160,14 +161,24 @@ function page({ slug, meta, html }) {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>${title} · Ben Cressman</title>
   <meta name="description" content="${esc(meta.excerpt || '')}">
-  <link rel="icon" href="../../../shared/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="../../../shared/fonts.css">
-  <link rel="stylesheet" href="../../../shared/base.css">
-  <link rel="stylesheet" href="../../../shared/turn.css">
+  <link rel="canonical" href="${SITE}/blog/${slug}/">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="${title}">
+  <meta property="og:description" content="${esc(meta.excerpt || '')}">
+  <meta property="og:url" content="${SITE}/blog/${slug}/">
+  <meta property="og:image" content="${SITE}/og.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <script defer src="/_vercel/insights/script.js"></script>
+  <link rel="icon" href="../../shared/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../shared/fonts.css">
+  <link rel="stylesheet" href="../../shared/base.css">
+  <link rel="stylesheet" href="../../shared/turn.css">
   <link rel="stylesheet" href="../../post.css">
   <link rel="stylesheet" href="../../wash.css">
-  <script src="../../../shared/turn.js"></script>
-${FONT_PRELOAD}${meta.sketch ? '  <link rel="modulepreload" href="../../../shared/rive-mount.js">\n' : ''}</head>
+  <script src="../../shared/turn.js"></script>
+${FONT_PRELOAD}${meta.sketch ? '  <link rel="modulepreload" href="../../shared/rive-mount.js">\n' : ''}</head>
 <body class="paper">
   <div class="col">
     <nav class="trail"><a href="../../#writing" class="home">← back to the bookshelves</a></nav>
@@ -187,7 +198,7 @@ ${html}
     </footer>
   </div>
   <script type="module" src="../../post.js"></script>
-  <script type="module" src="../../../shared/turn-tune.js"></script>
+  <script type="module" src="../../shared/turn-tune.js"></script>
 </body>
 </html>
 `;

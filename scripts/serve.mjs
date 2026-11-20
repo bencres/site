@@ -1,6 +1,6 @@
 // A small static server for site/ that behaves like the host: it serves the
-// precompressed .br / .gz files written by compress.mjs and applies site/_headers,
-// so local measurements reflect production.
+// precompressed .br / .gz files written by compress.mjs and applies the headers and
+// redirects in vercel.json, so local measurements reflect production.
 // usage: node scripts/serve.mjs [port] [root]
 import http from 'node:http';
 import fs from 'node:fs';
@@ -11,29 +11,36 @@ const root = path.resolve(process.argv[3] || path.join(import.meta.dirname, '../
 const TYPES = {
   '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.mjs': 'text/javascript; charset=utf-8',
   '.css': 'text/css; charset=utf-8', '.json': 'application/json', '.svg': 'image/svg+xml', '.wasm': 'application/wasm',
-  '.riv': 'application/octet-stream', '.woff2': 'font/woff2', '.png': 'image/png', '.jpg': 'image/jpeg', '.webp': 'image/webp', '.avif': 'image/avif',
+  '.riv': 'application/octet-stream', '.woff2': 'font/woff2', '.png': 'image/png', '.jpg': 'image/jpeg', '.webp': 'image/webp', '.avif': 'image/avif', '.pdf': 'application/pdf',
 };
 
-// _headers: a path pattern (with * wildcards) on its own line, then indented "Name: value" lines
-function readHeaders() {
-  const rules = [];
-  let text = '';
-  try { text = fs.readFileSync(path.join(root, '_headers'), 'utf8'); } catch { return rules; }
-  for (const line of text.split('\n')) {
-    if (!line.trim() || line.trim().startsWith('#')) continue;
-    if (!/^\s/.test(line)) {
-      const re = new RegExp(`^${line.trim().replace(/[.+?^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '.*').replace(/:\w+/g, '[^/]+')}$`);
-      rules.push({ re, headers: {} });
-    } else if (rules.length) {
-      const [k, ...v] = line.trim().split(':');
-      rules.at(-1).headers[k.trim()] = v.join(':').trim();
-    }
+// vercel.json's sources, in the subset of path-to-regexp it uses: (.*), :name, :name*
+// and :name(a|b), each as a regex with its named parts
+function pattern(source) {
+  const names = [];
+  const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const token = /\/:(\w+)\*|:(\w+)(\([^)]*\))?|\(\.\*\)/g;
+  let re = '', at = 0;
+  for (const m of source.matchAll(token)) {
+    re += esc(source.slice(at, m.index));
+    at = m.index + m[0].length;
+    if (m[1]) re += '(?:/(.*))?', names.push(m[1]);
+    else if (m[2]) re += m[3] || '([^/]+)', names.push(m[2]);
+    else re += '(.*)', names.push(String(names.length));
   }
-  return rules;
+  re += esc(source.slice(at));
+  return { re: new RegExp(`^${re}/?$`), names };
 }
+const config = JSON.parse(fs.readFileSync(path.join(import.meta.dirname, '../vercel.json'), 'utf8'));
+const headerRules = (config.headers || []).map((r) => ({ ...pattern(r.source), headers: Object.fromEntries(r.headers.map((h) => [h.key, h.value])) }));
+const redirects = (config.redirects || []).map((r) => ({ ...pattern(r.source), to: r.destination, code: r.permanent ? 308 : 307 }));
 
 http.createServer((req, res) => {
   let url = decodeURIComponent(new URL(req.url, 'http://x').pathname);
+  for (const r of redirects) {
+    const m = url.match(r.re);
+    if (m) return res.writeHead(r.code, { Location: r.names.reduce((to, n, i) => to.replace(new RegExp(`:${n}\\*?`), m[i + 1] ?? ''), r.to) }).end();
+  }
   let file = path.join(root, url);
   if (!file.startsWith(root)) return res.writeHead(403).end();
   try {
@@ -45,7 +52,7 @@ http.createServer((req, res) => {
   if (!fs.existsSync(file)) return res.writeHead(404, { 'Content-Type': 'text/plain' }).end('not found');
 
   const headers = { 'Content-Type': TYPES[path.extname(file)] || 'application/octet-stream', Vary: 'Accept-Encoding' };
-  for (const rule of readHeaders()) if (rule.re.test(url) || rule.re.test(url.endsWith('/') ? `${url}index.html` : url)) Object.assign(headers, rule.headers);
+  for (const rule of headerRules) if (rule.re.test(url)) Object.assign(headers, rule.headers);
   const accepts = req.headers['accept-encoding'] || '';
   let body = file;
   for (const [enc, ext] of [['br', '.br'], ['gzip', '.gz']]) {
@@ -56,9 +63,9 @@ http.createServer((req, res) => {
       break;
     }
   }
-  // like a host: anything not given a policy is rechecked, and a recheck of an unchanged
+  // like Vercel: anything not given a policy is rechecked, and a recheck of an unchanged
   // file is a 304 (the tag is the file's size and modified time, per encoding)
-  headers['Cache-Control'] ??= 'no-cache';
+  headers['Cache-Control'] ??= 'public, max-age=0, must-revalidate';
   const st = fs.statSync(body);
   headers.ETag = `"${st.size.toString(36)}-${Math.round(st.mtimeMs).toString(36)}${headers['Content-Encoding'] ? '-' + headers['Content-Encoding'] : ''}"`;
   if (req.headers['if-none-match'] === headers.ETag) {

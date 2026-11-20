@@ -1,4 +1,4 @@
-// Renders the hill page's words into site/shire-ii/index.html from
+// Renders the hill page's words into site/index.html from
 // site/shared/content.js, so the page reads (and lays out) before any script runs.
 // main.js then only enhances it: the arms' paint, the washes, the season's drip,
 // and everything that moves. Each generated part sits between a pair of markers,
@@ -7,10 +7,10 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve, join } from 'node:path';
 import { content as c } from '../site/shared/content.js';
-import { upright, splotch, flick, hatch, icon } from '../site/shire-ii/paint.js';
+import { upright, splotch, flick, hatch, icon } from '../site/paint.js';
 
 const root = resolve(import.meta.dirname, '..');
-const page = join(root, 'site/shire-ii/index.html');
+const page = join(root, 'site/index.html');
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const a = (href, text, attrs = '') => `<a href="${esc(href)}"${attrs}>${esc(text)}</a>`;
@@ -53,9 +53,9 @@ ${rm.items.map((it) => `<li>${it}</li>`).join('\n')}
   // for the paper and inks, and the hill's finished painting is shown as a still
   // until the live one is ready (main.js swaps them)
   still: `<script>(() => {
-${readFileSync(join(root, 'site/shire-ii/when.js'), 'utf8').replace(/^\/\/.*\n/gm, '').replace(/^export /gm, '').trim()}
+${readFileSync(join(root, 'site/when.js'), 'utf8').replace(/^\/\/.*\n/gm, '').replace(/^export /gm, '').trim()}
 const params = new URLSearchParams(location.search);
-const s = (!['season', 'time', 'day'].some((k) => params.has(k)) && remembered()) || when(params);
+const s = when(params);
 document.documentElement.dataset.season = SEASONS[s.season];
 document.documentElement.dataset.time = TIMES[s.time];
 const still = document.currentScript.previousElementSibling;
@@ -74,4 +74,4 @@ for (const [name, body] of Object.entries(parts)) {
   html = html.replace(re, (_, open, close) => `${open}${body}${close}`);
 }
 writeFileSync(page, html);
-console.log('rendered site/shire-ii/index.html');
+console.log('rendered site/index.html');

@@ -1,10 +1,8 @@
 // What season and hour the hill is painted for: the visitor's clock, or a preview
-// (?season=&time= / ?day=MM-DD&time=HH:MM in the URL, or the almanac's dials,
-// which are remembered for the rest of the visit so a post keeps the same light).
+// (?season=&time= / ?day=MM-DD&time=HH:MM in the URL).
 
 export const SEASONS = ['spring', 'summer', 'autumn', 'winter'];
 export const TIMES = ['morning', 'day', 'afternoon', 'dusk', 'night'];
-const KEY = 'shire-ii:preview';
 
 export function when(params = new URLSearchParams(location.search), now = new Date()) {
   let month = now.getMonth();
@@ -27,17 +25,3 @@ export function when(params = new URLSearchParams(location.search), now = new Da
   return { season, time, hour: TIMES.includes(t) ? null : hours, elevenses: hours >= 11 && hours < 12 && !TIMES.includes(t) };
 }
 
-export function remember(preview) {
-  try {
-    if (preview) sessionStorage.setItem(KEY, JSON.stringify({ season: preview.season, time: preview.time }));
-    else sessionStorage.removeItem(KEY);
-  } catch {}
-}
-
-export function remembered() {
-  try {
-    const p = JSON.parse(sessionStorage.getItem(KEY));
-    if (p && Number.isInteger(p.season) && Number.isInteger(p.time)) return { ...p, hour: null, elevenses: false };
-  } catch {}
-  return null;
-}

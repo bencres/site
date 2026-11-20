@@ -1,0 +1,28 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "echo 'nothing to install: site/ is committed already built'",
+  "buildCommand": "echo 'site/ is built locally with npm run build (it needs the rive CLI, cwebp and Chrome)'",
+  "outputDirectory": "site",
+  "trailingSlash": true,
+  "headers": [
+    {
+      "source": "/shared/vendor/2.51.0/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+    },
+    {
+      "source": "/shared/fonts/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+    },
+    {
+      "source": "/riv/(.*)",
+      "headers": [{ "key": "Content-Type", "value": "application/octet-stream" }]
+    }
+  ],
+  "redirects": [
+    { "source": "/shire-ii/:path*", "destination": "/:path*", "permanent": true },
+    { "source": "/blog/:slug(002-progress-uab-houdini-integration|005-progress-uab-assets-as-objects|007-progress-uab-refactor|00a-pipeline-pxf-prod-manager)/:rest*", "destination": "/#writing", "permanent": false },
+    { "source": "/snippets/:path*", "destination": "/", "permanent": false },
+    { "source": "/demo/django-angular", "destination": "https://github.com/bencres/demo-django-angular", "permanent": true }
+  ]
+}

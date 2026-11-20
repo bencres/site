@@ -1,10 +1,10 @@
 // A post: the same season and light as the hill you came from, its sketch, and
 // the hill's watercolor washes behind the section headings, blooming in as you read.
 // Only a post with a sketch loads the Rive runtime.
-import { SEASONS, TIMES, when, remembered } from './when.js';
+import { SEASONS, TIMES, when } from './when.js';
 import { wash, PIGMENTS } from './paint.js';
 
-const state = remembered() || when();
+const state = when();
 const season = SEASONS[state.season];
 document.documentElement.dataset.season = season;
 document.documentElement.dataset.time = TIMES[state.time];
@@ -17,7 +17,7 @@ await (window.turnSettled || Promise.resolve());
 
 const sketch = document.getElementById('sketch');
 if (sketch) {
-  import('../shared/rive-mount.js')
+  import('./shared/rive-mount.js')
     .then(({ mount }) => mount(sketch, { src: `sketches/${sketch.dataset.artboard.toLowerCase()}`, artboard: sketch.dataset.artboard, fit: 'contain' }))
     .catch((e) => console.warn('the sketch could not be drawn', e));
 }

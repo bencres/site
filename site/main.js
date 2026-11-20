@@ -1,13 +1,13 @@
-import { mount, holdUntil, reducedMotion } from '../shared/rive-mount.js';
-import { h } from '../shared/content.js';
+import { mount, holdUntil, reducedMotion } from './shared/rive-mount.js';
+import { h } from './shared/content.js';
 import { arm, drip, wash, PIGMENTS } from './paint.js';
-import { SEASONS, TIMES, when as whenAt, remember, remembered } from './when.js';
+import { SEASONS, TIMES, when as whenAt } from './when.js';
 
 const when = () => whenAt(params);
 
 const $ = (s) => document.querySelector(s);
 
-// ---------- when is it? the visitor's clock, a ?season=&time= preview, or the dials' (see when.js)
+// ---------- when is it? the visitor's clock, or a ?season=&time= preview (see when.js)
 
 const params = new URLSearchParams(location.search);
 const urlPreview = ['season', 'time', 'day'].some((k) => params.has(k));
@@ -145,7 +145,7 @@ function paint(next) {
   if (still?.isConnected && still.getAttribute('src') !== `stills/${season}-${time}.webp`) still.src = `stills/${season}-${time}.webp`;
 }
 
-state = (!urlPreview && remembered()) || when();
+state = when();
 paint(state);
 
 // ---------- rive
@@ -216,9 +216,9 @@ arms.forEach((a, i) => {
 });
 
 // look at the clock again every few minutes; the hill cross-fades if the hour turned.
-// A preview (the dials, or ?season= / ?time= / ?day=) holds until "back to now".
+// A preview (?season= / ?time= / ?day=) holds.
 setInterval(() => {
-  if (previewing || ['season', 'time', 'day'].some((k) => params.has(k))) return;
+  if (urlPreview) return;
   const next = when();
   if (next.season === state.season && next.time === state.time && next.elevenses === state.elevenses) return;
   apply(next);
@@ -377,53 +377,13 @@ else {
   blocks.forEach((b) => io.observe(b));
 }
 
-// ---------- the almanac: preview the hill in any season and light.
-// The painting's season and time layers switch on whole-number poses (spring = 0 ...
-// winter = 3, morning = 0 ... night = 4) and cross-fade between them, so the dials
-// step through those poses rather than sending in-between values the painting ignores.
-
-let previewing = !urlPreview && !!remembered();
-const seasonDial = $('#season-dial'), timeDial = $('#time-dial');
-const SEASON_WORD = ['spring', 'summer', 'autumn', 'winter'];
-const TIME_WORD = ['morning', 'midday', 'afternoon', 'dusk', 'night'];
-function showDials({ season, time }) {
-  seasonDial.value = season;
-  timeDial.value = time;
-  $('#season-word').textContent = SEASON_WORD[season];
-  $('#time-word').textContent = TIME_WORD[time];
-  seasonDial.setAttribute('aria-valuetext', SEASON_WORD[season]);
-  timeDial.setAttribute('aria-valuetext', TIME_WORD[time]);
-}
+// the painting's season and time layers switch on whole-number poses (spring = 0 ...
+// winter = 3, morning = 0 ... night = 4) and cross-fade between them
 function apply(next) {
   state = next;
   paint(state);
   for (const m of [hill, gate]) { m.set('season', state.season); m.set('time', state.time); }
-  showDials(state);
 }
-function scrub() {
-  const next = { season: +seasonDial.value, time: +timeDial.value, hour: null, elevenses: false };
-  previewing = true;
-  $('#almanac').classList.add('moved');
-  if (next.season === state.season && next.time === state.time) return;
-  apply(next);
-  remember(next);
-  const q = new URLSearchParams(location.search);
-  q.set('season', SEASONS[next.season]);
-  q.set('time', TIMES[next.time]);
-  history.replaceState(null, '', `?${q}`);
-}
-seasonDial.addEventListener('input', scrub);
-timeDial.addEventListener('input', scrub);
-$('#almanac-now').addEventListener('click', () => {
-  previewing = false;
-  remember(null);
-  for (const k of ['season', 'time', 'day']) params.delete(k);
-  history.replaceState(null, '', location.pathname);
-  apply(when());
-  $('#almanac').classList.remove('moved');
-});
-showDials(state);
-if (previewing || urlPreview) $('#almanac').classList.add('moved');
 
 // once the page has arrived (and any #section in the URL is in place), the signpost's jumps glide
 addEventListener('load', () => requestAnimationFrame(() => document.documentElement.classList.add('settled')));

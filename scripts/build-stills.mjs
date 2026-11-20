@@ -1,4 +1,4 @@
-// Renders the finished Hill for every season and time to site/shire-ii/stills/<season>-<time>.webp,
+// Renders the finished Hill for every season and time to site/stills/<season>-<time>.webp,
 // so the page can show the painting from its first paint while the live one loads.
 //
 // Each still is drawn by the same web runtime the page uses, from site/riv/shire-ii.riv,
@@ -8,7 +8,7 @@
 // its start: the live canvas's first frame.
 //
 // The painting is drawn on a transparent ground, then laid on its hour's paper (--paper in
-// site/shire-ii/style.css) exactly as the browser lays the canvas on the page, since flat
+// site/style.css) exactly as the browser lays the canvas on the page, since flat
 // paper is all there is under the canvas (the halo has a hole there; the grain is on top).
 // That composites to the same pixels as the canvas, at a quarter of the size: kept, the
 // alpha has to be lossless (lossy alpha bands the glazes), and the washes' soft, granular
@@ -23,7 +23,7 @@ import { execFileSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
 
 const root = resolve(import.meta.dirname, '..');
-const OUT = join(root, 'site/shire-ii/stills');
+const OUT = join(root, 'site/stills');
 const SEASONS = ['spring', 'summer', 'autumn', 'winter'];
 const TIMES = ['morning', 'day', 'afternoon', 'dusk', 'night'];
 const W = 1464, H = 650;
@@ -40,9 +40,9 @@ if (!vendor) throw new Error('no vendored Rive runtime: run `npm run vendor` fir
 const riv = join(root, 'site/riv/shire-ii.riv');
 
 // the paper for each time: :root's --paper, unless [data-time='...'] sets its own
-const css = readFileSync(join(root, 'site/shire-ii/style.css'), 'utf8');
+const css = readFileSync(join(root, 'site/style.css'), 'utf8');
 const base = css.match(/:root\s*\{[^}]*--paper:\s*(#[0-9a-f]{6})/i)?.[1];
-if (!base) throw new Error('no --paper in site/shire-ii/style.css');
+if (!base) throw new Error('no --paper in site/style.css');
 const PAPER = TIMES.map((t) => css.match(new RegExp(`\\[data-time='${t}'\\]\\s*\\{[^}]*--paper:\\s*(#[0-9a-f]{6})`, 'i'))?.[1] || base);
 
 let cwebp = null;
