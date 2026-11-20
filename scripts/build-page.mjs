@@ -23,8 +23,8 @@ const ROOMS = [
   { id: 'now', title: 'Now', room: 'by the fire', note: `updated ${c.now.updated}`, items: c.now.items.map(esc) },
   { id: 'work', title: 'Work', room: 'the study', mark: mark('m-blot', splotch({ seed: 5, dir: 2.5 })),
     // the places I've worked, named but not linked
-    items: c.work.map((w) => `${esc(w.name)}, ${esc(w.role)} <span class="when">${esc(w.when)}</span>`) },
-  { id: 'projects', title: 'Projects', room: 'the workshop', mark: mark('m-drip'), items: c.projects.map((p) => `${a(p.url, p.name)}: ${esc(p.blurb)}`) },
+    items: c.work.map((w) => `<strong>${esc(w.name)}</strong>, ${esc(w.role)} <span class="when">${esc(w.when)}</span>`) },
+  { id: 'projects', title: 'Projects', room: 'the workshop', mark: mark('m-drip'), items: c.projects.map((p) => `${p.url && p.url !== '#' ? a(p.url, p.name, ' target="_blank" rel="noopener"') : `<strong>${esc(p.name)}</strong>`}: ${esc(p.blurb)}`) },
   { id: 'writing', title: 'Writing', room: 'the bookshelves', mark: mark('m-hatch', hatch({ seed: 4, n: 5, cross: true })),
     items: c.writing.map((w) => `${a(w.url, w.title)}${w.starred ? '<span class="star" title="A favorite"> ✦</span>' : ''} <span class="when">${esc(w.date)}</span>`) },
   { id: 'elsewhere', title: 'Elsewhere', room: 'out the back gate', arm: 'yonder', inline: true, mark: mark('m-spatter', splotch({ seed: 12, dir: -0.5, size: 0.6, spatter: 10 })),
