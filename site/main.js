@@ -138,9 +138,32 @@ const SIGN = {
   dusk: 'The lamps are lit. Do come in.',
   night: 'Late caller? Come in quietly.',
 };
-// midday's sign tells the time by elevenses
-const ELEVENSES = (hour) =>
-  hour == null || hour < 11 ? 'Elevenses is at eleven.' : hour < 12 ? 'It is elevenses; there’s a cup for you.' : 'Elevenses was at eleven.';
+// and the sign keeps a hobbit's day: whichever of the seven meals is on, or next
+const MEALS = [
+  [5, 'Supper’s long cleared away, but there’s always a little something.'],
+  [7, 'Breakfast at seven.'],
+  [8.5, 'Breakfast is on the table.'],
+  [9, 'Second breakfast at nine.'],
+  [10.5, 'You’re just in time for second breakfast.'],
+  [11, 'Elevenses is at eleven.'],
+  [12, 'It is elevenses; there’s a cup for you.'],
+  [13, 'Luncheon at one.'],
+  [14.5, 'Luncheon is on; pull up a chair.'],
+  [16, 'Afternoon tea at four.'],
+  [17.5, 'Afternoon tea is poured.'],
+  [18, 'Dinner at six.'],
+  [20, 'Stay for dinner?'],
+  [21, 'Supper at nine.'],
+  [23, 'There’s supper, if you’re peckish.'],
+  [24, 'Supper’s long cleared away, but there’s always a little something.'],
+];
+// a named hour (?time=day) stands for the meal that suits it
+const MEAL_HOUR = { morning: 9.5, day: 11.5, afternoon: 16.5, dusk: 18.5, night: 21.5 };
+const meal = (hour, time) => {
+  const h = hour ?? MEAL_HOUR[time];
+  return MEALS.find(([until]) => h < until)[1];
+};
+const SCHEDULE = 'A hobbit’s day: breakfast, second breakfast, elevenses, luncheon, afternoon tea, dinner and supper.';
 
 let state = null;
 function paint(next) {
@@ -150,9 +173,9 @@ function paint(next) {
   root.dataset.time = time;
   let sign = SIGN[time];
   if (season === 'winter' && (time === 'day' || time === 'afternoon')) sign = 'Knock the snow off your boots and come in.';
-  if (time === 'day') sign = `${sign} ${ELEVENSES(next.hour)}`;
   if (regular) sign = 'Oh, it’s you again. You know the way in.';
-  $('#sign-text').textContent = sign;
+  $('#sign-text').textContent = `${sign} ${meal(next.hour, time)}`;
+  $('#sign').title = SCHEDULE;
   document.querySelectorAll('.room-block .wash').forEach((el, i) => {
     const [col, acc] = PIGMENTS[season][i % 5];
     el.style.backgroundImage = wash({ w: 150, h: 64, color: col, accent: acc, seed: 101 + i * 37 });
@@ -242,7 +265,7 @@ arms.forEach((a, i) => {
 setInterval(() => {
   if (urlPreview) return;
   const next = when();
-  if (next.season === state.season && next.time === state.time && next.elevenses === state.elevenses) return;
+  if (next.season === state.season && next.time === state.time && meal(next.hour, TIMES[next.time]) === meal(state.hour, TIMES[state.time])) return;
   apply(next);
 }, 5 * 60 * 1000);
 
