@@ -67,7 +67,7 @@ function niggle(ids) {
 
   // the canvas on the easel, and the tree being painted on it
   const C = { x0: 266, y0: 92, x1: 478, y1: 298 };
-  s.add(soak(24, washShape({ pts: [P(C.x0, C.y0), P(C.x1, C.y0 - 2), P(C.x1 + 1, C.y1), P(C.x0 - 1, C.y1 + 1)], color: 'FBF6EA', alpha: 0.95, edge: 0.3, soft: 0.5, blend: 'srcOver', tension: 0 })));
+  s.add(soak(56, washShape({ pts: [P(C.x0, C.y0), P(C.x1, C.y0 - 2), P(C.x1 + 1, C.y1), P(C.x0 - 1, C.y1 + 1)], color: 'FBF6EA', alpha: 0.95, edge: 0.3, soft: 0.5, blend: 'srcOver', tension: 0 }), 40));
 
   const cx = 372, cy = 168;
   const branches = [

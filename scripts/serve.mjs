@@ -56,7 +56,16 @@ http.createServer((req, res) => {
       break;
     }
   }
-  headers['Content-Length'] = fs.statSync(body).size;
+  // like a host: anything not given a policy is rechecked, and a recheck of an unchanged
+  // file is a 304 (the tag is the file's size and modified time, per encoding)
+  headers['Cache-Control'] ??= 'no-cache';
+  const st = fs.statSync(body);
+  headers.ETag = `"${st.size.toString(36)}-${Math.round(st.mtimeMs).toString(36)}${headers['Content-Encoding'] ? '-' + headers['Content-Encoding'] : ''}"`;
+  if (req.headers['if-none-match'] === headers.ETag) {
+    delete headers['Content-Length'];
+    return res.writeHead(304, headers).end();
+  }
+  headers['Content-Length'] = st.size;
   res.writeHead(200, headers);
   if (req.method === 'HEAD') return res.end();
   fs.createReadStream(body).pipe(res);

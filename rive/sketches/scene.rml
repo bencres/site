@@ -5399,10 +5399,10 @@
 <KeyedObject objectId="0:24">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
-<KeyFrameDouble frame="24" value="0" interpolationType="cubic">
+<KeyFrameDouble frame="56" value="0" interpolationType="cubic">
 <CubicEaseInterpolator x1="0.16" y1="1" x2="0.3" y2="1"/>
 </KeyFrameDouble>
-<KeyFrameDouble frame="70" value="1" interpolationType="linear"/>
+<KeyFrameDouble frame="96" value="1" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
 <KeyedObject objectId="0:25">

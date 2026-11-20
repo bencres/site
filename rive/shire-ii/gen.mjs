@@ -1213,9 +1213,10 @@ function hill(ids) {
   // nothing in a corner is left in daylight; the page carries the same colour on out
   // past the canvas and lets it fade (.hill::before in style.css)
   const [glazeXml, glazeTracks] = hourGlaze(ids, W, H, 1);
-  // it washes in over the first moments of the intro (the page's halo fades in alongside);
-  // when the hill skips its intro behind a still, it's simply there
-  s.add(k.in({ name: 'glaze in', t0: 0, t1: 56 }, [glazeXml]));
+  // it's there from the first frame: the page fades the whole canvas in on the same clock as
+  // the halo around it (style.css), so the two can never be at different strengths and
+  // show the canvas's edge as a box
+  s.add(glazeXml);
   for (const t of glazeTracks) tp(t.object, t.prop, t.vals, t.type);
 
   // --- lamplight, moon and stars sit above the glaze
