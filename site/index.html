@@ -4,6 +4,43 @@
   <meta charset="utf-8">
   <link rel="icon" href="shared/favicon.svg" type="image/svg+xml">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- build:early --><script>(() => {
+const SEASONS = ['spring', 'summer', 'autumn', 'winter'];
+const TIMES = ['morning', 'day', 'afternoon', 'dusk', 'night'];
+
+function when(params = new URLSearchParams(location.search), now = new Date()) {
+  let month = now.getMonth();
+  let hours = now.getHours() + now.getMinutes() / 60;
+  const day = params.get('day')?.match(/^(\d{1,2})-(\d{1,2})$/);
+  if (day) month = Math.min(11, Math.max(0, +day[1] - 1));
+  let season = [3, 3, 0, 0, 0, 1, 1, 1, 2, 2, 2, 3][month];
+  if (SEASONS.includes(params.get('season'))) season = SEASONS.indexOf(params.get('season'));
+  const t = params.get('time') || '';
+  const hm = t.match(/^(\d{1,2}):(\d{2})$/);
+  if (hm) hours = +hm[1] + +hm[2] / 60;
+  // the light keeps different hours through the year
+  const dawn = [5.5, 5, 6.5, 7.25][season];
+  const golden = [16.5, 17.5, 15.5, 14.5][season];
+  const dusk = [18.75, 19.75, 17.5, 16.5][season];
+  const night = dusk + 2.25;
+  let time = hours >= night || hours < dawn ? 4 : hours >= dusk ? 3 : hours >= golden ? 2 : hours >= 10 ? 1 : 0;
+  if (TIMES.includes(t)) time = TIMES.indexOf(t);
+  // the clock's hour, unless a named time (?time=day) stands in for it
+  return { season, time, hour: TIMES.includes(t) ? null : hours, elevenses: hours >= 11 && hours < 12 && !TIMES.includes(t) };
+}
+const s = when(new URLSearchParams(location.search));
+const root = document.documentElement;
+root.dataset.season = SEASONS[s.season];
+root.dataset.time = TIMES[s.time];
+// whether the still goes up at once: on a phone (where the live painting is a long way
+// off on a cold load), or when the hill has already drawn itself in for this visitor
+let known = false;
+try { known = !!sessionStorage.getItem('shire-ii:drawn'); } catch {}
+root.classList.toggle('known', known);
+root.classList.toggle('quick', known || matchMedia('(max-width: 600px)').matches);
+window.__still = `stills/${SEASONS[s.season]}-${TIMES[s.time]}.webp`;
+document.head.append(Object.assign(document.createElement('link'), { rel: 'preload', as: 'image', href: window.__still, fetchPriority: 'high' }));
+})();</script><!-- /build:early -->
   <title>Ben Cressman</title>
   <meta name="description" content="Software engineer in Dallas, shipping fintech from idea to launch.">
   <link rel="canonical" href="https://www.bencres.dev/">
@@ -38,54 +75,28 @@
     <figure class="hill">
       <img class="still" alt="" fetchpriority="high" onerror="this.remove()">
       <!-- build:still --><script>(() => {
-const SEASONS = ['spring', 'summer', 'autumn', 'winter'];
-const TIMES = ['morning', 'day', 'afternoon', 'dusk', 'night'];
-
-function when(params = new URLSearchParams(location.search), now = new Date()) {
-  let month = now.getMonth();
-  let hours = now.getHours() + now.getMinutes() / 60;
-  const day = params.get('day')?.match(/^(\d{1,2})-(\d{1,2})$/);
-  if (day) month = Math.min(11, Math.max(0, +day[1] - 1));
-  let season = [3, 3, 0, 0, 0, 1, 1, 1, 2, 2, 2, 3][month];
-  if (SEASONS.includes(params.get('season'))) season = SEASONS.indexOf(params.get('season'));
-  const t = params.get('time') || '';
-  const hm = t.match(/^(\d{1,2}):(\d{2})$/);
-  if (hm) hours = +hm[1] + +hm[2] / 60;
-  // the light keeps different hours through the year
-  const dawn = [5.5, 5, 6.5, 7.25][season];
-  const golden = [16.5, 17.5, 15.5, 14.5][season];
-  const dusk = [18.75, 19.75, 17.5, 16.5][season];
-  const night = dusk + 2.25;
-  let time = hours >= night || hours < dawn ? 4 : hours >= dusk ? 3 : hours >= golden ? 2 : hours >= 10 ? 1 : 0;
-  if (TIMES.includes(t)) time = TIMES.indexOf(t);
-  // the clock's hour, unless a named time (?time=day) stands in for it
-  return { season, time, hour: TIMES.includes(t) ? null : hours, elevenses: hours >= 11 && hours < 12 && !TIMES.includes(t) };
-}
-const params = new URLSearchParams(location.search);
-const s = when(params);
-document.documentElement.dataset.season = SEASONS[s.season];
-document.documentElement.dataset.time = TIMES[s.time];
 const still = document.currentScript.previousElementSibling;
-still.src = `stills/${SEASONS[s.season]}-${TIMES[s.time]}.webp`;
+still.src = window.__still;
 // the still only shows if the live painting isn't there within a moment; on a quick
-// load the painting draws itself in, as it always has, with no picture before it
+// load the painting draws itself in, as it always has, with no picture before it.
+// On a phone, or coming back, it goes up as soon as it's here (main.js)
 const hill = still.closest('.hill');
-setTimeout(() => still.isConnected && !hill.classList.contains('live') && hill.classList.add('stilled'), 650);
+if (!document.documentElement.classList.contains('quick')) setTimeout(() => still.isConnected && !hill.classList.contains('live') && hill.classList.add('stilled'), 650);
 })();</script><!-- /build:still -->
       <canvas id="hill" aria-hidden="true"></canvas>
       <nav class="signpost" id="signpost" aria-label="Sections"><!-- build:signpost --><span class="upright" aria-hidden="true"><svg class='paint' viewBox='0 0 26 262' width='26' height='262' overflow='visible' aria-hidden='true' focusable='false'><defs>
-<filter id='du6' x='-6%' y='-20%' width='112%' height='140%'><feTurbulence type='fractalNoise' baseFrequency='0.06' numOctaves='2' seed='7'/><feDisplacementMap in='SourceGraphic' scale='1.4'/></filter>
-<filter id='gu6'><feTurbulence type='fractalNoise' baseFrequency='0.9 0.12' numOctaves='2' seed='7'/><feColorMatrix values='0 0 0 0 .37 0 0 0 0 .29 0 0 0 0 .21 -3 0 0 0 1.4'/><feComposite in2='SourceGraphic' operator='in'/></filter>
-<filter id='bu6' x='-10%' y='-30%' width='120%' height='160%'><feGaussianBlur stdDeviation='1.1'/></filter>
+<filter id='du7' x='-6%' y='-20%' width='112%' height='140%'><feTurbulence type='fractalNoise' baseFrequency='0.06' numOctaves='2' seed='7'/><feDisplacementMap in='SourceGraphic' scale='1.4'/></filter>
+<filter id='gu7'><feTurbulence type='fractalNoise' baseFrequency='0.9 0.12' numOctaves='2' seed='7'/><feColorMatrix values='0 0 0 0 .37 0 0 0 0 .29 0 0 0 0 .21 -3 0 0 0 1.4'/><feComposite in2='SourceGraphic' operator='in'/></filter>
+<filter id='bu7' x='-10%' y='-30%' width='120%' height='160%'><feGaussianBlur stdDeviation='1.1'/></filter>
 </defs>
 <g class='soak'>
-<path d='M7.5 12L18.5 12L19 256L6.8 256Z' fill='#B89470' fill-opacity='.92' filter='url(#du6)'/>
-<path d='M7.5 12L18.5 12L19 256L6.8 256Z' filter='url(#gu6)' opacity='.5'/>
+<path d='M7.5 12L18.5 12L19 256L6.8 256Z' fill='#B89470' fill-opacity='.92' filter='url(#du7)'/>
+<path d='M7.5 12L18.5 12L19 256L6.8 256Z' filter='url(#gu7)' opacity='.5'/>
 <path d='M5 12L21 12L17 4L9 4Z' fill='#8A6A4A' fill-opacity='.92'/>
 <path d='M11.4 52.4L11.8 70.4M15 110L15.4 128M11.4 172.9L11.8 190.9M15 220.1L15.4 238.1' stroke='#5E554C' stroke-opacity='.55' stroke-width='.9' fill='none'/>
-<path class='bank' d='M-8.1 257.4C-7.8 256.4 -5.6 255.2 -2.7 254.6C0.2 254 5.2 253.7 9.4 253.5C13.6 253.3 18.6 253.1 22.7 253.4C26.8 253.7 32.3 254.6 34 255.4C35.7 256.3 34.1 257.7 32.9 258.6C31.7 259.5 29.5 260.2 27 261C24.4 261.8 21.3 263.1 17.3 263.4C13.4 263.6 7 263.1 3.4 262.5C-0.2 262 -2.3 261 -4.2 260.1C-6.2 259.3 -8.3 258.3 -8.1 257.4Z' fill='#86B35B' fill-opacity='.4' filter='url(#du6)' style='mix-blend-mode:multiply'/>
+<path class='bank' d='M-8.1 257.4C-7.8 256.4 -5.6 255.2 -2.7 254.6C0.2 254 5.2 253.7 9.4 253.5C13.6 253.3 18.6 253.1 22.7 253.4C26.8 253.7 32.3 254.6 34 255.4C35.7 256.3 34.1 257.7 32.9 258.6C31.7 259.5 29.5 260.2 27 261C24.4 261.8 21.3 263.1 17.3 263.4C13.4 263.6 7 263.1 3.4 262.5C-0.2 262 -2.3 261 -4.2 260.1C-6.2 259.3 -8.3 258.3 -8.1 257.4Z' fill='#86B35B' fill-opacity='.4' filter='url(#du7)' style='mix-blend-mode:multiply'/>
 </g>
-<g class='ink'><g class='cel c0'><path class='o' pathLength='1' d='M7.4 12C7.3 31.8 6.9 90.3 6.8 131C6.7 171.7 6.8 235.2 6.8 256M18.3 12C18.5 31.8 19.2 90.3 19.3 131C19.4 171.7 18.9 235.2 18.8 256M5.2 11.8L20.8 11.8L16.9 4L9.2 3.7ZM1 258L-4 249M4 259L3.1 247M21 259L23 246M24 258L29.4 250' fill='none' stroke='#2b231c' stroke-opacity='0.18' stroke-width='4.08' filter='url(#bu6)' stroke-linejoin='round' stroke-linecap='round'/><path class='o' pathLength='1' d='M7.4 12C7.3 31.8 6.9 90.3 6.8 131C6.7 171.7 6.8 235.2 6.8 256M18.3 12C18.5 31.8 19.2 90.3 19.3 131C19.4 171.7 18.9 235.2 18.8 256M5.2 11.8L20.8 11.8L16.9 4L9.2 3.7ZM1 258L-4 249M4 259L3.1 247M21 259L23 246M24 258L29.4 250' fill='none' stroke='#2b231c' stroke-width='1.7' stroke-linejoin='round' stroke-linecap='round'/></g><g class='cel c1'><path class='o' pathLength='1' d='M7.8 12C7.7 31.8 7.2 90.3 7.1 131C6.9 171.7 6.9 235.2 6.9 256M18.6 12C18.7 31.8 19.2 90.3 19.3 131C19.3 171.7 19.1 235.2 19.1 256M5.3 12.2L20.7 11.8L16.9 4L8.7 3.8ZM1 258L-4 249M4 259L3.1 247M21 259L23 246M24 258L29.4 250' fill='none' stroke='#2b231c' stroke-opacity='0.18' stroke-width='4.08' filter='url(#bu6)' stroke-linejoin='round' stroke-linecap='round'/><path class='o' pathLength='1' d='M7.8 12C7.7 31.8 7.2 90.3 7.1 131C6.9 171.7 6.9 235.2 6.9 256M18.6 12C18.7 31.8 19.2 90.3 19.3 131C19.3 171.7 19.1 235.2 19.1 256M5.3 12.2L20.7 11.8L16.9 4L8.7 3.8ZM1 258L-4 249M4 259L3.1 247M21 259L23 246M24 258L29.4 250' fill='none' stroke='#2b231c' stroke-width='1.7' stroke-linejoin='round' stroke-linecap='round'/></g><g class='cel c2'><path class='o' pathLength='1' d='M7.7 12C7.6 31.8 7 90.3 6.9 131C6.7 171.7 6.8 235.2 6.7 256M18.5 12C18.6 31.8 19.1 90.3 19.2 131C19.4 171.7 19.2 235.2 19.2 256M5.1 11.9L20.9 11.8L16.8 4.2L8.9 3.8ZM1 258L-4 249M4 259L3.1 247M21 259L23 246M24 258L29.4 250' fill='none' stroke='#2b231c' stroke-opacity='0.18' stroke-width='4.08' filter='url(#bu6)' stroke-linejoin='round' stroke-linecap='round'/><path class='o' pathLength='1' d='M7.7 12C7.6 31.8 7 90.3 6.9 131C6.7 171.7 6.8 235.2 6.7 256M18.5 12C18.6 31.8 19.1 90.3 19.2 131C19.4 171.7 19.2 235.2 19.2 256M5.1 11.9L20.9 11.8L16.8 4.2L8.9 3.8ZM1 258L-4 249M4 259L3.1 247M21 259L23 246M24 258L29.4 250' fill='none' stroke='#2b231c' stroke-width='1.7' stroke-linejoin='round' stroke-linecap='round'/></g></g>
+<g class='ink'><g class='cel c0'><path class='o' pathLength='1' d='M7.4 12C7.3 31.8 6.9 90.3 6.8 131C6.7 171.7 6.8 235.2 6.8 256M18.3 12C18.5 31.8 19.2 90.3 19.3 131C19.4 171.7 18.9 235.2 18.8 256M5.2 11.8L20.8 11.8L16.9 4L9.2 3.7ZM1 258L-4 249M4 259L3.1 247M21 259L23 246M24 258L29.4 250' fill='none' stroke='#2b231c' stroke-opacity='0.18' stroke-width='4.08' filter='url(#bu7)' stroke-linejoin='round' stroke-linecap='round'/><path class='o' pathLength='1' d='M7.4 12C7.3 31.8 6.9 90.3 6.8 131C6.7 171.7 6.8 235.2 6.8 256M18.3 12C18.5 31.8 19.2 90.3 19.3 131C19.4 171.7 18.9 235.2 18.8 256M5.2 11.8L20.8 11.8L16.9 4L9.2 3.7ZM1 258L-4 249M4 259L3.1 247M21 259L23 246M24 258L29.4 250' fill='none' stroke='#2b231c' stroke-width='1.7' stroke-linejoin='round' stroke-linecap='round'/></g><g class='cel c1'><path class='o' pathLength='1' d='M7.8 12C7.7 31.8 7.2 90.3 7.1 131C6.9 171.7 6.9 235.2 6.9 256M18.6 12C18.7 31.8 19.2 90.3 19.3 131C19.3 171.7 19.1 235.2 19.1 256M5.3 12.2L20.7 11.8L16.9 4L8.7 3.8ZM1 258L-4 249M4 259L3.1 247M21 259L23 246M24 258L29.4 250' fill='none' stroke='#2b231c' stroke-opacity='0.18' stroke-width='4.08' filter='url(#bu7)' stroke-linejoin='round' stroke-linecap='round'/><path class='o' pathLength='1' d='M7.8 12C7.7 31.8 7.2 90.3 7.1 131C6.9 171.7 6.9 235.2 6.9 256M18.6 12C18.7 31.8 19.2 90.3 19.3 131C19.3 171.7 19.1 235.2 19.1 256M5.3 12.2L20.7 11.8L16.9 4L8.7 3.8ZM1 258L-4 249M4 259L3.1 247M21 259L23 246M24 258L29.4 250' fill='none' stroke='#2b231c' stroke-width='1.7' stroke-linejoin='round' stroke-linecap='round'/></g><g class='cel c2'><path class='o' pathLength='1' d='M7.7 12C7.6 31.8 7 90.3 6.9 131C6.7 171.7 6.8 235.2 6.7 256M18.5 12C18.6 31.8 19.1 90.3 19.2 131C19.4 171.7 19.2 235.2 19.2 256M5.1 11.9L20.9 11.8L16.8 4.2L8.9 3.8ZM1 258L-4 249M4 259L3.1 247M21 259L23 246M24 258L29.4 250' fill='none' stroke='#2b231c' stroke-opacity='0.18' stroke-width='4.08' filter='url(#bu7)' stroke-linejoin='round' stroke-linecap='round'/><path class='o' pathLength='1' d='M7.7 12C7.6 31.8 7 90.3 6.9 131C6.7 171.7 6.8 235.2 6.7 256M18.5 12C18.6 31.8 19.1 90.3 19.2 131C19.4 171.7 19.2 235.2 19.2 256M5.1 11.9L20.9 11.8L16.8 4.2L8.9 3.8ZM1 258L-4 249M4 259L3.1 247M21 259L23 246M24 258L29.4 250' fill='none' stroke='#2b231c' stroke-width='1.7' stroke-linejoin='round' stroke-linecap='round'/></g></g>
 </svg></span>
 <a href="#now" class="arm r" style="--i:0; --tilt:-2.2deg"><b>Now</b> <small>by the fire</small></a>
 <a href="#work" class="arm r" style="--i:1; --tilt:1.6deg"><b>Work</b> <small>the study</small></a>
@@ -94,19 +105,42 @@ setTimeout(() => still.isConnected && !hill.classList.contains('live') && hill.c
 <a href="#elsewhere" class="arm l" style="--i:4; --tilt:-2.6deg"><b>Elsewhere</b> <small>yonder</small></a>
 <a href="#callers" class="arm r" style="--i:5; --tilt:5.5deg"><b>Post</b> <small>at the gate</small></a><!-- /build:signpost --></nav>
       <figcaption class="sign" id="sign"><span id="sign-text"></span><!-- build:flick --><span class="mark m-flick" aria-hidden="true"><svg class='paint' viewBox='0 0 130 50' aria-hidden='true' focusable='false'><defs>
-<filter id='df7' x='-20%' y='-20%' width='140%' height='140%'><feTurbulence type='fractalNoise' baseFrequency='0.09' numOctaves='2' seed='9'/><feDisplacementMap in='SourceGraphic' scale='1.4'/></filter>
-<filter id='bf7' x='-30%' y='-30%' width='160%' height='160%'><feGaussianBlur stdDeviation='2.2'/></filter>
+<filter id='df8' x='-20%' y='-20%' width='140%' height='140%'><feTurbulence type='fractalNoise' baseFrequency='0.09' numOctaves='2' seed='9'/><feDisplacementMap in='SourceGraphic' scale='1.4'/></filter>
+<filter id='bf8' x='-30%' y='-30%' width='160%' height='160%'><feGaussianBlur stdDeviation='2.2'/></filter>
 </defs>
-<g fill='#2b231c' opacity='.82'><path d='M8 30.9C9 30.9 11.8 30.3 13.9 29.9C15.9 29.6 18.3 29.2 20.3 28.9C22.3 28.5 24 28.3 25.9 28C27.7 27.6 29.6 27.2 31.6 26.8C33.5 26.5 35.8 26.1 37.7 25.8C39.6 25.6 41.2 25.4 43.1 25.1C44.9 24.9 46.9 24.5 48.8 24.2C50.7 23.8 52.7 23.4 54.6 23.2C56.5 23 58.2 23.1 60.1 23C62.1 22.8 64.2 22.5 66.1 22.3C68.1 22.1 69.9 22 71.7 21.9C73.6 21.9 75.4 21.9 77.2 22C79 22.1 80.6 22.5 82.5 22.6C84.4 22.8 86.5 22.8 88.5 23C90.5 23.2 92.5 23.4 94.5 23.8C96.5 24.3 98.6 25.2 100.5 25.8C102.4 26.3 103.9 26.6 105.8 27.1C107.7 27.7 110.7 29.1 111.8 29.2C112.9 29.4 113.1 28.7 112.2 28.1C111.3 27.6 108 26.5 106.2 25.9C104.3 25.3 102.8 25.1 100.9 24.5C99 23.9 96.9 23 94.8 22.5C92.8 21.9 90.8 21.6 88.8 21.2C86.8 20.7 84.8 20.3 83 19.8C81.2 19.3 79.6 18.6 77.8 18.2C75.9 17.7 74 17.3 72 17.1C70 16.8 68 16.6 66 16.6C64 16.5 61.9 16.6 59.9 16.5C57.9 16.5 56.1 16.2 54.1 16.3C52 16.4 49.8 16.8 47.7 17.1C45.7 17.3 43.8 17.7 41.9 18.1C40 18.4 38.4 18.6 36.4 19.1C34.4 19.5 32.1 20.1 30.1 20.7C28.1 21.3 26.2 22.1 24.4 22.8C22.6 23.4 21.1 24 19.2 24.7C17.3 25.5 15 26.3 13.1 27.1C11.2 27.9 8.4 28.9 7.6 29.5C6.7 30.2 6.9 30.8 8 30.9Z' filter='url(#df7)'/>
+<g fill='#2b231c' opacity='.82'><path d='M8 30.9C9 30.9 11.8 30.3 13.9 29.9C15.9 29.6 18.3 29.2 20.3 28.9C22.3 28.5 24 28.3 25.9 28C27.7 27.6 29.6 27.2 31.6 26.8C33.5 26.5 35.8 26.1 37.7 25.8C39.6 25.6 41.2 25.4 43.1 25.1C44.9 24.9 46.9 24.5 48.8 24.2C50.7 23.8 52.7 23.4 54.6 23.2C56.5 23 58.2 23.1 60.1 23C62.1 22.8 64.2 22.5 66.1 22.3C68.1 22.1 69.9 22 71.7 21.9C73.6 21.9 75.4 21.9 77.2 22C79 22.1 80.6 22.5 82.5 22.6C84.4 22.8 86.5 22.8 88.5 23C90.5 23.2 92.5 23.4 94.5 23.8C96.5 24.3 98.6 25.2 100.5 25.8C102.4 26.3 103.9 26.6 105.8 27.1C107.7 27.7 110.7 29.1 111.8 29.2C112.9 29.4 113.1 28.7 112.2 28.1C111.3 27.6 108 26.5 106.2 25.9C104.3 25.3 102.8 25.1 100.9 24.5C99 23.9 96.9 23 94.8 22.5C92.8 21.9 90.8 21.6 88.8 21.2C86.8 20.7 84.8 20.3 83 19.8C81.2 19.3 79.6 18.6 77.8 18.2C75.9 17.7 74 17.3 72 17.1C70 16.8 68 16.6 66 16.6C64 16.5 61.9 16.6 59.9 16.5C57.9 16.5 56.1 16.2 54.1 16.3C52 16.4 49.8 16.8 47.7 17.1C45.7 17.3 43.8 17.7 41.9 18.1C40 18.4 38.4 18.6 36.4 19.1C34.4 19.5 32.1 20.1 30.1 20.7C28.1 21.3 26.2 22.1 24.4 22.8C22.6 23.4 21.1 24 19.2 24.7C17.3 25.5 15 26.3 13.1 27.1C11.2 27.9 8.4 28.9 7.6 29.5C6.7 30.2 6.9 30.8 8 30.9Z' filter='url(#df8)'/>
 <circle cx='113' cy='28.7' r='1.9'/><circle cx='120' cy='31.2' r='1.1'/><circle cx='125' cy='32.7' r='.7'/></g></svg></span><!-- /build:flick --></figcaption>
     </figure>
 
     <main>
       <section class="intro" id="intro"><!-- build:intro --><p>Hi, I'm Ben. I'm a software engineer in fintech. Prior, I was a technical artist in visual effects and game development. Here, you'll find whatever's going on in my head and life.</p>
-<p>Say hello any time: <a href="mailto:hello@bencres.dev" class="mail">hello@bencres.dev</a>.</p><!-- /build:intro --></section>
+<p class="hello">Say hello any time:</p>
+<div class="post-desk"><a href="mailto:hello@bencres.dev" class="letter mail" aria-label="Write to me at hello@bencres.dev"><svg class='paint' viewBox='0 0 340 170' aria-hidden='true' focusable='false'><defs>
+<filter id='dl6' x='-6%' y='-20%' width='112%' height='140%'><feTurbulence type='fractalNoise' baseFrequency='0.06' numOctaves='2' seed='17'/><feDisplacementMap in='SourceGraphic' scale='1.4'/></filter>
+<filter id='gl6'><feTurbulence type='fractalNoise' baseFrequency='0.9 0.12' numOctaves='2' seed='17'/><feColorMatrix values='0 0 0 0 .37 0 0 0 0 .29 0 0 0 0 .21 -3 0 0 0 1.4'/><feComposite in2='SourceGraphic' operator='in'/></filter>
+<filter id='bl6' x='-10%' y='-30%' width='120%' height='160%'><feGaussianBlur stdDeviation='1.1'/></filter>
+</defs>
+<g class='soak' filter='url(#dl6)'>
+<path d='M5.9 8.1L169.1 5.9L332.3 5L333.9 83.4L334.6 163L171.3 164L7.7 165L7.3 85.7Z' fill='#F4EBD6' fill-opacity='.97' stroke='#9C7C58' stroke-opacity='.45' stroke-width='1.2'/>
+<path class='tint' d='M90.5 158.3C72.2 157 50.4 154.3 36.6 149.7C22.7 145 11.7 137.2 7.6 130.5C3.6 123.7 6.7 115.7 12.2 109C17.6 102.4 27.1 95.2 40.4 90.4C53.7 85.6 74.1 81.7 92.1 80.4C110.2 79.1 132.8 80.1 148.7 82.6C164.7 85.2 177.2 91.1 187.7 95.9C198.1 100.7 203.2 105.4 211.7 111.5C220.2 117.5 241.9 126.2 238.7 132.1C235.5 138 207.9 142.7 192.5 147C177.2 151.2 163.6 155.9 146.6 157.8C129.6 159.7 108.9 159.7 90.5 158.3Z' fill='#C0603E' fill-opacity='.13' style='mix-blend-mode:multiply'/>
+<path d='M6 8L332 5L335 163L8 165Z' filter='url(#gl6)' opacity='.32'/>
+<path d='M264 17L318 15L319 79L265 80Z' fill='#FBF6EA' stroke='#F4EBD6' stroke-width='4.5' stroke-dasharray='.1 5.2' stroke-linecap='round'/>
+<path d='M278.2 26.6C280.8 25.4 286.6 26.2 290.4 26.2C294.2 26.2 297.4 26 301 26.8C304.7 27.5 311.3 28.7 312.6 30.6C313.8 32.5 309.3 35.5 308.4 38.2C307.6 40.8 310.1 45.1 307.7 46.6C305.2 48.1 297.8 47.4 293.8 47.1C289.7 46.8 287.1 45.7 283.4 44.7C279.8 43.7 273.5 43 272.1 41.2C270.6 39.4 273.8 36.2 274.8 33.7C275.9 31.3 275.6 27.9 278.2 26.6Z' fill='#BFD3DF' fill-opacity='.6'/>
+<path d='M272.4 76.9C269.9 74.2 271.8 70.2 271.5 66.8C271.1 63.4 268 59.1 270.3 56.6C272.6 54.2 280.1 53.6 285.3 52.3C290.5 51 296 48.6 301.2 49C306.5 49.3 313.9 51.8 316.8 54.5C319.7 57.2 319.3 61.9 318.8 65.1C318.2 68.3 316.4 71.3 313.7 73.8C311 76.2 307.1 78.1 302.6 79.6C298.2 81.1 291.8 83.4 286.8 83C281.8 82.5 275 79.6 272.4 76.9Z' fill='#86B35B' fill-opacity='.55' style='mix-blend-mode:multiply'/>
+<circle cx='292' cy='56' r='9.5' fill='#8A6A48' fill-opacity='.7'/>
+<circle cx='292' cy='56' r='7' fill='#3F6E45' fill-opacity='.9'/>
+</g>
+<g class='ink'><g class='cel c0'><path class='o' pathLength='1' d='M6.1 8.2L168.2 6.4L332.5 5.1L334.2 83.1L335.3 163.5L171 163.1L8.2 164.6L6.7 87.1ZM267.6 20.5L314.6 18.7L315.6 75.5L268.2 76.6Z' fill='none' stroke='#2b231c' stroke-opacity='0.18' stroke-width='3.12' filter='url(#bl6)' stroke-linejoin='round' stroke-linecap='round'/><path class='o' pathLength='1' d='M6.1 8.2L168.2 6.4L332.5 5.1L334.2 83.1L335.3 163.5L171 163.1L8.2 164.6L6.7 87.1ZM267.6 20.5L314.6 18.7L315.6 75.5L268.2 76.6Z' fill='none' stroke='#2b231c' stroke-width='1.3' stroke-linejoin='round' stroke-linecap='round'/></g><g class='cel c1'><path class='o' pathLength='1' d='M6 8.1L168 7.5L331.5 5.1L332.6 83.6L335 163.1L170.7 163.9L8.3 164.5L7.6 87.4ZM267.4 20.7L314.4 18.4L315.5 75.4L268.3 76.6Z' fill='none' stroke='#2b231c' stroke-opacity='0.18' stroke-width='3.12' filter='url(#bl6)' stroke-linejoin='round' stroke-linecap='round'/><path class='o' pathLength='1' d='M6 8.1L168 7.5L331.5 5.1L332.6 83.6L335 163.1L170.7 163.9L8.3 164.5L7.6 87.4ZM267.4 20.7L314.4 18.4L315.5 75.4L268.3 76.6Z' fill='none' stroke='#2b231c' stroke-width='1.3' stroke-linejoin='round' stroke-linecap='round'/></g><g class='cel c2'><path class='o' pathLength='1' d='M6.3 7.9L169.1 6.7L332.1 4.7L334.4 83.8L335.5 163.1L171.6 164.4L7.8 165.3L6.8 86.3ZM267.4 20.3L314.3 18.4L315.6 75.2L268.6 76.2Z' fill='none' stroke='#2b231c' stroke-opacity='0.18' stroke-width='3.12' filter='url(#bl6)' stroke-linejoin='round' stroke-linecap='round'/><path class='o' pathLength='1' d='M6.3 7.9L169.1 6.7L332.1 4.7L334.4 83.8L335.5 163.1L171.6 164.4L7.8 165.3L6.8 86.3ZM267.4 20.3L314.3 18.4L315.6 75.2L268.6 76.2Z' fill='none' stroke='#2b231c' stroke-width='1.3' stroke-linejoin='round' stroke-linecap='round'/></g></g>
+<circle cx='292' cy='56.5' r='1.1' fill='#2b231c'/>
+<g class='postmark' fill='none' stroke='#2b231c' stroke-opacity='.42' stroke-width='1.1'>
+<circle cx='244' cy='47' r='21'/><circle cx='244' cy='47' r='16' stroke-opacity='.25'/>
+<path d='M190 30.4Q193 26.8 196 30T202 30Q205 26.8 208 30T214 30Q217 26.8 220 30T226 30Q229 26.8 232 30T238 30Q241 26.8 244 30T250 30Q253 26.8 256 30T262 30Q265 26.8 268 30T274 30Q277 26.8 280 30T286 30Q289 26.8 292 30T298 30Q301 26.8 304 30T310 30M190 39.4Q193 36.8 196 40T202 40Q205 36.8 208 40T214 40Q217 36.8 220 40T226 40Q229 36.8 232 40T238 40Q241 36.8 244 40T250 40Q253 36.8 256 40T262 40Q265 36.8 268 40T274 40Q277 36.8 280 40T286 40Q289 36.8 292 40T298 40Q301 36.8 304 40T310 40M190 50.1Q193 46.8 196 50T202 50Q205 46.8 208 50T214 50Q217 46.8 220 50T226 50Q229 46.8 232 50T238 50Q241 46.8 244 50T250 50Q253 46.8 256 50T262 50Q265 46.8 268 50T274 50Q277 46.8 280 50T286 50Q289 46.8 292 50T298 50Q301 46.8 304 50T310 50M190 59.3Q193 56.8 196 60T202 60Q205 56.8 208 60T214 60Q217 56.8 220 60T226 60Q229 56.8 232 60T238 60Q241 56.8 244 60T250 60Q253 56.8 256 60T262 60Q265 56.8 268 60T274 60Q277 56.8 280 60T286 60Q289 56.8 292 60T298 60Q301 56.8 304 60T310 60' stroke-opacity='.32'/>
+</g>
+<path d='M76.4 104.3L305.1 104.1M77 129.2L307.2 128.8M76.9 153.6L306.5 154.3' stroke='#2b231c' stroke-opacity='.16' stroke-width='.8' fill='none'/>
+</svg><span class="addr" aria-hidden="true"><span class="to">Ben Cressman</span><span class="at">the round green door, under the hill</span><span class="em">hello@bencres.dev</span></span></a><button type="button" class="copy" data-copy="hello@bencres.dev">or copy the address</button></div><!-- /build:intro --></section>
       <div id="rooms"><!-- build:rooms --><section class="room-block" aria-labelledby="now"><h2 id="now"><span class="wash" aria-hidden="true"></span><span class="title">Now</span><span class="room">by the fire</span><small>updated November 2026</small></h2><ul class="knobs">
-<li>I'm a senior engineer at The Axle Group building products and solving problems for lenders.</li>
-<li>I'm an adjunct professor at UTD teaching a tools development course that I developed with Prof. Nelson Lim.</li>
+<li>I'm a senior engineer at The Axle Group solving problems for lenders.</li>
+<li>I'm an adjunct professor at UTD teaching a tools development course that I developed with <a href="https://www.nelsonlim.com/" target="_blank" rel="noopener">Prof. Nelson Lim</a>.</li>
 </ul></section>
 <section class="room-block" aria-labelledby="work"><h2 id="work"><span class="wash" aria-hidden="true"></span><span class="title">Work</span><span class="room">the study</span><span class="mark m-blot" aria-hidden="true"><svg class='paint' viewBox='0 0 100 100' aria-hidden='true' focusable='false'><defs>
 <filter id='ds1' x='-20%' y='-20%' width='140%' height='140%'><feTurbulence type='fractalNoise' baseFrequency='0.09' numOctaves='2' seed='5'/><feDisplacementMap in='SourceGraphic' scale='3'/></filter>

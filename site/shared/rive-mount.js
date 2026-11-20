@@ -18,13 +18,22 @@ let hold = Promise.resolve();
 export function holdUntil(promise) {
   hold = Promise.all([hold, promise.catch(() => {})]);
 }
+// and, separately, hold back starting the runtime up (running its script, compiling the
+// wasm, reading the file: a long stretch with no frames on a phone) while the files still
+// download, e.g. until what's on screen has finished moving
+let start = Promise.resolve();
+export function holdStart(promise) {
+  start = Promise.all([start, promise.catch(() => {})]);
+}
 
 let runtime = null;
 function loadRuntime() {
   runtime ??= hold.then(() => new Promise((resolve, reject) => {
     // the wasm is fetched alongside the script, rather than after it has run
     const wasm = new URL('rive.wasm', VENDOR).href;
+    const js = new URL('rive.js', VENDOR).href;
     document.head.append(Object.assign(document.createElement('link'), { rel: 'preload', as: 'fetch', type: 'application/wasm', crossOrigin: 'anonymous', href: wasm }));
+    document.head.append(Object.assign(document.createElement('link'), { rel: 'preload', as: 'script', href: js }));
     const done = () => {
       const R = window.rive;
       R.Rive.suppressDeprecationWarnings = ['rive-events', 'state-machine-inputs'];
@@ -32,10 +41,12 @@ function loadRuntime() {
       resolve(R);
     };
     if (window.rive) return done();
-    const script = Object.assign(document.createElement('script'), { src: new URL('rive.js', VENDOR).href, async: true });
-    script.onload = done;
-    script.onerror = () => reject(new Error('the Rive runtime did not load'));
-    document.head.append(script);
+    start.then(() => {
+      const script = Object.assign(document.createElement('script'), { src: js, async: true });
+      script.onload = done;
+      script.onerror = () => reject(new Error('the Rive runtime did not load'));
+      document.head.append(script);
+    });
   }));
   return runtime;
 }

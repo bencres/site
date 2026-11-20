@@ -298,3 +298,42 @@ export const PIGMENTS = {
   autumn: [['E3A23A', 'C4503B'], ['8E9A48', 'D9A93F'], ['C4503B', 'E3A23A'], ['8AA8C0', 'D9A93F'], ['A0708A', 'C4503B']],
   winter: [['E2B85A', 'B5644A'], ['7E9A88', 'A9C0D6'], ['B5644A', 'E2B85A'], ['8FA7C4', 'C9D6E2'], ['9C8FB4', 'A9C0D6']],
 };
+
+/**
+ * A letter addressed to the hill, 340 × 170, for the email link: a paper envelope
+ * with a stamp (the round door, in miniature), a postmark run over it, and pencil
+ * rules for the address, which is real text laid over them (style.css).
+ */
+export function letter({ seed = 1, tint = 'C0603E' }) {
+  const id = `l${++uid}`;
+  const r = rng(seed);
+  const W = 340, H = 170;
+  const card = [[6, 8], [W - 8, 5], [W - 5, H - 7], [8, H - 5]];
+  const stamp = [[W - 76, 17], [W - 22, 15], [W - 21, 79], [W - 75, 80]];
+  const pm = [W - 96, 47];
+  const waves = [30, 40, 50, 60].map((y) => {
+    let d = `M${f(W - 150)} ${f(y + r.jit(1))}`;
+    for (let x = W - 150; x < W - 30; x += 12) d += `Q${f(x + 3)} ${f(y - 3.2)} ${f(x + 6)} ${f(y)}T${f(x + 12)} ${f(y)}`;
+    return d;
+  }).join('');
+  const rules = [104, 129, 154].map((y) => `M${f(78 + r.jit(2))} ${f(y + r.jit(0.6))}L${f(W - 34 + r.jit(2))} ${f(y + r.jit(0.6))}`).join('');
+  return `<svg class='paint' viewBox='0 0 ${W} ${H}' aria-hidden='true' focusable='false'>${DEFS(id, seed, 1.4)}
+<g class='soak' filter='url(#d${id})'>
+<path d='${poly(ruled(card, rng(seed + 1), 1))}' fill='#F4EBD6' fill-opacity='.97' stroke='#9C7C58' stroke-opacity='.45' stroke-width='1.2'/>
+<path class='tint' d='${blob(r, 120, 120, 110, 40, 12, 0.16)}' fill='#${tint}' fill-opacity='.13' style='mix-blend-mode:multiply'/>
+<path d='${poly(card)}' filter='url(#g${id})' opacity='.32'/>
+<path d='${poly(stamp)}' fill='#FBF6EA' stroke='#F4EBD6' stroke-width='4.5' stroke-dasharray='.1 5.2' stroke-linecap='round'/>
+<path d='${blob(r, W - 48, 36, 20, 12, 10, 0.2)}' fill='#BFD3DF' fill-opacity='.6'/>
+<path d='${blob(r, W - 46, 66, 26, 16, 10, 0.16)}' fill='#86B35B' fill-opacity='.55' style='mix-blend-mode:multiply'/>
+<circle cx='${W - 48}' cy='56' r='9.5' fill='#8A6A48' fill-opacity='.7'/>
+<circle cx='${W - 48}' cy='56' r='7' fill='#3F6E45' fill-opacity='.9'/>
+</g>
+<g class='ink'>${cels(id, r, () => poly(ruled(card, r, 1.1)) + poly(stamp.map(([x, y]) => [x + 3.5 + r.jit(0.3), y + 3.5 + r.jit(0.3)]).map(([x, y], i) => [i === 1 || i === 2 ? x - 7 : x, i >= 2 ? y - 7 : y])), { w: 1.3 })}</g>
+<circle cx='${W - 48}' cy='56.5' r='1.1' fill='#${INK}'/>
+<g class='postmark' fill='none' stroke='#${INK}' stroke-opacity='.42' stroke-width='1.1'>
+<circle cx='${pm[0]}' cy='${pm[1]}' r='21'/><circle cx='${pm[0]}' cy='${pm[1]}' r='16' stroke-opacity='.25'/>
+<path d='${waves}' stroke-opacity='.32'/>
+</g>
+<path d='${rules}' stroke='#${INK}' stroke-opacity='.16' stroke-width='.8' fill='none'/>
+</svg>`;
+}

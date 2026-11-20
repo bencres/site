@@ -1,4 +1,4 @@
-import { mount, holdUntil, reducedMotion } from './shared/rive-mount.js';
+import { mount, holdUntil, holdStart, reducedMotion } from './shared/rive-mount.js';
 import { h } from './shared/content.js';
 import { arm, drip, wash, PIGMENTS } from './paint.js';
 import { SEASONS, TIMES, when as whenAt } from './when.js';
@@ -75,22 +75,40 @@ const dripMark = $('.m-drip');
 // this season and hour, until the live one is ready to take over. If that took a while,
 // the live painting skips drawing itself in (it has been looked at already).
 
+// On a phone, or when the hill has already drawn itself in for this visitor ('quick',
+// set in index.html's <head>), the still goes up the moment it's here, the arms go up
+// on it straight away, and the live painting takes over later without drawing itself
+// in again: it waits until the arms have finished moving and the page is idle, since
+// starting it up costs a phone a few frames.
+
 const still = hillFig.querySelector('.still');
+const root = document.documentElement;
+const quick = root.classList.contains('quick');
 // shown: loaded, and put up because the live painting hadn't come yet (index.html)
 const stillShown = () => !!still?.isConnected && still.complete && still.naturalWidth > 0 && hillFig.classList.contains('stilled');
 const LATE = 1200;
 const sinceFirstPaint = () => performance.now() - (performance.getEntriesByName('first-contentful-paint')[0]?.startTime ?? 0);
 let live = false;
+let armsUp;
+const armsDone = new Promise((go) => (armsUp = go));
+if (quick) {
+  holdStart(Promise.race([
+    Promise.all([armsDone, window.turnSettled]).then(() => new Promise((go) => (window.requestIdleCallback ? requestIdleCallback(go, { timeout: 1200 }) : setTimeout(go, 300)))),
+    new Promise((go) => setTimeout(go, 6000)),
+  ]));
+}
 if (still) {
+  const wait = () => (quick ? 0 : Math.max(0, 650 - sinceFirstPaint()));
   const up = () => {
     if (live) return;
     hillFig.classList.add('stilled', 'glazed');
     // if the live painting hasn't come by the time it would have finished drawing in, the arms go up on the still
-    setTimeout(() => !live && stillShown() && plant(0), Math.max(0, LATE - sinceFirstPaint()));
+    if (quick) plant(0);
+    else setTimeout(() => !live && stillShown() && plant(0), Math.max(0, LATE - sinceFirstPaint()));
   };
-  if (still.complete && still.naturalWidth > 0) setTimeout(up, Math.max(0, 650 - sinceFirstPaint()));
+  if (still.complete && still.naturalWidth > 0) setTimeout(up, wait());
   else {
-    still.addEventListener('load', () => setTimeout(up, Math.max(0, 650 - sinceFirstPaint())), { once: true });
+    still.addEventListener('load', () => setTimeout(up, wait()), { once: true });
     // the live painting's downloads (the runtime is most of a megabyte) wait for the still, so
     // on a slow connection the picture comes first; not for long, if the still is slow too
     holdUntil(new Promise((go) => {
@@ -167,8 +185,9 @@ const hill = mount($('#hill'), {
     setAll(hill);
     hill.set('regular', regular);
     hill.set('bare', phone.matches);
-    const late = stillShown() && sinceFirstPaint() > LATE;
+    const late = stillShown() && (quick || sinceFirstPaint() > LATE);
     if (late) hill.set('still', true);
+    try { sessionStorage.setItem('shire-ii:drawn', '1'); } catch {}
     plant(reducedMotion || late ? 0 : 1750);
     hillFig.classList.add('glazed');
     goLive();
@@ -194,6 +213,8 @@ function plant(delay) {
   setTimeout(() => {
     signpost.classList.add('planted');
     setTimeout(() => hillFig.classList.add('inked'), 900);
+    // the last arm has swung up and its lettering is in (style.css), or at once if they don't move
+    setTimeout(armsUp, root.classList.contains('known') || reducedMotion ? 0 : 1400);
   }, delay);
 }
 setTimeout(() => plant(0), 5000);
@@ -205,6 +226,7 @@ arms.forEach((a, i) => {
   const stir = () => { hill.fire(react); if (react === 'post') gate.fire('post'); };
   a.addEventListener('mouseenter', stir);
   a.addEventListener('focus', stir);
+  a.addEventListener('pointerdown', (e) => e.pointerType !== 'mouse' && stir());
   a.addEventListener('click', () => {
     try { localStorage.setItem('shire-ii:arm', id); } catch {}
     const block = document.getElementById(id)?.closest('.room-block');
@@ -230,6 +252,32 @@ for (const a of [hello, post]) {
   a.addEventListener('mouseenter', raise);
   a.addEventListener('focus', raise);
 }
+
+// writing to me is posting a letter: the envelope is taken up and away to the post,
+// the flags go up, and then the mail app opens; a moment later there's a fresh one
+hello.addEventListener('click', (e) => {
+  if (reducedMotion || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || hello.classList.contains('posting')) return;
+  e.preventDefault();
+  hill.fire('post');
+  gate.fire('post');
+  hello.classList.add('posting');
+  const desk = hello.parentElement;
+  sfx(desk, { x: hello.offsetLeft + hello.offsetWidth * 0.78, y: hello.offsetTop + 6, k: 1 }, 'posted!', { spread: 10 });
+  setTimeout(() => (location.href = hello.href), 650);
+  setTimeout(() => hello.classList.remove('posting'), 2200);
+});
+// or just take the address
+const copy = $('.post-desk .copy');
+copy?.addEventListener('click', async () => {
+  try {
+    await navigator.clipboard.writeText(copy.dataset.copy);
+    copy.textContent = 'copied ✓';
+  } catch {
+    copy.textContent = copy.dataset.copy;
+  }
+  clearTimeout(copy.reset);
+  copy.reset = setTimeout(() => (copy.textContent = 'or copy the address'), 2400);
+});
 
 // ---------- knocking at the door
 // A knock rattles the door and a little "knock" rises off it. Then someone inside

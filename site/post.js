@@ -11,6 +11,21 @@ document.documentElement.dataset.time = TIMES[state.time];
 
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+// "back to the bookshelves", when you came from the hill, really goes back: the browser
+// keeps the hill as you left it (painting running, scrolled to where you were), so
+// returning is instant rather than loading and starting the painting over
+const hill = new URL('../../', location.href).pathname;
+for (const home of document.querySelectorAll('a.home')) {
+  home.addEventListener('click', (e) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button) return;
+    let from = null;
+    try { from = new URL(document.referrer); } catch {}
+    if (from?.origin !== location.origin || from.pathname !== hill || history.length < 2) return;
+    e.preventDefault();
+    history.back();
+  });
+}
+
 // the rest waits for the arriving page to finish landing (turn.js), so it never costs the
 // transition a frame: the sketch's canvas already holds its place, and the washes bloom on scroll
 await (window.turnSettled || Promise.resolve());

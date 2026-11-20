@@ -7,20 +7,22 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve, join } from 'node:path';
 import { content as c } from '../site/shared/content.js';
-import { upright, splotch, flick, hatch, icon } from '../site/paint.js';
+import { upright, splotch, flick, hatch, icon, letter } from '../site/paint.js';
 
 const root = resolve(import.meta.dirname, '..');
 const page = join(root, 'site/index.html');
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const a = (href, text, attrs = '') => `<a href="${esc(href)}"${attrs}>${esc(text)}</a>`;
+// a line of copy, where [text](https://…) is a link (opening in a new tab, like the projects)
+const prose = (s) => esc(s).replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, (_, text, url) => `<a href="${url}" target="_blank" rel="noopener">${text}</a>`);
 // an ink mark (main.js fades it in); its SVG is drawn now unless the season decides it
 const mark = (cls, svg = '') => `<span class="mark ${cls}" aria-hidden="true">${svg}</span>`;
 
 // the rooms of the house, in the order the signpost points to them. `react` (what
 // stirs on the hill when you turn the arm) lives in main.js, keyed by id
 const ROOMS = [
-  { id: 'now', title: 'Now', room: 'by the fire', note: `updated ${c.now.updated}`, items: c.now.items.map(esc) },
+  { id: 'now', title: 'Now', room: 'by the fire', note: `updated ${c.now.updated}`, items: c.now.items.map(prose) },
   { id: 'work', title: 'Work', room: 'the study', mark: mark('m-blot', splotch({ seed: 5, dir: 2.5 })),
     // the places I've worked, named but not linked
     items: c.work.map((w) => `<strong>${esc(w.name)}</strong>, ${esc(w.role)} <span class="when">${esc(w.when)}</span>`) },
@@ -39,7 +41,12 @@ const TILT = [-2.2, 1.6, -1.1, 2.2, -2.6, 5.5];
 
 const parts = {
   name: esc(c.name),
-  intro: [...c.intro.map((p) => `<p>${esc(p)}</p>`), `<p>Say hello any time: ${a(`mailto:${c.email}`, c.email, ' class="mail"')}.</p>`].join('\n'),
+  // saying hello is writing a letter: an envelope addressed to the hill, which posts itself (main.js)
+  intro: [
+    ...c.intro.map((p) => `<p>${prose(p)}</p>`),
+    `<p class="hello">Say hello any time:</p>`,
+    `<div class="post-desk"><a href="mailto:${esc(c.email)}" class="letter mail" aria-label="Write to me at ${esc(c.email)}">${letter({ seed: 17 })}<span class="addr" aria-hidden="true"><span class="to">${esc(c.name)}</span><span class="at">the round green door, under the hill</span><span class="em">${esc(c.email)}</span></span></a><button type="button" class="copy" data-copy="${esc(c.email)}">or copy the address</button></div>`,
+  ].join('\n'),
   rooms: ROOMS.map((rm) => `<section class="room-block" aria-labelledby="${rm.id}"><h2 id="${rm.id}"><span class="wash" aria-hidden="true"></span><span class="title">${esc(rm.title)}</span><span class="room">${esc(rm.room)}</span>${rm.note ? `<small>${esc(rm.note)}</small>` : ''}${rm.mark || ''}</h2><ul class="${rm.inline ? 'knobs inline' : 'knobs'}">
 ${rm.items.map((it) => `<li>${it}</li>`).join('\n')}
 </ul></section>`).join('\n'),
@@ -52,18 +59,29 @@ ${rm.items.map((it) => `<li>${it}</li>`).join('\n')}
   // Before first paint: the visitor's season and hour (when.js, inlined) go on <html>
   // for the paper and inks, and the hill's finished painting is shown as a still
   // until the live one is ready (main.js swaps them)
-  still: `<script>(() => {
+  early: `<script>(() => {
 ${readFileSync(join(root, 'site/when.js'), 'utf8').replace(/^\/\/.*\n/gm, '').replace(/^export /gm, '').trim()}
-const params = new URLSearchParams(location.search);
-const s = when(params);
-document.documentElement.dataset.season = SEASONS[s.season];
-document.documentElement.dataset.time = TIMES[s.time];
+const s = when(new URLSearchParams(location.search));
+const root = document.documentElement;
+root.dataset.season = SEASONS[s.season];
+root.dataset.time = TIMES[s.time];
+// whether the still goes up at once: on a phone (where the live painting is a long way
+// off on a cold load), or when the hill has already drawn itself in for this visitor
+let known = false;
+try { known = !!sessionStorage.getItem('shire-ii:drawn'); } catch {}
+root.classList.toggle('known', known);
+root.classList.toggle('quick', known || matchMedia('(max-width: 600px)').matches);
+window.__still = \`stills/\${SEASONS[s.season]}-\${TIMES[s.time]}.webp\`;
+document.head.append(Object.assign(document.createElement('link'), { rel: 'preload', as: 'image', href: window.__still, fetchPriority: 'high' }));
+})();</script>`,
+  still: `<script>(() => {
 const still = document.currentScript.previousElementSibling;
-still.src = \`stills/\${SEASONS[s.season]}-\${TIMES[s.time]}.webp\`;
+still.src = window.__still;
 // the still only shows if the live painting isn't there within a moment; on a quick
-// load the painting draws itself in, as it always has, with no picture before it
+// load the painting draws itself in, as it always has, with no picture before it.
+// On a phone, or coming back, it goes up as soon as it's here (main.js)
 const hill = still.closest('.hill');
-setTimeout(() => still.isConnected && !hill.classList.contains('live') && hill.classList.add('stilled'), 650);
+if (!document.documentElement.classList.contains('quick')) setTimeout(() => still.isConnected && !hill.classList.contains('live') && hill.classList.add('stilled'), 650);
 })();</script>`,
 };
 

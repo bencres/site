@@ -18,8 +18,8 @@ export const content = {
   now: {
     updated: 'November 2026',
     items: [
-      "I'm a senior engineer at The Axle Group building products and solving problems for lenders.",
-      "I'm an adjunct professor at UTD teaching a tools development course that I developed with Prof. Nelson Lim.",
+      "I'm a senior engineer at The Axle Group solving problems for lenders.",
+      "I'm an adjunct professor at UTD teaching a tools development course that I developed with [Prof. Nelson Lim](https://www.nelsonlim.com/).",
     ],
   },
 
