@@ -378,13 +378,12 @@ main { margin-top: 30px; }
 }
 @keyframes drift { to { background-position: 24px 100%; } }
 .hello .copy:hover { color: var(--ink); }
-/* "copied", let go as smoke above the button (main.js puff), a letter at a time */
-.puff {
-  position: absolute; z-index: 2; display: flex; transform: translate(-50%, -100%); pointer-events: none; white-space: pre;
-  font: 600 20px/1 'Caveat', 'Caveat Fallback', cursive; color: #54493d;
-  text-shadow: 0 0 6px rgba(110, 97, 82, 0.35);
+/* "copied ✓", pencilled in beside it for a moment (main.js jot) */
+.hello .copied {
+  position: absolute; opacity: 0; pointer-events: none; white-space: nowrap;
+  font: 600 18px/1.2 'Caveat', 'Caveat Fallback', cursive; color: var(--link);
+  transform: rotate(-2.5deg); transform-origin: left center;
 }
-.puff span { display: inline-block; }
 .hello .copy:focus-visible { outline: 2px dashed var(--link); outline-offset: 3px; }
 @media (prefers-reduced-motion: reduce) {
   .letter, .letter:hover { transition: none; transform: rotate(-1.6deg); }

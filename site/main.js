@@ -289,31 +289,22 @@ hello.addEventListener('click', (e) => {
   setTimeout(() => (location.href = hello.href), 650);
   setTimeout(() => hello.classList.remove('posting'), 2200);
 });
-// or just take the address. The button keeps its words; what it says back rises off it as
-// smoke, each letter drifting up and away from the others as it thins out
+// or just take the address. The button keeps its words; a pencilled "copied ✓" fades in
+// just after it, rests a moment and fades away (from wherever it had got to, if clicked again)
 const copy = $('.hello .copy');
-function puff(text) {
+const note = h('span', { class: 'copied', 'aria-hidden': 'true' });
+copy?.after(note);
+function jot(text) {
+  note.textContent = text;
   const line = copy.parentElement;
-  const cloud = h('span', { class: 'puff', 'aria-hidden': 'true' }, ...[...text].map((ch) => h('span', {}, ch)));
-  cloud.style.left = `${copy.offsetLeft + copy.offsetWidth / 2}px`;
-  cloud.style.top = `${copy.offsetTop - 4}px`;
-  line.append(cloud);
-  const letters = [...cloud.children];
-  const mid = (letters.length - 1) / 2;
-  const runs = letters.map((el, i) => {
-    if (reducedMotion) return el.animate([{ opacity: 0 }, { opacity: 0.9, offset: 0.2 }, { opacity: 0.9, offset: 0.7 }, { opacity: 0 }], { duration: 1400, fill: 'both' });
-    const dx = (i - mid) * (7 + Math.random() * 4) + (Math.random() - 0.5) * 6;
-    const dy = -(24 + Math.random() * 16);
-    const turn = (Math.random() - 0.5) * 34;
-    return el.animate([
-      { transform: 'translate(0, 4px) scale(0.92)', opacity: 0, filter: 'blur(0.5px)' },
-      { transform: `translate(${dx * 0.04}px, ${dy * 0.14}px) scale(1)`, opacity: 1, filter: 'blur(0px)', offset: 0.15 },
-      { transform: `translate(${dx * 0.12}px, ${dy * 0.3}px) rotate(${turn * 0.1}deg) scale(1.02)`, opacity: 0.95, filter: 'blur(0.2px)', offset: 0.34 },
-      { transform: `translate(${dx * 0.65}px, ${dy * 0.7}px) rotate(${turn * 0.6}deg) scale(1.15)`, opacity: 0.45, filter: 'blur(1.6px)', offset: 0.7 },
-      { transform: `translate(${dx}px, ${dy}px) rotate(${turn}deg) scale(1.35)`, opacity: 0, filter: 'blur(4px)' },
-    ], { duration: 1800 + Math.random() * 400, delay: i * 40, easing: 'cubic-bezier(0.3, 0.5, 0.4, 1)', fill: 'both' });
-  });
-  Promise.all(runs.map((a) => a.finished)).then(() => cloud.remove());
+  // beside the link, or just over it if there's no room left on the line (under it is the letter)
+  const beside = copy.offsetLeft + copy.offsetWidth + 12;
+  const over = beside + note.offsetWidth > line.clientWidth;
+  note.style.left = `${over ? copy.offsetLeft + copy.offsetWidth - note.offsetWidth : beside}px`;
+  note.style.top = `${over ? copy.offsetTop - note.offsetHeight - 2 : copy.offsetTop}px`;
+  const from = +getComputedStyle(note).opacity;
+  note.getAnimations().forEach((a) => a.cancel());
+  note.animate([{ opacity: from }, { opacity: 1, offset: 0.12 }, { opacity: 1, offset: 0.72 }, { opacity: 0 }], { duration: 2200, easing: 'ease-in-out', fill: 'forwards' });
 }
 // the clipboard API, or the old way for browsers that don't allow it here
 async function take(text) {
@@ -334,7 +325,7 @@ const heard = h('span', { class: 'visually-hidden', role: 'status' });
 copy?.after(heard);
 copy?.addEventListener('click', async () => {
   const ok = await take(copy.dataset.copy);
-  puff(ok ? 'copied' : 'couldn’t copy');
+  jot(ok ? 'copied ✓' : 'couldn’t copy');
   heard.textContent = ok ? `Copied ${copy.dataset.copy}` : 'Couldn’t copy the address';
 });
 
