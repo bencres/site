@@ -8,6 +8,9 @@
 // <head>, before the page is first revealed; turn.css holds the fixed parts.
 const AT = 'turn:at';
 const INK = 'turn:ink';
+// only where there's a mouse or trackpad (turn.css opts in on the same query): on a
+// touch screen pages just change, and none of this does anything
+const TURNS = matchMedia('(hover: hover) and (pointer: fine)').matches;
 
 // the settings, with the ranges the tuning card offers for each
 const TURN = (globalThis.TURN = {
@@ -35,7 +38,7 @@ const TURN = (globalThis.TURN = {
 
 addEventListener('click', (e) => {
   const a = e.target.closest?.('a[href]');
-  if (!a || a.origin !== location.origin || e.defaultPrevented) return;
+  if (!TURNS || !a || a.origin !== location.origin || e.defaultPrevented) return;
   warm();
   // a keyboard "click" has no pointer position; use the link itself
   let x = e.clientX, y = e.clientY;
@@ -82,7 +85,7 @@ let settle;
 globalThis.turnSettled = new Promise((done) => (settle = done));
 {
   const a = globalThis.navigation?.activation;
-  if (!('onpagereveal' in globalThis) || document.visibilityState === 'hidden' || matchMedia('(prefers-reduced-motion: reduce)').matches || (a && (!a.from || a.navigationType === 'reload'))) settle();
+  if (!TURNS || !('onpagereveal' in globalThis) || document.visibilityState === 'hidden' || matchMedia('(prefers-reduced-motion: reduce)').matches || (a && (!a.from || a.navigationType === 'reload'))) settle();
 }
 
 addEventListener('pagereveal', (e) => {
@@ -165,7 +168,7 @@ const MASKS = SHAPES.map((_, i) => new URL(`turn/drop-${i + 1}.webp`, document.c
 // next arrival finds them ready
 let warmed;
 const warm = () => (warmed ||= MASKS.map((src) => Object.assign(new Image(), { src })));
-addEventListener('load', () => (globalThis.requestIdleCallback || setTimeout)(warm));
+if (TURNS) addEventListener('load', () => (globalThis.requestIdleCallback || setTimeout)(warm));
 
 // the wet rim: water darkening the paper where it stops, a paler band just inside,
 // a little granulation; `o` is how strong the rim line is

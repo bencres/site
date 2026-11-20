@@ -1,7 +1,11 @@
 /* Page transitions: the next page arrives as a downpour of watercolor drops.
    The drops themselves (masks, keyframes, wet rims) are generated per arrival by
-   turn.js. Browsers without cross-document view transitions simply navigate. */
-@view-transition { navigation: auto; }
+   turn.js. Browsers without cross-document view transitions simply navigate, and so
+   do phones and tablets (anything driven by touch): the drops never ran smoothly
+   there, so pages simply change. Keep in step with TURNS in turn.js. */
+@media (hover: hover) and (pointer: fine) {
+  @view-transition { navigation: auto; }
+}
 
 ::view-transition-old(root), ::view-transition-new(root) { mix-blend-mode: normal; }
 
