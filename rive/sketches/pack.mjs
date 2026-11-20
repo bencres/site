@@ -1,7 +1,9 @@
-// Pack (001, how to make a Houdini package): packing for the road. Everything
-// for the journey is laid out on the grass, and goes into the pack one thing at a
-// time, each into its place, before the flap comes down and the tag is tied on;
-// then out it all comes again. Somewhere back over the hill is a round door.
+// Pack (001, how to make a Houdini package): packing for the road. Everything for the
+// journey is laid out on the grass, and each thing goes to its own place on the pack,
+// as a package's files each go in their own folder: the apples into the main
+// compartment under the flap, the pipe into the front pocket, the map into the side
+// pocket, the rope strapped on top, the lantern on its ring. Then out it all comes
+// again. Somewhere back over the hill is a round door.
 import { P, el, washShape, watercolor, blobPts, resample, EASE, rng } from '../lib/ink.mjs';
 import { sketch, group, INK_SOFT, AMBIENT, STORY } from './common.mjs';
 
@@ -34,10 +36,12 @@ export default function pack(ids, x = 0) {
     ...[64, 168, 404, 470, 676].map((gx) => pen([P(gx - 4, 348), P(gx, 338), P(gx + 3, 348), P(gx + 7, 340)], { t: 0.3, w: 1, j: 0.4 })),
   ]);
 
-  // the pack: its open flap tipped back, the dark of its mouth, what goes in, then its front
+  // the pack, and where each thing goes: the apples into the main compartment, under the
+  // flap; the pipe into the front pocket; the map, rolled, into the side pocket; the rope
+  // strapped on top once the flap is down; the lantern on its ring at the side
   const PX = 300, PY = 346; // the pack stands on its middle
   const HINGE = { x: 300, y: 213 };
-  const openFlap = ids.next(), shutFlap = ids.next(), front = ids.next();
+  const openFlap = ids.next(), shutFlap = ids.next(), front = ids.next(), pocketId = ids.next(), sideId = ids.next(), straps = ids.next();
   const lid = [P(-48, 0), P(-45, -26), P(-30, -38), P(30, -38), P(45, -26), P(48, 0)];
   s.add(soak(60, group({ name: 'open flap', id: openFlap, x: HINGE.x, y: HINGE.y }, [
     washShape({ pts: lid, color: '7A8850', alpha: 0.55, edge: 0.7, soft: 0.6, tension: 0.6 }),
@@ -46,104 +50,114 @@ export default function pack(ids, x = 0) {
   s.add(soak(64, watercolor({ x: HINGE.x, y: HINGE.y - 3, rx: 50, ry: 10, color: '4A3C2C', seed: 8, alpha: 0.9, grain: false })));
 
   // the things for the road, each drawn about its own middle where it lies on the grass
-  const things = [
-    {
-      name: 'apples', at: P(432, 338),
-      wash: [watercolor({ x: -8, y: 0, rx: 9, ry: 9, color: 'B9483A', seed: 51, alpha: 0.75, grain: false }), watercolor({ x: 9, y: 2, rx: 8.5, ry: 8, color: 'A9B04F', seed: 52, alpha: 0.75, grain: false })],
-      ink: (pen) => [
-        pen(oval(-8, 0, 9, 9, 10), { closed: true, w: 1.2, j: 0.3 }),
-        pen(oval(9, 2, 8.5, 8, 10), { closed: true, w: 1.2, j: 0.3 }),
-        pen([P(-8, -8), P(-7, -14)], { w: 1, j: 0.2 }),
-        pen([P(-7, -12), P(-2, -16), P(1, -13)], { w: 0.9, j: 0.2 }),
-        pen([P(9, -5), P(11, -10)], { w: 1, j: 0.2 }),
-      ],
-    },
-    {
-      name: 'rope', at: P(504, 338),
-      wash: [0, 1, 2].map((k) => washShape({ pts: oval(0, -12 + k * 6, 22, 7), color: 'C8A46A', alpha: 0.4, edge: 0.6, soft: 0.6 })),
-      ink: (pen) => [
-        ...[0, 1, 2].map((k) => pen(oval(0, -12 + k * 6, 22 - k, 7, 12), { closed: true, w: 1.1, j: 0.35 })),
-        pen([P(20, 0), P(30, 5), P(40, 3), P(46, 7)], { w: 1.1, j: 0.3 }),
-      ],
-    },
-    {
-      name: 'map', at: P(572, 338), rot: -0.08,
-      wash: [
-        washShape({ pts: [P(-28, -7), P(28, -7), P(28, 7), P(-28, 7)], color: 'E8D9B0', alpha: 0.8, edge: 0.6, soft: 0.5, tension: 0.1 }),
-        washShape({ pts: [P(-3, -8), P(3, -8), P(3, 8), P(-3, 8)], color: 'B9483A', alpha: 0.75, edge: 0.6, soft: 0.4, tension: 0.1 }),
-      ],
-      ink: (pen) => [
-        pen([P(-28, -7), P(28, -7)], { w: 1.2, j: 0.3 }),
-        pen([P(-28, 7), P(28, 7)], { w: 1.2, j: 0.3 }),
-        pen(oval(28, 0, 3, 7, 10), { closed: true, w: 1.1, j: 0.2 }),
-        pen(oval(-28, 0, 3, 7, 10), { closed: true, w: 1.1, j: 0.2 }),
-        pen([P(1, 7), P(4, 15), P(2, 20)], { w: 0.9, j: 0.2 }),
-        pen([P(-1, 7), P(-6, 14), P(-7, 19)], { w: 0.9, j: 0.2 }),
-      ],
-    },
-    {
-      name: 'lantern', at: P(636, 328),
-      wash: [
-        watercolor({ x: 0, y: 0, rx: 12, ry: 13, color: 'F2C66B', seed: 61, alpha: 0.7, grain: false }),
-        washShape({ pts: [P(-13, -14), P(0, -24), P(13, -14)], color: '5B4F43', alpha: 0.6, edge: 0.6, soft: 0.4, tension: 0.2 }),
-      ],
-      ink: (pen) => [
-        pen([P(-11, -14), P(-13, 14), P(13, 14), P(11, -14)], { t: 0.1, w: 1.2, j: 0.3 }),
-        pen([P(-14, -14), P(0, -24), P(14, -14), P(-14, -14)], { t: 0.1, w: 1.2, j: 0.3 }),
-        pen([P(-6, -22), P(-6, -31), P(0, -35), P(6, -31), P(6, -22)], { w: 1.1, j: 0.3 }),
-        pen([P(-14, 14), P(14, 14), P(14, 18), P(-14, 18)], { t: 0.1, w: 1.1, j: 0.3 }),
-        pen([P(0, -6), P(2, 2), P(0, 6), P(-2, 2), P(0, -6)], { w: 0.8, j: 0.2 }),
-      ],
-    },
-    {
-      name: 'pipe', at: P(530, 360), rot: 0.04,
-      wash: [washShape({ pts: [P(-34, -15), P(-20, -15), P(-21, -3), P(-27, 1), P(-33, -3)], color: '8A6A48', alpha: 0.7, edge: 0.7, soft: 0.4, tension: 0.6 })],
-      ink: (pen) => [
-        pen([P(-34, -15), P(-33, -3), P(-27, 1), P(-21, -3), P(-20, -15)], { t: 0.6, w: 1.2, j: 0.3 }),
-        pen(oval(-27, -15, 7, 2, 8), { closed: true, w: 1, j: 0.2 }),
-        pen([P(-21, -6), P(0, -2), P(22, 0), P(38, -1)], { w: 2.1, j: 0.4 }),
-      ],
-    },
-  ];
-  const IN = { x: PX, y: PY - 62 }; // where a thing rests once it's in
-  const HOVER = { x: PX, y: HINGE.y - 40 };
-  for (const t of things) {
+  // (the lantern about the top of its handle, which is what it hangs by)
+  const thing = (t) => {
     t.id = ids.next();
-    s.add(soak(70 + things.indexOf(t) * 6, group({ name: t.name, id: t.id, x: t.at.x, y: t.at.y, rotation: t.rot }, [
+    return soak(70 + t.n * 6, group({ name: t.name, id: t.id, x: t.at.x, y: t.at.y, rotation: t.rot }, [
       ...t.wash,
-      line(t.name, 70 + things.indexOf(t), (pen) => t.ink(pen), { add: false }).xml,
-    ]), 36));
-  }
+      line(t.name, 70 + t.n, (pen) => t.ink(pen), { add: false }).xml,
+    ]), 36);
+  };
+  const apples = {
+    n: 0, name: 'apples', at: P(432, 338), to: P(PX, PY - 62), via: P(PX, HINGE.y - 40), turn: 0.35,
+    wash: [watercolor({ x: -8, y: 0, rx: 9, ry: 9, color: 'B9483A', seed: 51, alpha: 0.75, grain: false }), watercolor({ x: 9, y: 2, rx: 8.5, ry: 8, color: 'A9B04F', seed: 52, alpha: 0.75, grain: false })],
+    ink: (pen) => [
+      pen(oval(-8, 0, 9, 9, 10), { closed: true, w: 1.2, j: 0.3 }),
+      pen(oval(9, 2, 8.5, 8, 10), { closed: true, w: 1.2, j: 0.3 }),
+      pen([P(-8, -8), P(-7, -14)], { w: 1, j: 0.2 }),
+      pen([P(-7, -12), P(-2, -16), P(1, -13)], { w: 0.9, j: 0.2 }),
+      pen([P(9, -5), P(11, -10)], { w: 1, j: 0.2 }),
+    ],
+  };
+  const pipe = {
+    n: 1, name: 'pipe', at: P(530, 360), rot: 0.04, to: P(PX + 4, PY - 45), via: P(PX + 4, PY - 104), turn: Math.PI / 2,
+    wash: [washShape({ pts: [P(-34, -15), P(-20, -15), P(-21, -3), P(-27, 1), P(-33, -3)], color: '8A6A48', alpha: 0.7, edge: 0.7, soft: 0.4, tension: 0.6 })],
+    ink: (pen) => [
+      pen([P(-34, -15), P(-33, -3), P(-27, 1), P(-21, -3), P(-20, -15)], { t: 0.6, w: 1.2, j: 0.3 }),
+      pen(oval(-27, -15, 7, 2, 8), { closed: true, w: 1, j: 0.2 }),
+      pen([P(-21, -6), P(0, -2), P(22, 0), P(38, -1)], { w: 2.1, j: 0.4 }),
+    ],
+  };
+  const map = {
+    n: 2, name: 'map', at: P(572, 338), rot: -0.08, to: P(PX + 68, PY - 76), via: P(PX + 68, PY - 128), turn: Math.PI / 2,
+    wash: [
+      washShape({ pts: [P(-28, -7), P(28, -7), P(28, 7), P(-28, 7)], color: 'E8D9B0', alpha: 0.8, edge: 0.6, soft: 0.5, tension: 0.1 }),
+      washShape({ pts: [P(-3, -8), P(3, -8), P(3, 8), P(-3, 8)], color: 'B9483A', alpha: 0.75, edge: 0.6, soft: 0.4, tension: 0.1 }),
+    ],
+    ink: (pen) => [
+      pen([P(-28, -7), P(28, -7)], { w: 1.2, j: 0.3 }),
+      pen([P(-28, 7), P(28, 7)], { w: 1.2, j: 0.3 }),
+      pen(oval(28, 0, 3, 7, 10), { closed: true, w: 1.1, j: 0.2 }),
+      pen(oval(-28, 0, 3, 7, 10), { closed: true, w: 1.1, j: 0.2 }),
+      pen([P(1, 7), P(4, 15), P(2, 20)], { w: 0.9, j: 0.2 }),
+      pen([P(-1, 7), P(-6, 14), P(-7, 19)], { w: 0.9, j: 0.2 }),
+    ],
+  };
+  const rope = {
+    n: 3, name: 'rope', at: P(504, 338), to: P(PX, HINGE.y - 6), via: P(PX, HINGE.y - 52), turn: 0,
+    wash: [0, 1, 2].map((k) => washShape({ pts: oval(0, -12 + k * 6, 22, 7), color: 'C8A46A', alpha: 0.4, edge: 0.6, soft: 0.6 })),
+    ink: (pen) => [
+      ...[0, 1, 2].map((k) => pen(oval(0, -12 + k * 6, 22 - k, 7, 12), { closed: true, w: 1.1, j: 0.35 })),
+      pen([P(20, 0), P(30, 5), P(40, 3), P(46, 7)], { w: 1.1, j: 0.3 }),
+    ],
+  };
+  const RING = P(PX - 62, PY - 92);
+  const lantern = {
+    n: 4, name: 'lantern', at: P(636, 293), to: RING, via: P(RING.x - 6, RING.y - 46), turn: 0, swing: true,
+    wash: [
+      watercolor({ x: 0, y: 35, rx: 12, ry: 13, color: 'F2C66B', seed: 61, alpha: 0.7, grain: false }),
+      washShape({ pts: [P(-13, 21), P(0, 11), P(13, 21)], color: '5B4F43', alpha: 0.6, edge: 0.6, soft: 0.4, tension: 0.2 }),
+    ],
+    ink: (pen) => [
+      pen([P(-11, 21), P(-13, 49), P(13, 49), P(11, 21)], { t: 0.1, w: 1.2, j: 0.3 }),
+      pen([P(-14, 21), P(0, 11), P(14, 21), P(-14, 21)], { t: 0.1, w: 1.2, j: 0.3 }),
+      pen([P(-6, 13), P(-6, 4), P(0, 0), P(6, 4), P(6, 13)], { w: 1.1, j: 0.3 }),
+      pen([P(-14, 49), P(14, 49), P(14, 53), P(-14, 53)], { t: 0.1, w: 1.1, j: 0.3 }),
+      pen([P(0, 29), P(2, 37), P(0, 41), P(-2, 37), P(0, 29)], { w: 0.8, j: 0.2 }),
+    ],
+  };
+  const things = [apples, pipe, map, rope, lantern];
 
+  s.add(thing(apples));
   // the pack's front: paper behind its wash, so whatever has gone in is out of sight
   const body = [P(-52, -133), P(-61, -112), P(-64, -50), P(-57, -10), P(-30, 0), P(30, 0), P(57, -10), P(64, -50), P(61, -112), P(52, -133)];
-  const pocket = [P(-34, -78), P(34, -78), P(36, -22), P(26, -14), P(-26, -14), P(-36, -22)];
-  const tagId = ids.next();
-  const tag = [P(4, 22), P(22, 18), P(27, 40), P(8, 44)];
+  // low on the front, so the pipe's bowl shows between it and the flap once that's down
+  const pocket = [P(-34, -62), P(34, -62), P(36, -14), P(26, -5), P(-26, -5), P(-36, -14)];
+  const side = [P(55, -84), P(74, -82), P(80, -48), P(76, -18), P(57, -14)];
   s.add(soak(52, group({ name: 'front', id: front, x: PX, y: PY }, [
     washShape({ pts: body, color: PAPER, alpha: 1, edge: 0, soft: 0.5, blend: 'srcOver', tension: 0.7 }),
     washShape({ pts: body, color: '8C9A5E', alpha: 0.6, edge: 0.8, soft: 1.2, tension: 0.7 }),
-    washShape({ pts: pocket, color: '6E7C46', alpha: 0.45, edge: 0.7, soft: 0.8, tension: 0.4 }),
     watercolor({ x: -36, y: -60, rx: 16, ry: 40, color: '5E6B3A', seed: 77, alpha: 0.25, grain: false }),
+    // the dark of the front pocket's mouth, and the side pocket's
+    watercolor({ x: 0, y: -63, rx: 33, ry: 4, color: '3E3424', seed: 78, alpha: 0.7, grain: false }),
+    watercolor({ x: 65, y: -84, rx: 10, ry: 3.5, color: '3E3424', seed: 79, alpha: 0.7, grain: false }),
     line('Pack', 23, (pen) => [
       pen(body, { closed: true, t: 0.7, w: 1.7, j: 0.5 }),
-      pen(pocket, { closed: true, t: 0.4, w: 1.3, j: 0.4 }),
-      pen([P(-34, -60), P(0, -56), P(34, -60)], { w: 1.1, j: 0.3 }),
-      pen([P(-24, -133), P(-26, -78)], { w: 1.2, j: 0.3 }),
-      pen([P(24, -133), P(26, -78)], { w: 1.2, j: 0.3 }),
+      pen([P(-24, -133), P(-26, -62)], { w: 1.2, j: 0.3 }),
+      pen([P(24, -133), P(26, -62)], { w: 1.2, j: 0.3 }),
       pen([P(-40, -4), P(-44, -40)], { color: INK_SOFT, w: 0.9, j: 0.3 }),
+      pen(oval(RING.x - PX, RING.y - PY + 1, 3.4, 3.4, 8), { closed: true, w: 1.3, j: 0.15 }),
     ], { add: false }).xml,
-    // the tag, swinging from a ring at the pack's shoulder
-    group({ name: 'tag', id: tagId, x: 56, y: -112 }, [
-      washShape({ pts: tag, color: 'E8D9B0', alpha: 0.85, edge: 0.7, soft: 0.4, tension: 0.15 }),
-      line('Tag', 27, (pen) => [
-        pen([P(0, 0), P(6, 12), P(12, 21)], { w: 0.9, j: 0.2 }),
-        pen(tag, { closed: true, t: 0.15, w: 1.1, j: 0.25 }),
-        pen([P(10, 28), P(20, 26)], { color: INK_SOFT, w: 0.8, j: 0.3 }),
-        pen([P(11, 33), P(22, 31)], { color: INK_SOFT, w: 0.8, j: 0.3 }),
-        pen([P(12, 38), P(18, 37)], { color: INK_SOFT, w: 0.8, j: 0.3 }),
-      ], { add: false }).xml,
-    ]),
+  ])));
+  s.add(thing(pipe));
+  // the front pocket, over the pipe
+  s.add(soak(54, group({ name: 'front pocket', id: pocketId, x: PX, y: PY }, [
+    washShape({ pts: pocket, color: PAPER, alpha: 1, edge: 0, soft: 0.4, blend: 'srcOver', tension: 0.4 }),
+    washShape({ pts: pocket, color: '6E7C46', alpha: 0.62, edge: 0.7, soft: 0.8, tension: 0.4 }),
+    line('Pocket', 25, (pen) => [
+      pen(pocket, { closed: true, t: 0.4, w: 1.3, j: 0.4 }),
+      pen([P(-34, -46), P(0, -42), P(34, -46)], { w: 1.1, j: 0.3 }),
+    ], { add: false }).xml,
+  ])));
+  s.add(thing(map));
+  // the side pocket, over the map
+  s.add(soak(56, group({ name: 'side pocket', id: sideId, x: PX, y: PY }, [
+    washShape({ pts: side, color: PAPER, alpha: 1, edge: 0, soft: 0.4, blend: 'srcOver', tension: 0.5 }),
+    washShape({ pts: side, color: '76844E', alpha: 0.62, edge: 0.7, soft: 0.8, tension: 0.5 }),
+    line('Side', 26, (pen) => [
+      pen(side, { closed: true, t: 0.5, w: 1.3, j: 0.35 }),
+      pen([P(57, -70), P(77, -68)], { color: INK_SOFT, w: 0.9, j: 0.3 }),
+    ], { add: false }).xml,
   ])));
 
   // the flap once it's down, buckled across the front
@@ -158,14 +172,23 @@ export default function pack(ids, x = 0) {
       pen([P(-46, 10), P(0, 16), P(46, 10)], { color: INK_SOFT, w: 0.9, j: 0.3 }),
     ], { add: false, drawn: false }).xml,
   ]));
-
+  // the rope sits on the shut flap, and two straps go over it
+  s.add(thing(rope));
+  s.add(group({ name: 'straps', id: straps, x: HINGE.x, y: HINGE.y, opacity: 0 }, [
+    line('Straps', 30, (pen) => [-14, 14].flatMap((dx) => [
+      pen([P(dx - 1, -26), P(dx, -14), P(dx + 1, 4)], { w: 2.4, j: 0.3, drawn: false }),
+      pen([P(dx - 3.5, -13), P(dx + 3.5, -13)], { w: 1.1, j: 0.2, drawn: false }),
+    ]), { add: false }).xml,
+  ]));
   // a stick for the road, leant on the pack
-  s.add(soak(80, washShape({ pts: [P(190, 351), P(247, 196), P(252, 198), P(196, 352)], color: '8A6A48', alpha: 0.55, edge: 0.6, soft: 0.5, tension: 0.2 })));
+  s.add(soak(80, washShape({ pts: [P(127, 351), P(240, 228), P(245, 232), P(133, 352)], color: '8A6A48', alpha: 0.55, edge: 0.6, soft: 0.5, tension: 0.2 })));
   line('Stick', 31, (pen) => [
-    pen([P(193, 352), P(214, 296), P(232, 244), P(250, 194)], { w: 2.3, j: 0.5 }),
-    pen(blobPts(6, 5, rng(32), { n: 8, wobble: 0.2 }).map((p) => P(p.x + 251, p.y + 192)), { closed: true, w: 1.3, j: 0.3 }),
-    pen([P(222, 270), P(214, 262)], { w: 1, j: 0.2 }),
+    pen([P(130, 352), P(168, 311), P(206, 270), P(243, 229)], { w: 2.3, j: 0.5 }),
+    pen(blobPts(6, 5, rng(32), { n: 8, wobble: 0.2 }).map((p) => P(p.x + 244, p.y + 227)), { closed: true, w: 1.3, j: 0.3 }),
+    pen([P(178, 300), P(170, 296)], { w: 1, j: 0.2 }),
   ]);
+  s.add(thing(lantern));
+
 
   // a butterfly with somewhere to be
   const fly = ids.next(), wingL = ids.next(), wingR = ids.next();
@@ -186,36 +209,44 @@ export default function pack(ids, x = 0) {
       { object: fly, prop: 'y', keys: route.map(([f, , vy], i) => [f, vy + (i % 2 ? -10 : 8), 'cubic', EASE.inOut]) },
     ],
   }));
-  s.loopLayer('Sway', s.anim({
-    name: 'Sway', duration: 180, loop: 'loop', rate: AMBIENT,
-    tracks: [{ object: tagId, prop: 'rotation', keys: [[0, -0.08, 'cubic', EASE.inOut], [90, 0.12, 'cubic', EASE.inOut], [180, -0.08]] }],
-  }));
-
-  // the story: in it all goes, one thing after another; the flap comes down; a pause
-  // to be ready; up comes the flap, and out it all comes again, last in first out
-  const T0 = 160, STEP = 66, SHUT = T0 + things.length * STEP + 10, OPEN = SHUT + 330, OUT0 = OPEN + 44, OSTEP = 58;
-  const D = OUT0 + things.length * OSTEP + 140;
+  // the story: each thing up off the grass and over to its own place (the flap comes
+  // down once the apples are in, and the rope is strapped on top of it); a pause to be
+  // ready; then all of it back out again, last in first out
+  const IN = [160, 230, 300, 430, 500];
+  const SHUT = 372, READY = 880;
+  const OUT = [1170, 1110, 1050, 940, 880]; // by thing; the flap opens before the map comes out
+  const OPEN = 990;
+  const D = 1360;
   const tracks = [];
   const squash = [[0, 1, 'hold']];
+  const bump = (f, k = 0.965) => squash.push([f, 1, 'cubic', EASE.out], [f + 6, k, 'cubic', EASE.inOut], [f + 22, 1, 'hold']);
   things.forEach((t, k) => {
-    const a = T0 + k * STEP; // in
-    const b = OUT0 + (things.length - 1 - k) * OSTEP; // out
-    const rot = t.rot || 0, tip = k % 2 ? 0.35 : -0.3;
-    tracks.push({ object: t.id, prop: 'x', keys: [[0, t.at.x, 'hold'], [a, t.at.x, 'cubic', EASE.inOut], [a + 34, HOVER.x, 'hold'], [b, IN.x, 'cubic', EASE.inOut], [b + 44, t.at.x]] });
+    const a = IN[k], b = OUT[k];
+    const rot = t.rot || 0, tip = t.turn + (k % 2 ? 0.2 : -0.2);
+    tracks.push({ object: t.id, prop: 'x', keys: [[0, t.at.x, 'hold'], [a, t.at.x, 'cubic', EASE.inOut], [a + 34, t.via.x, 'cubic', EASE.inOut], [a + 52, t.to.x, 'hold'], [b, t.to.x, 'cubic', EASE.inOut], [b + 16, t.via.x, 'cubic', EASE.inOut], [b + 46, t.at.x]] });
     tracks.push({ object: t.id, prop: 'y', keys: [
-      [0, t.at.y, 'hold'], [a, t.at.y, 'cubic', EASE.out], [a + 16, t.at.y - 46, 'cubic', EASE.inOut], [a + 34, HOVER.y, 'cubic', EASE.in], [a + 52, IN.y, 'hold'],
-      [b, IN.y, 'cubic', EASE.out], [b + 18, HOVER.y - 6, 'cubic', EASE.inOut], [b + 40, t.at.y - 22, 'cubic', EASE.in], [b + 50, t.at.y],
+      [0, t.at.y, 'hold'], [a, t.at.y, 'cubic', EASE.out], [a + 16, t.at.y - 46, 'cubic', EASE.inOut], [a + 34, t.via.y, 'cubic', EASE.in], [a + 52, t.to.y, 'hold'],
+      [b, t.to.y, 'cubic', EASE.out], [b + 18, t.via.y - 6, 'cubic', EASE.inOut], [b + 40, t.at.y - 22, 'cubic', EASE.in], [b + 50, t.at.y],
     ] });
-    tracks.push({ object: t.id, prop: 'rotation', keys: [[0, rot, 'hold'], [a, rot, 'cubic', EASE.inOut], [a + 34, tip, 'hold'], [b, tip, 'cubic', EASE.inOut], [b + 46, rot]] });
-    squash.push([a + 52, 1, 'cubic', EASE.out], [a + 58, 0.965, 'cubic', EASE.inOut], [a + 74, 1, 'hold']);
+    const settle = t.swing
+      // a lantern on a ring swings, and settles
+      ? [[a + 34, tip, 'cubic', EASE.inOut], [a + 52, 0.32, 'cubic', EASE.inOut], [a + 70, -0.2, 'cubic', EASE.inOut], [a + 88, 0.09, 'cubic', EASE.inOut], [a + 104, -0.03, 'cubic', EASE.inOut], [a + 118, 0, 'hold'], [b, 0, 'cubic', EASE.inOut]]
+      : [[a + 34, tip, 'cubic', EASE.inOut], [a + 50, t.turn, 'hold'], [b, t.turn, 'cubic', EASE.inOut]];
+    tracks.push({ object: t.id, prop: 'rotation', keys: [[0, rot, 'hold'], [a, rot, 'cubic', EASE.inOut], ...settle, [b + 46, rot]] });
+    if (!t.swing) bump(a + 52);
   });
-  squash.push([SHUT + 30, 1, 'cubic', EASE.out], [SHUT + 36, 0.975, 'cubic', EASE.inOut], [SHUT + 52, 1]);
-  tracks.push({ object: front, prop: 'scaleY', keys: squash });
-  tracks.push({ object: front, prop: 'scaleX', keys: squash.map(([f, v, ...e]) => [f, 2 - v, ...e]) });
+  bump(SHUT + 30, 0.975);
+  squash.sort((p, q) => p[0] - q[0]);
+  for (const id of [front, pocketId, sideId]) {
+    tracks.push({ object: id, prop: 'scaleY', keys: squash });
+    tracks.push({ object: id, prop: 'scaleX', keys: squash.map(([f, v, ...e]) => [f, 2 - v, ...e]) });
+  }
   // the flap folds forward over the top, and back again
   tracks.push({ object: openFlap, prop: 'scaleY', keys: [[0, 1, 'hold'], [SHUT, 1, 'cubic', EASE.in], [SHUT + 14, 0, 'hold'], [OPEN + 16, 0, 'cubic', EASE.out], [OPEN + 32, 1]] });
   tracks.push({ object: shutFlap, prop: 'scaleY', keys: [[0, 0, 'hold'], [SHUT + 14, 0, 'cubic', EASE.out], [SHUT + 32, 1, 'hold'], [OPEN, 1, 'cubic', EASE.in], [OPEN + 16, 0]] });
   tracks.push({ object: shutFlap, prop: 'opacity', keys: [[0, 0, 'hold'], [SHUT + 14, 1, 'hold'], [OPEN + 16, 0]] });
+  // the straps buckle over the rope once it's down, and come undone before it goes
+  tracks.push({ object: straps, prop: 'opacity', keys: [[0, 0, 'hold'], [IN[3] + 54, 0, 'cubic', EASE.out], [IN[3] + 66, 1, 'hold'], [OUT[3] - 12, 1, 'cubic', EASE.in], [OUT[3], 0]] });
   s.loopLayer('Packing', s.anim({ name: 'Packing', duration: D, loop: 'loop', rate: STORY, tracks }));
 
   intro();
