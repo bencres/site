@@ -41,8 +41,16 @@ function niggle(ids) {
   s.add(el('GroupEffect', { name: 'Draw', id: fx }, el('TrimPath', { end: 0, id: trim, name: 'Trim' })));
 
   // a soft wash of afternoon behind everything, kept inside the frame
-  s.add(watercolor({ x: 372, y: 170, rx: 270, ry: 120, color: 'C9D9E6', seed: 3, alpha: 0.32, grain: false }));
-  s.add(watercolor({ x: 372, y: 352, rx: 300, ry: 22, color: 'B9C48A', seed: 4, alpha: 0.4 }));
+  // every wash soaks in during the intro, a beat behind the ink that draws it (rather than
+  // being on the page from the first frame)
+  const soakTracks = [];
+  const soak = (t0, xml, len = 46) => {
+    const id = ids.next();
+    soakTracks.push({ object: id, prop: 'opacity', keys: [[0, 0, 'hold'], [t0, 0, 'cubic', EASE.out], [t0 + len, 1]] });
+    return el('Node', { name: 'soak', id, opacity: 0 }, [].concat(xml));
+  };
+  s.add(soak(0, watercolor({ x: 372, y: 170, rx: 270, ry: 120, color: 'C9D9E6', seed: 3, alpha: 0.32, grain: false }), 70));
+  s.add(soak(10, watercolor({ x: 372, y: 352, rx: 300, ry: 22, color: 'B9C48A', seed: 4, alpha: 0.4 }), 60));
 
   // the easel's frame stands behind the canvas board
   const frame = [
@@ -59,7 +67,7 @@ function niggle(ids) {
 
   // the canvas on the easel, and the tree being painted on it
   const C = { x0: 266, y0: 92, x1: 478, y1: 298 };
-  s.add(washShape({ pts: [P(C.x0, C.y0), P(C.x1, C.y0 - 2), P(C.x1 + 1, C.y1), P(C.x0 - 1, C.y1 + 1)], color: 'FBF6EA', alpha: 0.95, edge: 0.3, soft: 0.5, blend: 'srcOver', tension: 0 }));
+  s.add(soak(24, washShape({ pts: [P(C.x0, C.y0), P(C.x1, C.y0 - 2), P(C.x1 + 1, C.y1), P(C.x0 - 1, C.y1 + 1)], color: 'FBF6EA', alpha: 0.95, edge: 0.3, soft: 0.5, blend: 'srcOver', tension: 0 })));
 
   const cx = 372, cy = 168;
   const branches = [
@@ -70,7 +78,7 @@ function niggle(ids) {
     [P(372, 200), P(388, 172), P(402, 146), P(408, 124)],
     [P(371, 190), P(372, 160), P(370, 128), P(372, 104)],
   ];
-  s.add(washShape({ pts: [P(366, 292), P(365, 230), P(368, 200), P(376, 200), P(379, 232), P(380, 292)], color: '8A6A48', alpha: 0.5, edge: 0.6, soft: 0.6, tension: 0.4 }));
+  s.add(soak(58, washShape({ pts: [P(366, 292), P(365, 230), P(368, 200), P(376, 200), P(379, 232), P(380, 292)], color: '8A6A48', alpha: 0.5, edge: 0.6, soft: 0.6, tension: 0.4 })));
 
   // leaves: sprinkled through the crown, a few at each branch's end
   const leaves = [];
@@ -110,10 +118,10 @@ function niggle(ids) {
   s.loopLayer('Boil', ink.animId);
 
   // a stool to the right, with a jar of brushes and a palette of the tree's colours
-  s.add(watercolor({ x: 560, y: 300, rx: 34, ry: 9, color: 'B48A5A', seed: 9, alpha: 0.45, grain: false }));
-  s.add(washShape({ pts: [P(540, 250), P(566, 250), P(568, 292), P(538, 292)], color: '9FB7C4', alpha: 0.45, edge: 0.7, soft: 0.6, tension: 0.2 }));
+  s.add(soak(70, watercolor({ x: 560, y: 300, rx: 34, ry: 9, color: 'B48A5A', seed: 9, alpha: 0.45, grain: false })));
+  s.add(soak(74, washShape({ pts: [P(540, 250), P(566, 250), P(568, 292), P(538, 292)], color: '9FB7C4', alpha: 0.45, edge: 0.7, soft: 0.6, tension: 0.2 })));
   const palette = [['7FA65A', 590, 290], ['D29A45', 604, 294], ['B9B45A', 584, 297]];
-  for (const [col, x, y] of palette) s.add(watercolor({ x, y, rx: 6, ry: 4, color: col, seed: x, alpha: 0.85, grain: false }));
+  palette.forEach(([col, x, y], i) => s.add(soak(80 + i * 6, watercolor({ x, y, rx: 6, ry: 4, color: col, seed: x, alpha: 0.85, grain: false }), 30)));
   const stool = boil(s, {
     name: 'Stool', seed: 11, hold: CEL, rate: AMBIENT,
     draw: (rr) => [
@@ -132,9 +140,9 @@ function niggle(ids) {
 
   // a candle on the left: the one light in the room that's brighter than white
   const flameId = ids.next(), glowId = ids.next();
-  s.add(el('Node', { name: 'glow', x: 150, y: 248, id: glowId }, [watercolor({ rx: 46, ry: 46, color: 'F2C66B', seed: 13, alpha: 0.35, grain: false })]));
-  s.add(washShape({ pts: [P(142, 262), P(158, 262), P(159, 330), P(141, 330)], color: 'EFE6D2', alpha: 0.9, edge: 0.4, soft: 0.5, blend: 'srcOver', tension: 0.2 }));
-  s.add(el('Node', { name: 'flame', x: 150, y: 250, id: flameId }, [washShape({ pts: [P(0, -14), P(5, -2), P(3, 6), P(-3, 6), P(-5, -2)], color: 'E8993A', alpha: 0.9, edge: 0.8, soft: 0.4, tension: 0.9 })]));
+  s.add(soak(60, el('Node', { name: 'glow', x: 150, y: 248, id: glowId }, [watercolor({ rx: 46, ry: 46, color: 'F2C66B', seed: 13, alpha: 0.35, grain: false })]), 60));
+  s.add(soak(40, washShape({ pts: [P(142, 262), P(158, 262), P(159, 330), P(141, 330)], color: 'EFE6D2', alpha: 0.9, edge: 0.4, soft: 0.5, blend: 'srcOver', tension: 0.2 })));
+  s.add(soak(64, el('Node', { name: 'flame', x: 150, y: 250, id: flameId }, [washShape({ pts: [P(0, -14), P(5, -2), P(3, 6), P(-3, 6), P(-5, -2)], color: 'E8993A', alpha: 0.9, edge: 0.8, soft: 0.4, tension: 0.9 })]), 24));
   const candle = boil(s, {
     name: 'Candle', seed: 17, hold: CEL, rate: AMBIENT,
     draw: (rr) => [
@@ -167,14 +175,14 @@ function niggle(ids) {
 
   // the brush, which visits each leaf as its colour comes in
   const brushId = ids.next();
-  s.add(el('Node', { name: 'brush', x: 556, y: 210, rotation: -0.5, id: brushId }, [
+  s.add(soak(90, el('Node', { name: 'brush', x: 556, y: 210, rotation: -0.5, id: brushId }, [
     inkShape({ pts: [P(0, 0), P(46, 58)], color: INK, width: 2.6, bleed: 0.1 }),
     washShape({ pts: [P(-2, -3), P(3, 1), P(-4, -12), P(-7, -10)], color: '6C9A57', alpha: 0.9, edge: 0.8, soft: 0.4, tension: 0.6 }),
-  ]));
+  ]), 30));
 
   // the loop: ink draws itself the first time; then the leaves colour in one by
   // one, in the loader's order, hold a while, and fade so it can begin again
-  s.loopLayer('Intro', s.anim({ name: 'Intro', duration: 110, tracks: [{ object: trim, prop: 'end', keys: [[0, 0, 'cubic', [0.55, 0.05, 0.25, 1]], [100, 1]] }] }));
+  s.loopLayer('Intro', s.anim({ name: 'Intro', duration: 130, tracks: [{ object: trim, prop: 'end', keys: [[0, 0, 'cubic', [0.55, 0.05, 0.25, 1]], [100, 1]] }, ...soakTracks] }));
   const D = 1020, T0 = 110, STEP = 12, HOLD = 860, FADE = 960;
   const tracks = [];
   const bx = [[0, 556], [T0 - 20, 556]], by = [[0, 210], [T0 - 20, 210]];

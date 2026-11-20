@@ -1213,8 +1213,9 @@ function hill(ids) {
   // nothing in a corner is left in daylight; the page carries the same colour on out
   // past the canvas and lets it fade (.hill::before in style.css)
   const [glazeXml, glazeTracks] = hourGlaze(ids, W, H, 1);
-  // there from the first frame (not drawn in), so it and the page's halo arrive together
-  s.add(glazeXml);
+  // it washes in over the first moments of the intro (the page's halo fades in alongside);
+  // when the hill skips its intro behind a still, it's simply there
+  s.add(k.in({ name: 'glaze in', t0: 0, t1: 56 }, [glazeXml]));
   for (const t of glazeTracks) tp(t.object, t.prop, t.vals, t.type);
 
   // --- lamplight, moon and stars sit above the glaze
@@ -1298,19 +1299,20 @@ function hill(ids) {
   const moonInner = [];
   for (let i = 0; i <= 8; i++) { const a = 1.75 - (i / 8) * 3.5; moonInner.push(P(-7 + Math.cos(a) * 15, Math.sin(a) * 15)); }
   const moon = [...moonOuter, ...moonInner];
-  s.add(group({ name: 'moon', id: moonId, x: 232, y: 74, opacity: TIME0 === 4 ? 1 : 0 }, [
+  // the moon rises into place and the stars come out one by one, as the night washes in
+  s.add(k.in({ name: 'moon in', cx: 232, cy: 74, t0: 30, t1: 84, sc: 0.7, dy: 10 }, [group({ name: 'moon', id: moonId, x: 232, y: 74, opacity: TIME0 === 4 ? 1 : 0 }, [
     glow({ x: 0, y: 0, w: 120, h: 120, color: 'F3E7B8', alpha: 0.3 }),
     wc(ids, moon, 'EFE2A8', rng(290), { alpha: 0.95, off: [1, 1], wobble: 0.5, grain: 0.3, soft: false }),
     k.boil({ name: 'moon ink', seed: 291, draw: (rr) => ink({ pts: moon, closed: true }, rr, { w: 1.5, amt: 0.3 }) }),
-  ]));
+  ])]));
   tp(moonId, 'opacity', [0, 0, 0, 0, 1]);
   const stars = [[64, 44, 6], [300, 30, 5], [470, 52, 4.5], [150, 150, 4], [770, 36, 5.5]];
   const twinkle = [];
   stars.forEach(([x, y, R], i) => {
     const id = ids.next(), tw = ids.next();
-    s.add(group({ name: 'star', id, x, y, opacity: 0 }, [
+    s.add(k.in({ name: 'star in', cx: x, cy: y, t0: 56 + i * 9, t1: 86 + i * 9, sc: 0.3, ease: EASE.back }, [group({ name: 'star', id, x, y, opacity: 0 }, [
       group({ name: 'twinkle', id: tw }, [el('Shape', { name: 'star' }, [polyXml(starPts(R), { closed: true }), fill(argb('F6E7A8', 0.95)), stroke(INK, 0.9)])]),
-    ]));
+    ])]));
     tp(id, 'opacity', [0, 0, 0, i === 1 || i === 4 ? 0.9 : 0, 1]);
     twinkle.push(sampled(tw, 'scaleX', 240, TICK, (t) => 1 + 0.25 * Math.sin((t + i * 0.29) * TAU)), sampled(tw, 'scaleY', 240, TICK, (t) => 1 + 0.25 * Math.sin((t + i * 0.29) * TAU)));
   });

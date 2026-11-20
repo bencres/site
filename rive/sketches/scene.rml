@@ -2,7 +2,8 @@
 <Artboard defaultStateMachineId="0:12" styleId="0:11" width="720" height="380" x="0" y="0" clip="true" name="Niggle" id="0:10">
 <LayoutComponentStyle name="Style" id="0:11"/>
 
-<Node name="brush" x="556" y="210" rotation="-0.5" id="0:101">
+<Node name="soak" id="0:114" opacity="0">
+<Node name="brush" x="556" y="210" rotation="-0.5" id="0:113">
 <Shape x="0" y="0" name="Ink">
 <PointsPath isClockwise="true" name="Path">
 <CubicMirroredVertex x="0" y="0" rotation="0.900390625" distance="12.34375"/>
@@ -33,8 +34,9 @@
 </Stroke>
 </Shape>
 </Node>
-<Solo name="Ground" x="0" y="0" activeComponentId="0:95" id="0:94">
-<Node name="cel0" id="0:95">
+</Node>
+<Solo name="Ground" x="0" y="0" activeComponentId="0:107" id="0:106">
+<Node name="cel0" id="0:107">
 <Shape x="0" y="0" name="Ink">
 <PointsPath isClockwise="true" name="Path">
 <CubicMirroredVertex x="626.125" y="355.125" rotation="-1.115234375" distance="0.5"/>
@@ -126,7 +128,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="cel1" id="0:96">
+<Node name="cel1" id="0:108">
 <Shape x="0" y="0" name="Ink">
 <PointsPath isClockwise="true" name="Path">
 <CubicMirroredVertex x="625.65625" y="354.78125" rotation="-1.0908203125" distance="0.5"/>
@@ -218,7 +220,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="cel2" id="0:97">
+<Node name="cel2" id="0:109">
 <Shape x="0" y="0" name="Ink">
 <PointsPath isClockwise="true" name="Path">
 <CubicMirroredVertex x="626.03125" y="354.71875" rotation="-1.171875" distance="0.46875"/>
@@ -311,8 +313,8 @@
 </Shape>
 </Node>
 </Solo>
-<Solo name="Candle" x="0" y="0" activeComponentId="0:85" id="0:84">
-<Node name="cel0" id="0:85">
+<Solo name="Candle" x="0" y="0" activeComponentId="0:97" id="0:96">
+<Node name="cel0" id="0:97">
 <Shape x="0" y="0" name="Ink">
 <PointsPath isClockwise="true" name="Path">
 <CubicMirroredVertex x="149.84375" y="262.03125" rotation="-1.517578125" distance="1.15625"/>
@@ -369,7 +371,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="cel1" id="0:86">
+<Node name="cel1" id="0:98">
 <Shape x="0" y="0" name="Ink">
 <PointsPath isClockwise="true" name="Path">
 <CubicMirroredVertex x="150.09375" y="262.125" rotation="-1.59375" distance="1.21875"/>
@@ -426,7 +428,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="cel2" id="0:87">
+<Node name="cel2" id="0:99">
 <Shape x="0" y="0" name="Ink">
 <PointsPath isClockwise="true" name="Path">
 <CubicMirroredVertex x="150.0625" y="261.9375" rotation="-1.6083984375" distance="1.1875"/>
@@ -484,7 +486,8 @@
 </Shape>
 </Node>
 </Solo>
-<Node name="flame" x="150" y="250" id="0:82">
+<Node name="soak" id="0:95" opacity="0">
+<Node name="flame" x="150" y="250" id="0:91">
 <Shape x="0" y="0" name="Wash" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="true" name="Path">
 <CubicMirroredVertex x="0" y="-14" rotation="0" distance="1.5"/>
@@ -503,6 +506,8 @@
 </Stroke>
 </Shape>
 </Node>
+</Node>
+<Node name="soak" id="0:94" opacity="0">
 <Shape x="0" y="0" name="Wash" blendModeValue="srcOver">
 <PointsPath isClosed="true" isClockwise="true" name="Path">
 <CubicMirroredVertex x="142" y="262" rotation="-1.326171875" distance="2.34375"/>
@@ -519,7 +524,9 @@
 <Feather strength="1.2" name="F"/>
 </Stroke>
 </Shape>
-<Node name="glow" x="150" y="248" id="0:83">
+</Node>
+<Node name="soak" id="0:93" opacity="0">
+<Node name="glow" x="150" y="248" id="0:92">
 <Node name="Watercolor" x="0" y="0">
 <Shape name="wet" x="2.71875" y="-1.0625" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="true" name="Path">
@@ -565,8 +572,9 @@
 </Shape>
 </Node>
 </Node>
-<Solo name="Stool" x="0" y="0" activeComponentId="0:76" id="0:75">
-<Node name="cel0" id="0:76">
+</Node>
+<Solo name="Stool" x="0" y="0" activeComponentId="0:85" id="0:84">
+<Node name="cel0" id="0:85">
 <Shape x="0" y="0" name="Ink">
 <PointsPath isClosed="true" isClockwise="true" name="Path">
 <CubicMirroredVertex x="618.34375" y="294" rotation="1.66015625" distance="1.34375"/>
@@ -698,7 +706,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="cel1" id="0:77">
+<Node name="cel1" id="0:86">
 <Shape x="0" y="0" name="Ink">
 <PointsPath isClosed="true" isClockwise="true" name="Path">
 <CubicMirroredVertex x="617.96875" y="294" rotation="1.337890625" distance="1.40625"/>
@@ -830,7 +838,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="cel2" id="0:78">
+<Node name="cel2" id="0:87">
 <Shape x="0" y="0" name="Ink">
 <PointsPath isClosed="true" isClockwise="true" name="Path">
 <CubicMirroredVertex x="619.59375" y="294" rotation="1.44140625" distance="1.40625"/>
@@ -963,6 +971,7 @@
 </Shape>
 </Node>
 </Solo>
+<Node name="soak" id="0:83" opacity="0">
 <Node name="Watercolor" x="584" y="297">
 <Shape name="wet" x="-0.28125" y="-0.40625" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="true" name="Path">
@@ -1007,6 +1016,8 @@
 </Stroke>
 </Shape>
 </Node>
+</Node>
+<Node name="soak" id="0:82" opacity="0">
 <Node name="Watercolor" x="604" y="294">
 <Shape name="wet" x="0.09375" y="0.3125" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="true" name="Path">
@@ -1051,6 +1062,8 @@
 </Stroke>
 </Shape>
 </Node>
+</Node>
+<Node name="soak" id="0:81" opacity="0">
 <Node name="Watercolor" x="590" y="290">
 <Shape name="wet" x="0.125" y="0.1875" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="true" name="Path">
@@ -1095,6 +1108,8 @@
 </Stroke>
 </Shape>
 </Node>
+</Node>
+<Node name="soak" id="0:80" opacity="0">
 <Shape x="0" y="0" name="Wash" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="true" name="Path">
 <CubicMirroredVertex x="540" y="250" rotation="-0.982421875" distance="1.6875"/>
@@ -1111,6 +1126,8 @@
 <Feather strength="1.2" name="F"/>
 </Stroke>
 </Shape>
+</Node>
+<Node name="soak" id="0:79" opacity="0">
 <Node name="Watercolor" x="560" y="300">
 <Shape name="wet" x="1.4375" y="-0.375" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="true" name="Path">
@@ -1155,8 +1172,9 @@
 </Stroke>
 </Shape>
 </Node>
-<Solo name="Ink" x="0" y="0" activeComponentId="0:69" id="0:68">
-<Node name="cel0" id="0:69">
+</Node>
+<Solo name="Ink" x="0" y="0" activeComponentId="0:73" id="0:72">
+<Node name="cel0" id="0:73">
 <Shape x="359.53125" y="103.84375" name="Ink">
 <PointsPath isClosed="true" isClockwise="false" name="Path">
 <CubicMirroredVertex x="6.625" y="5.96875" rotation="-0.8095703125" distance="0.6875"/>
@@ -2045,7 +2063,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="cel1" id="0:70">
+<Node name="cel1" id="0:74">
 <Shape x="359.53125" y="103.84375" name="Ink">
 <PointsPath isClosed="true" isClockwise="false" name="Path">
 <CubicMirroredVertex x="6.375" y="6.09375" rotation="-0.90234375" distance="0.71875"/>
@@ -2934,7 +2952,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="cel2" id="0:71">
+<Node name="cel2" id="0:75">
 <Shape x="359.53125" y="103.84375" name="Ink">
 <PointsPath isClosed="true" isClockwise="false" name="Path">
 <CubicMirroredVertex x="6.5625" y="6" rotation="-0.900390625" distance="0.75"/>
@@ -3824,7 +3842,7 @@
 </Shape>
 </Node>
 </Solo>
-<Node name="leaf 45" x="359.53125" y="103.84375" id="0:67" opacity="0" scaleX="0.5" scaleY="0.5">
+<Node name="leaf 45" x="359.53125" y="103.84375" id="0:71" opacity="0" scaleX="0.5" scaleY="0.5">
 <Shape x="0" y="0" name="Wash" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="false" name="Path">
 <CubicMirroredVertex x="7.6875" y="7" rotation="-0.82421875" distance="0.75"/>
@@ -3846,7 +3864,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="leaf 44" x="406.84375" y="153.46875" id="0:66" opacity="0" scaleX="0.5" scaleY="0.5">
+<Node name="leaf 44" x="406.84375" y="153.46875" id="0:70" opacity="0" scaleX="0.5" scaleY="0.5">
 <Shape x="0" y="0" name="Wash" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="false" name="Path">
 <CubicMirroredVertex x="0.8125" y="7.875" rotation="0.0576171875" distance="0.78125"/>
@@ -3868,7 +3886,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="leaf 43" x="383.71875" y="180.09375" id="0:65" opacity="0" scaleX="0.5" scaleY="0.5">
+<Node name="leaf 43" x="383.71875" y="180.09375" id="0:69" opacity="0" scaleX="0.5" scaleY="0.5">
 <Shape x="0" y="0" name="Wash" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="false" name="Path">
 <CubicMirroredVertex x="1.5625" y="-6.625" rotation="-3.0927734375" distance="0.78125"/>
@@ -3890,7 +3908,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="leaf 42" x="317.71875" y="141.96875" id="0:64" opacity="0" scaleX="0.5" scaleY="0.5">
+<Node name="leaf 42" x="317.71875" y="141.96875" id="0:68" opacity="0" scaleX="0.5" scaleY="0.5">
 <Shape x="0" y="0" name="Wash" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="false" name="Path">
 <CubicMirroredVertex x="-3.96875" y="-4.125" rotation="2.3525390625" distance="0.71875"/>
@@ -3912,7 +3930,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="leaf 41" x="297.5625" y="155.15625" id="0:63" opacity="0" scaleX="0.5" scaleY="0.5">
+<Node name="leaf 41" x="297.5625" y="155.15625" id="0:67" opacity="0" scaleX="0.5" scaleY="0.5">
 <Shape x="0" y="0" name="Wash" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="false" name="Path">
 <CubicMirroredVertex x="7.1875" y="-2.75" rotation="-2.12890625" distance="0.625"/>
@@ -3934,7 +3952,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="leaf 40" x="396.65625" y="105.375" id="0:62" opacity="0" scaleX="0.5" scaleY="0.5">
+<Node name="leaf 40" x="396.65625" y="105.375" id="0:66" opacity="0" scaleX="0.5" scaleY="0.5">
 <Shape x="0" y="0" name="Wash" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="false" name="Path">
 <CubicMirroredVertex x="-2.34375" y="-6.3125" rotation="2.689453125" distance="0.78125"/>
@@ -3956,7 +3974,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="leaf 39" x="441.40625" y="204.375" id="0:61" opacity="0" scaleX="0.5" scaleY="0.5">
+<Node name="leaf 39" x="441.40625" y="204.375" id="0:65" opacity="0" scaleX="0.5" scaleY="0.5">
 <Shape x="0" y="0" name="Wash" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="false" name="Path">
 <CubicMirroredVertex x="-6.21875" y="-0.09375" rotation="1.7158203125" distance="0.71875"/>
@@ -3978,7 +3996,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="leaf 38" x="423.59375" y="146.875" id="0:60" opacity="0" scaleX="0.5" scaleY="0.5">
+<Node name="leaf 38" x="423.59375" y="146.875" id="0:64" opacity="0" scaleX="0.5" scaleY="0.5">
 <Shape x="0" y="0" name="Wash" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="false" name="Path">
 <CubicMirroredVertex x="-3.59375" y="6.9375" rotation="0.6806640625" distance="0.8125"/>
@@ -4000,7 +4018,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="leaf 37" x="414.4375" y="177.96875" id="0:59" opacity="0" scaleX="0.5" scaleY="0.5">
+<Node name="leaf 37" x="414.4375" y="177.96875" id="0:63" opacity="0" scaleX="0.5" scaleY="0.5">
 <Shape x="0" y="0" name="Wash" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="false" name="Path">
 <CubicMirroredVertex x="-6.15625" y="6.03125" rotation="0.97265625" distance="0.8125"/>
@@ -4022,7 +4040,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="leaf 36" x="368.65625" y="212.15625" id="0:58" opacity="0" scaleX="0.5" scaleY="0.5">
+<Node name="leaf 36" x="368.65625" y="212.15625" id="0:62" opacity="0" scaleX="0.5" scaleY="0.5">
 <Shape x="0" y="0" name="Wash" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="false" name="Path">
 <CubicMirroredVertex x="6.59375" y="7.78125" rotation="-0.671875" distance="0.71875"/>
@@ -4044,7 +4062,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="leaf 35" x="334.15625" y="176.34375" id="0:57" opacity="0" scaleX="0.5" scaleY="0.5">
+<Node name="leaf 35" x="334.15625" y="176.34375" id="0:61" opacity="0" scaleX="0.5" scaleY="0.5">
 <Shape x="0" y="0" name="Wash" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="false" name="Path">
 <CubicMirroredVertex x="4.875" y="-4.5" rotation="-2.5517578125" distance="0.59375"/>
@@ -4066,7 +4084,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="leaf 34" x="349" y="139.875" id="0:56" opacity="0" scaleX="0.5" scaleY="0.5">
+<Node name="leaf 34" x="349" y="139.875" id="0:60" opacity="0" scaleX="0.5" scaleY="0.5">
 <Shape x="0" y="0" name="Wash" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="false" name="Path">
 <CubicMirroredVertex x="3.125" y="-6.8125" rotation="-2.8994140625" distance="0.625"/>
@@ -4088,7 +4106,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="leaf 33" x="457.53125" y="160.59375" id="0:55" opacity="0" scaleX="0.5" scaleY="0.5">
+<Node name="leaf 33" x="457.53125" y="160.59375" id="0:59" opacity="0" scaleX="0.5" scaleY="0.5">
 <Shape x="0" y="0" name="Wash" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="false" name="Path">
 <CubicMirroredVertex x="4.59375" y="6.6875" rotation="-0.5380859375" distance="0.75"/>
@@ -4110,7 +4128,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="leaf 32" x="320.9375" y="195.0625" id="0:54" opacity="0" scaleX="0.5" scaleY="0.5">
+<Node name="leaf 32" x="320.9375" y="195.0625" id="0:58" opacity="0" scaleX="0.5" scaleY="0.5">
 <Shape x="0" y="0" name="Wash" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="false" name="Path">
 <CubicMirroredVertex x="3.6875" y="9.1875" rotation="-0.294921875" distance="0.71875"/>
@@ -4132,7 +4150,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="leaf 31" x="397.28125" y="165.3125" id="0:53" opacity="0" scaleX="0.5" scaleY="0.5">
+<Node name="leaf 31" x="397.28125" y="165.3125" id="0:57" opacity="0" scaleX="0.5" scaleY="0.5">
 <Shape x="0" y="0" name="Wash" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="false" name="Path">
 <CubicMirroredVertex x="7.40625" y="-2.4375" rotation="-2.0771484375" distance="0.71875"/>
@@ -4154,7 +4172,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="leaf 30" x="422" y="127.59375" id="0:52" opacity="0" scaleX="0.5" scaleY="0.5">
+<Node name="leaf 30" x="422" y="127.59375" id="0:56" opacity="0" scaleX="0.5" scaleY="0.5">
 <Shape x="0" y="0" name="Wash" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="false" name="Path">
 <CubicMirroredVertex x="7.90625" y="-0.625" rotation="-1.8076171875" distance="0.5625"/>
@@ -4176,7 +4194,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="leaf 29" x="331.53125" y="116.5" id="0:51" opacity="0" scaleX="0.5" scaleY="0.5">
+<Node name="leaf 29" x="331.53125" y="116.5" id="0:55" opacity="0" scaleX="0.5" scaleY="0.5">
 <Shape x="0" y="0" name="Wash" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="false" name="Path">
 <CubicMirroredVertex x="6.625" y="5.4375" rotation="-0.8837890625" distance="0.6875"/>
@@ -4198,7 +4216,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="leaf 28" x="336.34375" y="201.46875" id="0:50" opacity="0" scaleX="0.5" scaleY="0.5">
+<Node name="leaf 28" x="336.34375" y="201.46875" id="0:54" opacity="0" scaleX="0.5" scaleY="0.5">
 <Shape x="0" y="0" name="Wash" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="false" name="Path">
 <CubicMirroredVertex x="-6.1875" y="5.96875" rotation="0.978515625" distance="0.71875"/>
@@ -4220,7 +4238,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="leaf 27" x="415.59375" y="202.96875" id="0:49" opacity="0" scaleX="0.5" scaleY="0.5">
+<Node name="leaf 27" x="415.59375" y="202.96875" id="0:53" opacity="0" scaleX="0.5" scaleY="0.5">
 <Shape x="0" y="0" name="Wash" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="false" name="Path">
 <CubicMirroredVertex x="9.4375" y="4.6875" rotation="-1.1494140625" distance="0.71875"/>
@@ -4242,7 +4260,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="leaf 26" x="343.65625" y="155.25" id="0:48" opacity="0" scaleX="0.5" scaleY="0.5">
+<Node name="leaf 26" x="343.65625" y="155.25" id="0:52" opacity="0" scaleX="0.5" scaleY="0.5">
 <Shape x="0" y="0" name="Wash" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="false" name="Path">
 <CubicMirroredVertex x="0.8125" y="10.09375" rotation="0.04296875" distance="0.625"/>
@@ -4264,7 +4282,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="leaf 25" x="309" y="123.71875" id="0:47" opacity="0" scaleX="0.5" scaleY="0.5">
+<Node name="leaf 25" x="309" y="123.71875" id="0:51" opacity="0" scaleX="0.5" scaleY="0.5">
 <Shape x="0" y="0" name="Wash" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="false" name="Path">
 <CubicMirroredVertex x="3.9375" y="9.34375" rotation="-0.318359375" distance="0.71875"/>
@@ -4286,7 +4304,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="leaf 24" x="303.96875" y="137.71875" id="0:46" opacity="0" scaleX="0.5" scaleY="0.5">
+<Node name="leaf 24" x="303.96875" y="137.71875" id="0:50" opacity="0" scaleX="0.5" scaleY="0.5">
 <Shape x="0" y="0" name="Wash" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="false" name="Path">
 <CubicMirroredVertex x="5.875" y="8.21875" rotation="-0.57421875" distance="0.65625"/>
@@ -4308,7 +4326,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="leaf 23" x="382.90625" y="108.90625" id="0:45" opacity="0" scaleX="0.5" scaleY="0.5">
+<Node name="leaf 23" x="382.90625" y="108.90625" id="0:49" opacity="0" scaleX="0.5" scaleY="0.5">
 <Shape x="0" y="0" name="Wash" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="false" name="Path">
 <CubicMirroredVertex x="2" y="-6.53125" rotation="-3.03515625" distance="0.71875"/>
@@ -4330,7 +4348,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="leaf 22" x="452.34375" y="178.65625" id="0:44" opacity="0" scaleX="0.5" scaleY="0.5">
+<Node name="leaf 22" x="452.34375" y="178.65625" id="0:48" opacity="0" scaleX="0.5" scaleY="0.5">
 <Shape x="0" y="0" name="Wash" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="false" name="Path">
 <CubicMirroredVertex x="3.625" y="8.40625" rotation="-0.31640625" distance="0.8125"/>
@@ -4352,7 +4370,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="leaf 21" x="322.09375" y="157.9375" id="0:43" opacity="0" scaleX="0.5" scaleY="0.5">
+<Node name="leaf 21" x="322.09375" y="157.9375" id="0:47" opacity="0" scaleX="0.5" scaleY="0.5">
 <Shape x="0" y="0" name="Wash" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="false" name="Path">
 <CubicMirroredVertex x="6.6875" y="-3.25" rotation="-2.228515625" distance="0.65625"/>
@@ -4374,7 +4392,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="leaf 20" x="406" y="217.15625" id="0:42" opacity="0" scaleX="0.5" scaleY="0.5">
+<Node name="leaf 20" x="406" y="217.15625" id="0:46" opacity="0" scaleX="0.5" scaleY="0.5">
 <Shape x="0" y="0" name="Wash" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="false" name="Path">
 <CubicMirroredVertex x="-7.0625" y="2.15625" rotation="1.4326171875" distance="0.8125"/>
@@ -4396,7 +4414,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="leaf 19" x="358.09375" y="150.34375" id="0:41" opacity="0" scaleX="0.5" scaleY="0.5">
+<Node name="leaf 19" x="358.09375" y="150.34375" id="0:45" opacity="0" scaleX="0.5" scaleY="0.5">
 <Shape x="0" y="0" name="Wash" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="false" name="Path">
 <CubicMirroredVertex x="2.125" y="8.65625" rotation="-0.119140625" distance="0.84375"/>
@@ -4418,7 +4436,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="leaf 18" x="368.0625" y="115.75" id="0:40" opacity="0" scaleX="0.5" scaleY="0.5">
+<Node name="leaf 18" x="368.0625" y="115.75" id="0:44" opacity="0" scaleX="0.5" scaleY="0.5">
 <Shape x="0" y="0" name="Wash" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="false" name="Path">
 <CubicMirroredVertex x="-1.65625" y="8.75" rotation="0.353515625" distance="0.75"/>
@@ -4440,7 +4458,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="leaf 17" x="300.71875" y="174.28125" id="0:39" opacity="0" scaleX="0.5" scaleY="0.5">
+<Node name="leaf 17" x="300.71875" y="174.28125" id="0:43" opacity="0" scaleX="0.5" scaleY="0.5">
 <Shape x="0" y="0" name="Wash" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="false" name="Path">
 <CubicMirroredVertex x="-4.34375" y="4.5" rotation="1.0078125" distance="0.78125"/>
@@ -4462,7 +4480,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="leaf 16" x="352.21875" y="115.90625" id="0:38" opacity="0" scaleX="0.5" scaleY="0.5">
+<Node name="leaf 16" x="352.21875" y="115.90625" id="0:42" opacity="0" scaleX="0.5" scaleY="0.5">
 <Shape x="0" y="0" name="Wash" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="false" name="Path">
 <CubicMirroredVertex x="2.03125" y="-7" rotation="-3.0380859375" distance="0.8125"/>
@@ -4484,7 +4502,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="leaf 15" x="352.15625" y="167.28125" id="0:37" opacity="0" scaleX="0.5" scaleY="0.5">
+<Node name="leaf 15" x="352.15625" y="167.28125" id="0:41" opacity="0" scaleX="0.5" scaleY="0.5">
 <Shape x="0" y="0" name="Wash" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="false" name="Path">
 <CubicMirroredVertex x="3.84375" y="6.9375" rotation="-0.4189453125" distance="0.75"/>
@@ -4506,7 +4524,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="leaf 14" x="350.90625" y="187.5625" id="0:36" opacity="0" scaleX="0.5" scaleY="0.5">
+<Node name="leaf 14" x="350.90625" y="187.5625" id="0:40" opacity="0" scaleX="0.5" scaleY="0.5">
 <Shape x="0" y="0" name="Wash" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="false" name="Path">
 <CubicMirroredVertex x="4.125" y="9.5" rotation="-0.33203125" distance="0.71875"/>
@@ -4528,7 +4546,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="leaf 13" x="436.90625" y="179.125" id="0:35" opacity="0" scaleX="0.5" scaleY="0.5">
+<Node name="leaf 13" x="436.90625" y="179.125" id="0:39" opacity="0" scaleX="0.5" scaleY="0.5">
 <Shape x="0" y="0" name="Wash" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="false" name="Path">
 <CubicMirroredVertex x="-5.1875" y="5.09375" rotation="1.0009765625" distance="0.6875"/>
@@ -4550,7 +4568,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="leaf 12" x="382.375" y="133.8125" id="0:34" opacity="0" scaleX="0.5" scaleY="0.5">
+<Node name="leaf 12" x="382.375" y="133.8125" id="0:38" opacity="0" scaleX="0.5" scaleY="0.5">
 <Shape x="0" y="0" name="Wash" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="false" name="Path">
 <CubicMirroredVertex x="6.25" y="-3.8125" rotation="-2.3310546875" distance="0.71875"/>
@@ -4572,7 +4590,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="leaf 11" x="405.90625" y="116.53125" id="0:33" opacity="0" scaleX="0.5" scaleY="0.5">
+<Node name="leaf 11" x="405.90625" y="116.53125" id="0:37" opacity="0" scaleX="0.5" scaleY="0.5">
 <Shape x="0" y="0" name="Wash" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="false" name="Path">
 <CubicMirroredVertex x="7.5" y="-2.96875" rotation="-2.130859375" distance="0.625"/>
@@ -4594,7 +4612,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="leaf 10" x="391.40625" y="221.375" id="0:32" opacity="0" scaleX="0.5" scaleY="0.5">
+<Node name="leaf 10" x="391.40625" y="221.375" id="0:36" opacity="0" scaleX="0.5" scaleY="0.5">
 <Shape x="0" y="0" name="Wash" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="false" name="Path">
 <CubicMirroredVertex x="-5.9375" y="2.3125" rotation="1.3896484375" distance="0.625"/>
@@ -4616,7 +4634,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="leaf 9" x="402.53125" y="183.65625" id="0:31" opacity="0" scaleX="0.5" scaleY="0.5">
+<Node name="leaf 9" x="402.53125" y="183.65625" id="0:35" opacity="0" scaleX="0.5" scaleY="0.5">
 <Shape x="0" y="0" name="Wash" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="false" name="Path">
 <CubicMirroredVertex x="8.21875" y="6.21875" rotation="-0.9296875" distance="0.65625"/>
@@ -4638,7 +4656,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="leaf 8" x="364.0625" y="192.21875" id="0:30" opacity="0" scaleX="0.5" scaleY="0.5">
+<Node name="leaf 8" x="364.0625" y="192.21875" id="0:34" opacity="0" scaleX="0.5" scaleY="0.5">
 <Shape x="0" y="0" name="Wash" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="false" name="Path">
 <CubicMirroredVertex x="6.09375" y="8.59375" rotation="-0.5732421875" distance="0.5625"/>
@@ -4660,7 +4678,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="leaf 7" x="444.21875" y="137.8125" id="0:29" opacity="0" scaleX="0.5" scaleY="0.5">
+<Node name="leaf 7" x="444.21875" y="137.8125" id="0:33" opacity="0" scaleX="0.5" scaleY="0.5">
 <Shape x="0" y="0" name="Wash" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="false" name="Path">
 <CubicMirroredVertex x="5.5625" y="6.3125" rotation="-0.6884765625" distance="0.6875"/>
@@ -4682,7 +4700,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="leaf 6" x="304.21875" y="202.4375" id="0:28" opacity="0" scaleX="0.5" scaleY="0.5">
+<Node name="leaf 6" x="304.21875" y="202.4375" id="0:32" opacity="0" scaleX="0.5" scaleY="0.5">
 <Shape x="0" y="0" name="Wash" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="false" name="Path">
 <CubicMirroredVertex x="8.8125" y="5.3125" rotation="-1.0556640625" distance="0.65625"/>
@@ -4704,7 +4722,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="leaf 5" x="393.53125" y="196.6875" id="0:27" opacity="0" scaleX="0.5" scaleY="0.5">
+<Node name="leaf 5" x="393.53125" y="196.6875" id="0:31" opacity="0" scaleX="0.5" scaleY="0.5">
 <Shape x="0" y="0" name="Wash" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="false" name="Path">
 <CubicMirroredVertex x="6.6875" y="-4.03125" rotation="-2.3134765625" distance="0.75"/>
@@ -4726,7 +4744,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="leaf 4" x="433.46875" y="193.25" id="0:26" opacity="0" scaleX="0.5" scaleY="0.5">
+<Node name="leaf 4" x="433.46875" y="193.25" id="0:30" opacity="0" scaleX="0.5" scaleY="0.5">
 <Shape x="0" y="0" name="Wash" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="false" name="Path">
 <CubicMirroredVertex x="-1.875" y="9.65625" rotation="0.3427734375" distance="0.75"/>
@@ -4748,7 +4766,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="leaf 3" x="381.28125" y="151.40625" id="0:25" opacity="0" scaleX="0.5" scaleY="0.5">
+<Node name="leaf 3" x="381.28125" y="151.40625" id="0:29" opacity="0" scaleX="0.5" scaleY="0.5">
 <Shape x="0" y="0" name="Wash" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="false" name="Path">
 <CubicMirroredVertex x="8.375" y="0.5" rotation="-1.6416015625" distance="0.71875"/>
@@ -4770,7 +4788,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="leaf 2" x="331.375" y="140.375" id="0:24" opacity="0" scaleX="0.5" scaleY="0.5">
+<Node name="leaf 2" x="331.375" y="140.375" id="0:28" opacity="0" scaleX="0.5" scaleY="0.5">
 <Shape x="0" y="0" name="Wash" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="false" name="Path">
 <CubicMirroredVertex x="-6.375" y="-4.28125" rotation="2.1796875" distance="0.625"/>
@@ -4792,7 +4810,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="leaf 1" x="409.0625" y="137.4375" id="0:23" opacity="0" scaleX="0.5" scaleY="0.5">
+<Node name="leaf 1" x="409.0625" y="137.4375" id="0:27" opacity="0" scaleX="0.5" scaleY="0.5">
 <Shape x="0" y="0" name="Wash" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="false" name="Path">
 <CubicMirroredVertex x="9.46875" y="-2.09375" rotation="-1.9296875" distance="0.625"/>
@@ -4814,7 +4832,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="leaf 0" x="315.96875" y="181.09375" id="0:22" opacity="0" scaleX="0.5" scaleY="0.5">
+<Node name="leaf 0" x="315.96875" y="181.09375" id="0:26" opacity="0" scaleX="0.5" scaleY="0.5">
 <Shape x="0" y="0" name="Wash" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="false" name="Path">
 <CubicMirroredVertex x="2.78125" y="-6.46875" rotation="-2.9326171875" distance="0.6875"/>
@@ -4836,6 +4854,7 @@
 </Stroke>
 </Shape>
 </Node>
+<Node name="soak" id="0:25" opacity="0">
 <Shape x="0" y="0" name="Wash" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="true" name="Path">
 <CubicMirroredVertex x="366" y="292" rotation="-1.80859375" distance="4.25"/>
@@ -4854,6 +4873,8 @@
 <Feather strength="1.2" name="F"/>
 </Stroke>
 </Shape>
+</Node>
+<Node name="soak" id="0:24" opacity="0">
 <Shape x="0" y="0" name="Wash" blendModeValue="srcOver">
 <PointsPath isClosed="true" isClockwise="true" name="Path">
 <StraightVertex x="266" y="92"/>
@@ -4870,8 +4891,9 @@
 <Feather strength="1.2" name="F"/>
 </Stroke>
 </Shape>
-<Solo name="Easel" x="0" y="0" activeComponentId="0:16" id="0:15">
-<Node name="cel0" id="0:16">
+</Node>
+<Solo name="Easel" x="0" y="0" activeComponentId="0:18" id="0:17">
+<Node name="cel0" id="0:18">
 <Shape x="0" y="0" name="Ink">
 <PointsPath isClockwise="true" name="Path">
 <CubicMirroredVertex x="372.375" y="354.8125" rotation="-1.583984375" distance="2.5625"/>
@@ -4920,7 +4942,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="cel1" id="0:17">
+<Node name="cel1" id="0:19">
 <Shape x="0" y="0" name="Ink">
 <PointsPath isClockwise="true" name="Path">
 <CubicMirroredVertex x="371.78125" y="354.65625" rotation="-1.5654296875" distance="2.5"/>
@@ -4969,7 +4991,7 @@
 </Stroke>
 </Shape>
 </Node>
-<Node name="cel2" id="0:18">
+<Node name="cel2" id="0:20">
 <Shape x="0" y="0" name="Ink">
 <PointsPath isClockwise="true" name="Path">
 <CubicMirroredVertex x="371.75" y="354.75" rotation="-1.55078125" distance="2.53125"/>
@@ -5019,6 +5041,7 @@
 </Shape>
 </Node>
 </Solo>
+<Node name="soak" id="0:16" opacity="0">
 <Node name="Watercolor" x="372" y="352">
 <Shape x="0" y="0" name="grain">
 <Ellipse x="-155.71875" y="-2" width="1.1875" height="1.1875" originX="0.5" originY="0.5"/>
@@ -5141,6 +5164,8 @@
 </Stroke>
 </Shape>
 </Node>
+</Node>
+<Node name="soak" id="0:15" opacity="0">
 <Node name="Watercolor" x="372" y="170">
 <Shape name="wet" x="24.4375" y="-5.46875" blendModeValue="multiply">
 <PointsPath isClosed="true" isClockwise="true" name="Path">
@@ -5185,35 +5210,28 @@
 </Stroke>
 </Shape>
 </Node>
+</Node>
 <GroupEffect name="Draw" id="0:13">
 <TrimPath end="0" id="0:14" name="Trim"/>
 </GroupEffect>
 <StateMachine name="Main" id="0:12">
-<StateMachineLayer name="Easel boil" id="0:21">
+<StateMachineLayer name="Easel boil" id="0:23">
 <AnyState x="100" y="-120"/>
 <ExitState x="400" y="-120"/>
 <EntryState x="0" y="0">
-<StateTransition stateToId="0:20"/>
+<StateTransition stateToId="0:22"/>
 </EntryState>
-<AnimationState x="200" y="0" animationId="0:19" id="0:20"/>
+<AnimationState x="200" y="0" animationId="0:21" id="0:22"/>
 </StateMachineLayer>
-<StateMachineLayer name="Boil" id="0:74">
+<StateMachineLayer name="Boil" id="0:78">
 <AnyState x="100" y="-120"/>
 <ExitState x="400" y="-120"/>
 <EntryState x="0" y="0">
-<StateTransition stateToId="0:73"/>
+<StateTransition stateToId="0:77"/>
 </EntryState>
-<AnimationState x="200" y="0" animationId="0:72" id="0:73"/>
+<AnimationState x="200" y="0" animationId="0:76" id="0:77"/>
 </StateMachineLayer>
-<StateMachineLayer name="Stool boil" id="0:81">
-<AnyState x="100" y="-120"/>
-<ExitState x="400" y="-120"/>
-<EntryState x="0" y="0">
-<StateTransition stateToId="0:80"/>
-</EntryState>
-<AnimationState x="200" y="0" animationId="0:79" id="0:80"/>
-</StateMachineLayer>
-<StateMachineLayer name="Candle boil" id="0:90">
+<StateMachineLayer name="Stool boil" id="0:90">
 <AnyState x="100" y="-120"/>
 <ExitState x="400" y="-120"/>
 <EntryState x="0" y="0">
@@ -5221,67 +5239,66 @@
 </EntryState>
 <AnimationState x="200" y="0" animationId="0:88" id="0:89"/>
 </StateMachineLayer>
-<StateMachineLayer name="Flicker" id="0:93">
+<StateMachineLayer name="Candle boil" id="0:102">
 <AnyState x="100" y="-120"/>
 <ExitState x="400" y="-120"/>
 <EntryState x="0" y="0">
-<StateTransition stateToId="0:92"/>
+<StateTransition stateToId="0:101"/>
 </EntryState>
-<AnimationState x="200" y="0" animationId="0:91" id="0:92"/>
+<AnimationState x="200" y="0" animationId="0:100" id="0:101"/>
 </StateMachineLayer>
-<StateMachineLayer name="Ground boil" id="0:100">
+<StateMachineLayer name="Flicker" id="0:105">
 <AnyState x="100" y="-120"/>
 <ExitState x="400" y="-120"/>
 <EntryState x="0" y="0">
-<StateTransition stateToId="0:99"/>
+<StateTransition stateToId="0:104"/>
 </EntryState>
-<AnimationState x="200" y="0" animationId="0:98" id="0:99"/>
+<AnimationState x="200" y="0" animationId="0:103" id="0:104"/>
 </StateMachineLayer>
-<StateMachineLayer name="Intro" id="0:104">
+<StateMachineLayer name="Ground boil" id="0:112">
 <AnyState x="100" y="-120"/>
 <ExitState x="400" y="-120"/>
 <EntryState x="0" y="0">
-<StateTransition stateToId="0:103"/>
+<StateTransition stateToId="0:111"/>
 </EntryState>
-<AnimationState x="200" y="0" animationId="0:102" id="0:103"/>
+<AnimationState x="200" y="0" animationId="0:110" id="0:111"/>
 </StateMachineLayer>
-<StateMachineLayer name="Paint" id="0:107">
+<StateMachineLayer name="Intro" id="0:117">
 <AnyState x="100" y="-120"/>
 <ExitState x="400" y="-120"/>
 <EntryState x="0" y="0">
-<StateTransition stateToId="0:106"/>
+<StateTransition stateToId="0:116"/>
 </EntryState>
-<AnimationState x="200" y="0" animationId="0:105" id="0:106"/>
+<AnimationState x="200" y="0" animationId="0:115" id="0:116"/>
+</StateMachineLayer>
+<StateMachineLayer name="Paint" id="0:120">
+<AnyState x="100" y="-120"/>
+<ExitState x="400" y="-120"/>
+<EntryState x="0" y="0">
+<StateTransition stateToId="0:119"/>
+</EntryState>
+<AnimationState x="200" y="0" animationId="0:118" id="0:119"/>
 </StateMachineLayer>
 </StateMachine>
-<LinearAnimation loopValue="loop" duration="6" fps="15" quantize="true" name="Easel boil" id="0:19">
-<KeyedObject objectId="0:15">
+<LinearAnimation loopValue="loop" duration="6" fps="15" quantize="true" name="Easel boil" id="0:21">
+<KeyedObject objectId="0:17">
 <KeyedProperty property="activeComponentId">
-<KeyFrameId frame="0" value="0:16" interpolationType="hold"/>
-<KeyFrameId frame="2" value="0:17" interpolationType="hold"/>
-<KeyFrameId frame="4" value="0:18" interpolationType="hold"/>
+<KeyFrameId frame="0" value="0:18" interpolationType="hold"/>
+<KeyFrameId frame="2" value="0:19" interpolationType="hold"/>
+<KeyFrameId frame="4" value="0:20" interpolationType="hold"/>
 </KeyedProperty>
 </KeyedObject>
 </LinearAnimation>
-<LinearAnimation loopValue="loop" duration="6" fps="15" quantize="true" name="Ink boil" id="0:72">
-<KeyedObject objectId="0:68">
+<LinearAnimation loopValue="loop" duration="6" fps="15" quantize="true" name="Ink boil" id="0:76">
+<KeyedObject objectId="0:72">
 <KeyedProperty property="activeComponentId">
-<KeyFrameId frame="0" value="0:69" interpolationType="hold"/>
-<KeyFrameId frame="2" value="0:70" interpolationType="hold"/>
-<KeyFrameId frame="4" value="0:71" interpolationType="hold"/>
+<KeyFrameId frame="0" value="0:73" interpolationType="hold"/>
+<KeyFrameId frame="2" value="0:74" interpolationType="hold"/>
+<KeyFrameId frame="4" value="0:75" interpolationType="hold"/>
 </KeyedProperty>
 </KeyedObject>
 </LinearAnimation>
-<LinearAnimation loopValue="loop" duration="6" fps="15" quantize="true" name="Stool boil" id="0:79">
-<KeyedObject objectId="0:75">
-<KeyedProperty property="activeComponentId">
-<KeyFrameId frame="0" value="0:76" interpolationType="hold"/>
-<KeyFrameId frame="2" value="0:77" interpolationType="hold"/>
-<KeyFrameId frame="4" value="0:78" interpolationType="hold"/>
-</KeyedProperty>
-</KeyedObject>
-</LinearAnimation>
-<LinearAnimation loopValue="loop" duration="6" fps="15" quantize="true" name="Candle boil" id="0:88">
+<LinearAnimation loopValue="loop" duration="6" fps="15" quantize="true" name="Stool boil" id="0:88">
 <KeyedObject objectId="0:84">
 <KeyedProperty property="activeComponentId">
 <KeyFrameId frame="0" value="0:85" interpolationType="hold"/>
@@ -5290,8 +5307,17 @@
 </KeyedProperty>
 </KeyedObject>
 </LinearAnimation>
-<LinearAnimation loopValue="loop" duration="24" fps="15" quantize="true" name="Flicker" id="0:91">
-<KeyedObject objectId="0:82">
+<LinearAnimation loopValue="loop" duration="6" fps="15" quantize="true" name="Candle boil" id="0:100">
+<KeyedObject objectId="0:96">
+<KeyedProperty property="activeComponentId">
+<KeyFrameId frame="0" value="0:97" interpolationType="hold"/>
+<KeyFrameId frame="2" value="0:98" interpolationType="hold"/>
+<KeyFrameId frame="4" value="0:99" interpolationType="hold"/>
+</KeyedProperty>
+</KeyedObject>
+</LinearAnimation>
+<LinearAnimation loopValue="loop" duration="24" fps="15" quantize="true" name="Flicker" id="0:103">
+<KeyedObject objectId="0:91">
 <KeyedProperty property="scaleY">
 <KeyFrameDouble frame="0" value="1" interpolationType="cubic">
 <CubicEaseInterpolator x1="0.45" y1="0" x2="0.55" y2="1"/>
@@ -5320,7 +5346,7 @@
 <KeyFrameDouble frame="24" value="0" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:83">
+<KeyedObject objectId="0:92">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0.85" interpolationType="cubic">
 <CubicEaseInterpolator x1="0.45" y1="0" x2="0.55" y2="1"/>
@@ -5335,16 +5361,16 @@
 </KeyedProperty>
 </KeyedObject>
 </LinearAnimation>
-<LinearAnimation loopValue="loop" duration="6" fps="15" quantize="true" name="Ground boil" id="0:98">
-<KeyedObject objectId="0:94">
+<LinearAnimation loopValue="loop" duration="6" fps="15" quantize="true" name="Ground boil" id="0:110">
+<KeyedObject objectId="0:106">
 <KeyedProperty property="activeComponentId">
-<KeyFrameId frame="0" value="0:95" interpolationType="hold"/>
-<KeyFrameId frame="2" value="0:96" interpolationType="hold"/>
-<KeyFrameId frame="4" value="0:97" interpolationType="hold"/>
+<KeyFrameId frame="0" value="0:107" interpolationType="hold"/>
+<KeyFrameId frame="2" value="0:108" interpolationType="hold"/>
+<KeyFrameId frame="4" value="0:109" interpolationType="hold"/>
 </KeyedProperty>
 </KeyedObject>
 </LinearAnimation>
-<LinearAnimation loopValue="oneShot" duration="110" fps="60" name="Intro" id="0:102">
+<LinearAnimation loopValue="oneShot" duration="130" fps="60" name="Intro" id="0:115">
 <KeyedObject objectId="0:14">
 <KeyedProperty property="end">
 <KeyFrameDouble frame="0" value="0" interpolationType="cubic">
@@ -5353,9 +5379,125 @@
 <KeyFrameDouble frame="100" value="1" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
+<KeyedObject objectId="0:15">
+<KeyedProperty property="opacity">
+<KeyFrameDouble frame="0" value="0" interpolationType="cubic">
+<CubicEaseInterpolator x1="0.16" y1="1" x2="0.3" y2="1"/>
+</KeyFrameDouble>
+<KeyFrameDouble frame="70" value="1" interpolationType="linear"/>
+</KeyedProperty>
+</KeyedObject>
+<KeyedObject objectId="0:16">
+<KeyedProperty property="opacity">
+<KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
+<KeyFrameDouble frame="10" value="0" interpolationType="cubic">
+<CubicEaseInterpolator x1="0.16" y1="1" x2="0.3" y2="1"/>
+</KeyFrameDouble>
+<KeyFrameDouble frame="70" value="1" interpolationType="linear"/>
+</KeyedProperty>
+</KeyedObject>
+<KeyedObject objectId="0:24">
+<KeyedProperty property="opacity">
+<KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
+<KeyFrameDouble frame="24" value="0" interpolationType="cubic">
+<CubicEaseInterpolator x1="0.16" y1="1" x2="0.3" y2="1"/>
+</KeyFrameDouble>
+<KeyFrameDouble frame="70" value="1" interpolationType="linear"/>
+</KeyedProperty>
+</KeyedObject>
+<KeyedObject objectId="0:25">
+<KeyedProperty property="opacity">
+<KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
+<KeyFrameDouble frame="58" value="0" interpolationType="cubic">
+<CubicEaseInterpolator x1="0.16" y1="1" x2="0.3" y2="1"/>
+</KeyFrameDouble>
+<KeyFrameDouble frame="104" value="1" interpolationType="linear"/>
+</KeyedProperty>
+</KeyedObject>
+<KeyedObject objectId="0:79">
+<KeyedProperty property="opacity">
+<KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
+<KeyFrameDouble frame="70" value="0" interpolationType="cubic">
+<CubicEaseInterpolator x1="0.16" y1="1" x2="0.3" y2="1"/>
+</KeyFrameDouble>
+<KeyFrameDouble frame="116" value="1" interpolationType="linear"/>
+</KeyedProperty>
+</KeyedObject>
+<KeyedObject objectId="0:80">
+<KeyedProperty property="opacity">
+<KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
+<KeyFrameDouble frame="74" value="0" interpolationType="cubic">
+<CubicEaseInterpolator x1="0.16" y1="1" x2="0.3" y2="1"/>
+</KeyFrameDouble>
+<KeyFrameDouble frame="120" value="1" interpolationType="linear"/>
+</KeyedProperty>
+</KeyedObject>
+<KeyedObject objectId="0:81">
+<KeyedProperty property="opacity">
+<KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
+<KeyFrameDouble frame="80" value="0" interpolationType="cubic">
+<CubicEaseInterpolator x1="0.16" y1="1" x2="0.3" y2="1"/>
+</KeyFrameDouble>
+<KeyFrameDouble frame="110" value="1" interpolationType="linear"/>
+</KeyedProperty>
+</KeyedObject>
+<KeyedObject objectId="0:82">
+<KeyedProperty property="opacity">
+<KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
+<KeyFrameDouble frame="86" value="0" interpolationType="cubic">
+<CubicEaseInterpolator x1="0.16" y1="1" x2="0.3" y2="1"/>
+</KeyFrameDouble>
+<KeyFrameDouble frame="116" value="1" interpolationType="linear"/>
+</KeyedProperty>
+</KeyedObject>
+<KeyedObject objectId="0:83">
+<KeyedProperty property="opacity">
+<KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
+<KeyFrameDouble frame="92" value="0" interpolationType="cubic">
+<CubicEaseInterpolator x1="0.16" y1="1" x2="0.3" y2="1"/>
+</KeyFrameDouble>
+<KeyFrameDouble frame="122" value="1" interpolationType="linear"/>
+</KeyedProperty>
+</KeyedObject>
+<KeyedObject objectId="0:93">
+<KeyedProperty property="opacity">
+<KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
+<KeyFrameDouble frame="60" value="0" interpolationType="cubic">
+<CubicEaseInterpolator x1="0.16" y1="1" x2="0.3" y2="1"/>
+</KeyFrameDouble>
+<KeyFrameDouble frame="120" value="1" interpolationType="linear"/>
+</KeyedProperty>
+</KeyedObject>
+<KeyedObject objectId="0:94">
+<KeyedProperty property="opacity">
+<KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
+<KeyFrameDouble frame="40" value="0" interpolationType="cubic">
+<CubicEaseInterpolator x1="0.16" y1="1" x2="0.3" y2="1"/>
+</KeyFrameDouble>
+<KeyFrameDouble frame="86" value="1" interpolationType="linear"/>
+</KeyedProperty>
+</KeyedObject>
+<KeyedObject objectId="0:95">
+<KeyedProperty property="opacity">
+<KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
+<KeyFrameDouble frame="64" value="0" interpolationType="cubic">
+<CubicEaseInterpolator x1="0.16" y1="1" x2="0.3" y2="1"/>
+</KeyFrameDouble>
+<KeyFrameDouble frame="88" value="1" interpolationType="linear"/>
+</KeyedProperty>
+</KeyedObject>
+<KeyedObject objectId="0:114">
+<KeyedProperty property="opacity">
+<KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
+<KeyFrameDouble frame="90" value="0" interpolationType="cubic">
+<CubicEaseInterpolator x1="0.16" y1="1" x2="0.3" y2="1"/>
+</KeyFrameDouble>
+<KeyFrameDouble frame="120" value="1" interpolationType="linear"/>
+</KeyedProperty>
+</KeyedObject>
 </LinearAnimation>
-<LinearAnimation loopValue="loop" duration="510" fps="30" quantize="true" name="Paint" id="0:105">
-<KeyedObject objectId="0:33">
+<LinearAnimation loopValue="loop" duration="510" fps="30" quantize="true" name="Paint" id="0:118">
+<KeyedObject objectId="0:37">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
 <KeyFrameDouble frame="55" value="0" interpolationType="cubic">
@@ -5386,7 +5528,7 @@
 <KeyFrameDouble frame="481" value="0.5" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:29">
+<KeyedObject objectId="0:33">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
 <KeyFrameDouble frame="61" value="0" interpolationType="cubic">
@@ -5417,7 +5559,7 @@
 <KeyFrameDouble frame="481" value="0.5" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:60">
+<KeyedObject objectId="0:64">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
 <KeyFrameDouble frame="67" value="0" interpolationType="cubic">
@@ -5448,7 +5590,7 @@
 <KeyFrameDouble frame="481" value="0.5" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:56">
+<KeyedObject objectId="0:60">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
 <KeyFrameDouble frame="73" value="0" interpolationType="cubic">
@@ -5479,7 +5621,7 @@
 <KeyFrameDouble frame="481" value="0.5" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:27">
+<KeyedObject objectId="0:31">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
 <KeyFrameDouble frame="79" value="0" interpolationType="cubic">
@@ -5510,7 +5652,7 @@
 <KeyFrameDouble frame="481" value="0.5" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:34">
+<KeyedObject objectId="0:38">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
 <KeyFrameDouble frame="85" value="0" interpolationType="cubic">
@@ -5541,7 +5683,7 @@
 <KeyFrameDouble frame="481" value="0.5" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:57">
+<KeyedObject objectId="0:61">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
 <KeyFrameDouble frame="91" value="0" interpolationType="cubic">
@@ -5572,7 +5714,7 @@
 <KeyFrameDouble frame="481" value="0.5" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:64">
+<KeyedObject objectId="0:68">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
 <KeyFrameDouble frame="97" value="0" interpolationType="cubic">
@@ -5603,7 +5745,7 @@
 <KeyFrameDouble frame="481" value="0.5" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:44">
+<KeyedObject objectId="0:48">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
 <KeyFrameDouble frame="103" value="0" interpolationType="cubic">
@@ -5634,7 +5776,7 @@
 <KeyFrameDouble frame="481" value="0.5" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:38">
+<KeyedObject objectId="0:42">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
 <KeyFrameDouble frame="109" value="0" interpolationType="cubic">
@@ -5665,7 +5807,7 @@
 <KeyFrameDouble frame="481" value="0.5" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:62">
+<KeyedObject objectId="0:66">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
 <KeyFrameDouble frame="115" value="0" interpolationType="cubic">
@@ -5696,7 +5838,7 @@
 <KeyFrameDouble frame="481" value="0.5" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:31">
+<KeyedObject objectId="0:35">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
 <KeyFrameDouble frame="121" value="0" interpolationType="cubic">
@@ -5727,7 +5869,7 @@
 <KeyFrameDouble frame="481" value="0.5" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:45">
+<KeyedObject objectId="0:49">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
 <KeyFrameDouble frame="127" value="0" interpolationType="cubic">
@@ -5758,7 +5900,7 @@
 <KeyFrameDouble frame="481" value="0.5" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:58">
+<KeyedObject objectId="0:62">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
 <KeyFrameDouble frame="133" value="0" interpolationType="cubic">
@@ -5789,7 +5931,7 @@
 <KeyFrameDouble frame="481" value="0.5" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:40">
+<KeyedObject objectId="0:44">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
 <KeyFrameDouble frame="139" value="0" interpolationType="cubic">
@@ -5820,7 +5962,7 @@
 <KeyFrameDouble frame="481" value="0.5" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:41">
+<KeyedObject objectId="0:45">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
 <KeyFrameDouble frame="145" value="0" interpolationType="cubic">
@@ -5851,7 +5993,7 @@
 <KeyFrameDouble frame="481" value="0.5" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:28">
+<KeyedObject objectId="0:32">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
 <KeyFrameDouble frame="151" value="0" interpolationType="cubic">
@@ -5882,7 +6024,7 @@
 <KeyFrameDouble frame="481" value="0.5" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:50">
+<KeyedObject objectId="0:54">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
 <KeyFrameDouble frame="157" value="0" interpolationType="cubic">
@@ -5913,7 +6055,7 @@
 <KeyFrameDouble frame="481" value="0.5" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:30">
+<KeyedObject objectId="0:34">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
 <KeyFrameDouble frame="163" value="0" interpolationType="cubic">
@@ -5944,7 +6086,7 @@
 <KeyFrameDouble frame="481" value="0.5" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:61">
+<KeyedObject objectId="0:65">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
 <KeyFrameDouble frame="169" value="0" interpolationType="cubic">
@@ -5975,7 +6117,7 @@
 <KeyFrameDouble frame="481" value="0.5" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:48">
+<KeyedObject objectId="0:52">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
 <KeyFrameDouble frame="175" value="0" interpolationType="cubic">
@@ -6006,7 +6148,7 @@
 <KeyFrameDouble frame="481" value="0.5" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:51">
+<KeyedObject objectId="0:55">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
 <KeyFrameDouble frame="181" value="0" interpolationType="cubic">
@@ -6037,7 +6179,7 @@
 <KeyFrameDouble frame="481" value="0.5" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:53">
+<KeyedObject objectId="0:57">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
 <KeyFrameDouble frame="187" value="0" interpolationType="cubic">
@@ -6068,7 +6210,7 @@
 <KeyFrameDouble frame="481" value="0.5" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:52">
+<KeyedObject objectId="0:56">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
 <KeyFrameDouble frame="193" value="0" interpolationType="cubic">
@@ -6099,7 +6241,7 @@
 <KeyFrameDouble frame="481" value="0.5" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:43">
+<KeyedObject objectId="0:47">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
 <KeyFrameDouble frame="199" value="0" interpolationType="cubic">
@@ -6130,7 +6272,7 @@
 <KeyFrameDouble frame="481" value="0.5" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:26">
+<KeyedObject objectId="0:30">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
 <KeyFrameDouble frame="205" value="0" interpolationType="cubic">
@@ -6161,7 +6303,7 @@
 <KeyFrameDouble frame="481" value="0.5" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:67">
+<KeyedObject objectId="0:71">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
 <KeyFrameDouble frame="211" value="0" interpolationType="cubic">
@@ -6192,7 +6334,7 @@
 <KeyFrameDouble frame="481" value="0.5" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:37">
+<KeyedObject objectId="0:41">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
 <KeyFrameDouble frame="217" value="0" interpolationType="cubic">
@@ -6223,7 +6365,7 @@
 <KeyFrameDouble frame="481" value="0.5" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:25">
+<KeyedObject objectId="0:29">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
 <KeyFrameDouble frame="223" value="0" interpolationType="cubic">
@@ -6254,7 +6396,7 @@
 <KeyFrameDouble frame="481" value="0.5" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:46">
+<KeyedObject objectId="0:50">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
 <KeyFrameDouble frame="229" value="0" interpolationType="cubic">
@@ -6285,7 +6427,7 @@
 <KeyFrameDouble frame="481" value="0.5" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:36">
+<KeyedObject objectId="0:40">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
 <KeyFrameDouble frame="235" value="0" interpolationType="cubic">
@@ -6316,7 +6458,7 @@
 <KeyFrameDouble frame="481" value="0.5" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:54">
+<KeyedObject objectId="0:58">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
 <KeyFrameDouble frame="241" value="0" interpolationType="cubic">
@@ -6347,7 +6489,7 @@
 <KeyFrameDouble frame="481" value="0.5" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:24">
+<KeyedObject objectId="0:28">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
 <KeyFrameDouble frame="247" value="0" interpolationType="cubic">
@@ -6378,7 +6520,7 @@
 <KeyFrameDouble frame="481" value="0.5" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:65">
+<KeyedObject objectId="0:69">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
 <KeyFrameDouble frame="253" value="0" interpolationType="cubic">
@@ -6409,7 +6551,7 @@
 <KeyFrameDouble frame="481" value="0.5" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:49">
+<KeyedObject objectId="0:53">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
 <KeyFrameDouble frame="259" value="0" interpolationType="cubic">
@@ -6440,7 +6582,7 @@
 <KeyFrameDouble frame="481" value="0.5" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:47">
+<KeyedObject objectId="0:51">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
 <KeyFrameDouble frame="265" value="0" interpolationType="cubic">
@@ -6471,7 +6613,7 @@
 <KeyFrameDouble frame="481" value="0.5" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:23">
+<KeyedObject objectId="0:27">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
 <KeyFrameDouble frame="271" value="0" interpolationType="cubic">
@@ -6502,7 +6644,7 @@
 <KeyFrameDouble frame="481" value="0.5" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:63">
+<KeyedObject objectId="0:67">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
 <KeyFrameDouble frame="277" value="0" interpolationType="cubic">
@@ -6533,7 +6675,7 @@
 <KeyFrameDouble frame="481" value="0.5" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:59">
+<KeyedObject objectId="0:63">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
 <KeyFrameDouble frame="283" value="0" interpolationType="cubic">
@@ -6564,7 +6706,7 @@
 <KeyFrameDouble frame="481" value="0.5" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:35">
+<KeyedObject objectId="0:39">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
 <KeyFrameDouble frame="289" value="0" interpolationType="cubic">
@@ -6595,7 +6737,7 @@
 <KeyFrameDouble frame="481" value="0.5" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:39">
+<KeyedObject objectId="0:43">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
 <KeyFrameDouble frame="295" value="0" interpolationType="cubic">
@@ -6626,7 +6768,7 @@
 <KeyFrameDouble frame="481" value="0.5" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:32">
+<KeyedObject objectId="0:36">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
 <KeyFrameDouble frame="301" value="0" interpolationType="cubic">
@@ -6657,7 +6799,7 @@
 <KeyFrameDouble frame="481" value="0.5" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:42">
+<KeyedObject objectId="0:46">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
 <KeyFrameDouble frame="307" value="0" interpolationType="cubic">
@@ -6688,7 +6830,7 @@
 <KeyFrameDouble frame="481" value="0.5" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:22">
+<KeyedObject objectId="0:26">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
 <KeyFrameDouble frame="313" value="0" interpolationType="cubic">
@@ -6719,7 +6861,7 @@
 <KeyFrameDouble frame="481" value="0.5" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:66">
+<KeyedObject objectId="0:70">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
 <KeyFrameDouble frame="319" value="0" interpolationType="cubic">
@@ -6750,7 +6892,7 @@
 <KeyFrameDouble frame="481" value="0.5" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:55">
+<KeyedObject objectId="0:59">
 <KeyedProperty property="opacity">
 <KeyFrameDouble frame="0" value="0" interpolationType="hold"/>
 <KeyFrameDouble frame="325" value="0" interpolationType="cubic">
@@ -6781,7 +6923,7 @@
 <KeyFrameDouble frame="481" value="0.5" interpolationType="linear"/>
 </KeyedProperty>
 </KeyedObject>
-<KeyedObject objectId="0:101">
+<KeyedObject objectId="0:113">
 <KeyedProperty property="x">
 <KeyFrameDouble frame="0" value="556" interpolationType="cubic">
 <CubicEaseInterpolator x1="0.45" y1="0" x2="0.55" y2="1"/>
