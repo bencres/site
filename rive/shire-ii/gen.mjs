@@ -10,7 +10,7 @@
 // time 0..4 (morning, day, late afternoon, dusk, night), still (skip the intro).
 // Hill also: regular (third visit or later), triggers knock, glint, puff, gust,
 // rustle, post, shine; bare (hide the post, for phones, where the page plants
-// its own signpost under the painting). Gate: close, post.
+// its own signpost under the painting). Gate: close, mouse.
 //
 // Performance: one combined boil animation per artboard, washes are hard-edged
 // glazes (feathers only on the few big soft ones), glows are radial gradients,
@@ -1583,17 +1583,12 @@ function gate(ids) {
   ]));
 
   // mailbox
-  const flagId = ids.next();
   const box = [P(500, 116), P(499, 92), P(508, 82), P(552, 82), P(561, 92), P(560, 116)];
   const mailInk = k.boil({ name: 'mail ink', seed: 430, draw: (rr) => [ink([[P(529, 198), P(529, 116)], [P(536, 198), P(536, 116)], { pts: box, closed: true }, [P(506, 92), P(506, 114)]], rr, { w: 1.7, amt: 0.4, fx: fxGate, tension: 0.5 })] });
   s.add(k.in({ name: 'mail in', cx: 530, cy: 198, t0: 20, t1: 66 }, [
     wc(ids, box, 'D07A5A', rng(431), { alpha: 0.95, off: [1.5, 1.5], wobble: 0.8, grain: 0.5, soft: false, blend: 'normal' }),
     wc(ids, [P(529, 116), P(536, 116), P(536, 198), P(529, 198)], 'B89470', rng(432), { alpha: 0.9, off: [1, 0], grain: 0.3, soft: false, blend: 'normal' }),
     mailInk,
-    group({ name: 'flag', id: flagId, x: 560, y: 108 }, [
-      wc(ids, [P(12, -2), P(24, -2), P(24, -12), P(12, -12)], 'C8463B', rng(433), { alpha: 0.9, off: [0, 0], wobble: 0.3, grain: 0, soft: false }),
-      ink([[P(0, 0), P(24, 0)], { pts: [P(12, -2), P(24, -2), P(24, -12), P(12, -12)], closed: true }], rng(434), { w: 1.3, amt: 0.2, fx: fxGate }),
-    ]),
   ]));
 
   // ground, flowers
@@ -1671,13 +1666,8 @@ function gate(ids) {
     el('AnimationState', { x: 600, y: 0, animationId: closed, id: c }),
   ]));
 
-  const post = s.input('trigger', 'post');
-  s.triggerLayer('post', post, s.anim({ name: 'post', duration: 210, tracks: [
-    { object: flagId, prop: 'rotation', keys: [[0, 0, 'elastic', { amplitude: 1, period: 0.5 }], [40, -Math.PI / 2, 'hold'], [160, -Math.PI / 2, 'cubic', EASE.inOut], [200, 0]] },
-  ] }), { fromAny: false });
   const hMail = ids.next();
   s.add(hit(hMail, 532, 120, 80, 90));
-  s.listen(hMail, 'enter', [Scene.fire(post)]);
   const mouse = s.input('trigger', 'mouse');
   const blink = (f) => [[f, 0, 'cubic', EASE.in], [f + 3, 1, 'cubic', EASE.out], [f + 6, 0, 'hold']];
   const sniff = (f0, f1) => { const k = []; for (let f = f0; f < f1; f += 6) k.push([f, 0, 'cubic', EASE.inOut], [f + 3, 0.16, 'cubic', EASE.inOut]); return k; };

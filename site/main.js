@@ -248,7 +248,7 @@ document.fonts?.ready.then(() => paintArms(state.season));
 // an arm turned (hover or focus) stirs something on the hill; taking it re-wets that room's wash
 arms.forEach((a, i) => {
   const { react, id } = ARMS[i];
-  const stir = () => { hill.fire(react); if (react === 'post') gate.fire('post'); };
+  const stir = () => hill.fire(react);
   a.addEventListener('mouseenter', stir);
   a.addEventListener('focus', stir);
   a.addEventListener('pointerdown', (e) => e.pointerType !== 'mouse' && stir());
@@ -271,20 +271,19 @@ setInterval(() => {
   apply(next);
 }, 5 * 60 * 1000);
 
-// email links raise the mailbox flags
+// email links raise the hill's mailbox flag (the one at the gate has none)
 for (const a of [hello, post]) {
-  const raise = () => { hill.fire('post'); gate.fire('post'); };
+  const raise = () => hill.fire('post');
   a.addEventListener('mouseenter', raise);
   a.addEventListener('focus', raise);
 }
 
 // writing to me is posting a letter: the envelope is taken up and away to the post,
-// the flags go up, and then the mail app opens; a moment later there's a fresh one
+// the hill's flag goes up, and then the mail app opens; a moment later there's a fresh one
 hello.addEventListener('click', (e) => {
   if (reducedMotion || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || hello.classList.contains('posting')) return;
   e.preventDefault();
   hill.fire('post');
-  gate.fire('post');
   hello.classList.add('posting');
   const desk = hello.parentElement;
   sfx(desk, { x: hello.offsetLeft + hello.offsetWidth * 0.78, y: hello.offsetTop + 6, k: 1 }, 'posted!', { spread: 10 });
