@@ -49,7 +49,13 @@ http.createServer((req, res) => {
       file = path.join(file, 'index.html');
     }
   } catch {}
-  if (!fs.existsSync(file)) return res.writeHead(404, { 'Content-Type': 'text/plain' }).end('not found');
+  // like Vercel: an address that leads nowhere gets the site's 404.html, if it has one
+  let status = 200;
+  if (!fs.existsSync(file)) {
+    file = path.join(root, '404.html');
+    status = 404;
+    if (!fs.existsSync(file)) return res.writeHead(404, { 'Content-Type': 'text/plain' }).end('not found');
+  }
 
   const headers = { 'Content-Type': TYPES[path.extname(file)] || 'application/octet-stream', Vary: 'Accept-Encoding' };
   for (const rule of headerRules) if (rule.re.test(url)) Object.assign(headers, rule.headers);
@@ -68,12 +74,12 @@ http.createServer((req, res) => {
   headers['Cache-Control'] ??= 'public, max-age=0, must-revalidate';
   const st = fs.statSync(body);
   headers.ETag = `"${st.size.toString(36)}-${Math.round(st.mtimeMs).toString(36)}${headers['Content-Encoding'] ? '-' + headers['Content-Encoding'] : ''}"`;
-  if (req.headers['if-none-match'] === headers.ETag) {
+  if (status === 200 && req.headers['if-none-match'] === headers.ETag) {
     delete headers['Content-Length'];
     return res.writeHead(304, headers).end();
   }
   headers['Content-Length'] = st.size;
-  res.writeHead(200, headers);
+  res.writeHead(status, headers);
   if (req.method === 'HEAD') return res.end();
   fs.createReadStream(body).pipe(res);
 }).listen(port, () => console.log(`serving ${root} on http://localhost:${port}/`));

@@ -164,6 +164,7 @@ const meal = (hour, time) => {
   const h = hour ?? MEAL_HOUR[time];
   return MEALS.find(([until]) => h < until)[1];
 };
+const GOOD_MORNING = '“Do you wish me a good morning, or mean that it is a good morning whether I want it or not; or that you feel good this morning; or that it is a morning to be good on?” (Gandalf)';
 const SCHEDULE = 'A hobbit’s day: breakfast, second breakfast, elevenses, luncheon, afternoon tea, dinner and supper.';
 
 let state = null;
@@ -174,7 +175,8 @@ function paint(next) {
   root.dataset.time = time;
   let sign = SIGN[time];
   if (season === 'winter' && (time === 'day' || time === 'afternoon')) sign = 'Knock the snow off your boots and come in.';
-  $('#sign-text').textContent = `${sign} ${meal(next.hour, time)}`;
+  // the morning sign is Bilbo's "Good morning!", and Gandalf's answer is there for anyone who hovers
+  $('#sign-text').replaceChildren(h('span', { title: time === 'morning' ? GOOD_MORNING : null }, sign), ` ${meal(next.hour, time)}`);
   $('#sign').title = SCHEDULE;
   document.querySelectorAll('.room-block .wash').forEach((el, i) => {
     const [col, acc] = PIGMENTS[season][i % 5];
@@ -395,6 +397,8 @@ const knockWord = () => sfx(hillFigEl, paintAt(608, 288), 'knock', { spread: 36 
 
 // idle → (knock) → coming → (wait) welcome, or (knock, knock) angry → idle
 let door = { state: 'idle', knocks: 0, timer: 0 };
+const ANGRY = ['WHAT?!', 'We don’t want any adventures here, thank you!', 'WHAT?!', 'WHAT?!', 'We don’t want any adventures here, thank you!', 'You might try over The Hill or across The Water.'];
+let angry = 0;
 function knockAt() {
   hill.fire('knock');
   knockWord();
@@ -407,10 +411,12 @@ function knockAt() {
     door.bubble?.hush();
     setTimeout(() => {
       hill.fire('slam');
-      say('WHAT?!', { kind: 'angry', ms: 1100 });
+      // mostly a bare WHAT?!, sometimes Bilbo's own way of seeing off a caller
+      const line = ANGRY[angry++ % ANGRY.length];
+      say(line, { kind: 'angry', ms: line.length > 8 ? 2400 : 1100 });
       // the slam shakes a few leaves off the tree
       setTimeout(() => hill.fire('shake'), 1450);
-      setTimeout(() => (door = { state: 'idle', knocks: 0, timer: 0 }), 2600);
+      setTimeout(() => (door = { state: 'idle', knocks: 0, timer: 0 }), line.length > 8 ? 3400 : 2600);
     }, 350);
   }
 }
@@ -434,6 +440,30 @@ function answer() {
 }
 document.addEventListener('keydown', (e) => {
   if (e.key === 'k' && !e.metaKey && !e.ctrlKey && !e.altKey && document.activeElement === document.body) knockAt();
+});
+
+// the door's other way in, the one written over the Doors of Durin: it's in the console for
+// anyone who looks, and saying "mellon" (friend) anywhere on the page opens it
+console.info('%cSpeak, friend, and enter.', "font: 600 22px 'Caveat', cursive; color: #2f6a45;");
+let spoken = '';
+document.addEventListener('keydown', (e) => {
+  if (e.metaKey || e.ctrlKey || e.altKey || e.key.length !== 1 || e.target.closest?.('input, textarea, [contenteditable]')) return;
+  spoken = (spoken + e.key.toLowerCase()).slice(-6);
+  if (spoken !== 'mellon' || door.state !== 'idle') return;
+  spoken = '';
+  door = { state: 'open', knocks: 0, timer: 0 };
+  hill.fire('welcome');
+  setTimeout(() => say('Mellon! Come in, friend.', { ms: 3200 }), 500);
+  setTimeout(() => (door = { state: 'idle', knocks: 0, timer: 0 }), 5200);
+});
+
+// and on the knob, the first line of the book
+const KNOB = [620, 292];
+hillFigEl.addEventListener('pointermove', (e) => {
+  const at = paintAt(...KNOB), r = hillFigEl.getBoundingClientRect();
+  const on = Math.hypot(e.clientX - r.left - at.x, e.clientY - r.top - at.y) < 10 * at.k;
+  if (on !== hillFigEl.hasAttribute('title')) hillFigEl.toggleAttribute('title', on);
+  if (on) hillFigEl.title = 'In a hole in the ground there lived a hobbit.';
 });
 
 // ---------- small things to find

@@ -17,12 +17,15 @@ const a = (href, text, attrs = '') => `<a href="${esc(href)}"${attrs}>${esc(text
 // a line of copy, where [text](https://…) is a link (opening in a new tab, like the projects)
 const prose = (s) => esc(s).replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, (_, text, url) => `<a href="${url}" target="_blank" rel="noopener">${text}</a>`);
 // an ink mark (main.js fades it in); its SVG is drawn now unless the season decides it
+// for the ways out, as Bilbo used to say
+const DOOR_STEP = '“It’s a dangerous business, Frodo, going out your door.”';
 const mark = (cls, svg = '') => `<span class="mark ${cls}" aria-hidden="true">${svg}</span>`;
 
 // the rooms of the house, in the order the signpost points to them. `react` (what
 // stirs on the hill when you turn the arm) lives in main.js, keyed by id
 const ROOMS = [
-  { id: 'now', title: 'Now', room: 'by the fire', items: c.now.items.map(prose) },
+  { id: 'now', title: 'Now', room: 'by the fire', items: c.now.items.map(prose),
+    motto: ['All we have to decide is what to do with the time that is given us.', 'Gandalf'] },
   { id: 'work', title: 'Work', room: 'the study', mark: mark('m-blot', splotch({ seed: 5, dir: 2.5 })),
     // the places I've worked, named but not linked
     items: c.work.map((w) => `<strong>${esc(w.name)}</strong>, ${esc(w.role)} <span class="when">${esc(w.when)}</span>`) },
@@ -30,11 +33,11 @@ const ROOMS = [
   { id: 'writing', title: 'Writing', room: 'the bookshelves', mark: mark('m-hatch', hatch({ seed: 4, n: 5, cross: true })),
     items: c.writing.map((w) => `${a(w.url, w.title)}${w.starred ? '<span class="star" title="A favorite"> ✦</span>' : ''} <span class="when">${esc(w.date)}</span>`) },
   { id: 'elsewhere', title: 'Elsewhere', room: 'out the back gate', arm: 'yonder', inline: true, mark: mark('m-spatter', splotch({ seed: 12, dir: -0.5, size: 0.6, spatter: 10 })),
-    items: c.elsewhere.map((l, i) => `<a href="${esc(l.url)}" class="badge" target="_blank" rel="me noopener"><span class="mark-icon">${icon({ kind: l.name.toLowerCase(), seed: 61 + i * 13 })}</span><span class="label">${esc(l.name)}</span></a>`) },
+    items: c.elsewhere.map((l, i) => `<a href="${esc(l.url)}" class="badge" target="_blank" rel="me noopener" title="${esc(DOOR_STEP)}"><span class="mark-icon">${icon({ kind: l.name.toLowerCase(), seed: 61 + i * 13 })}</span><span class="label">${esc(l.name)}</span></a>`) },
 ];
 // the signpost: an arm for each room (Elsewhere points back over the hill), and one for the post
 const ARMS = [
-  ...ROOMS.map((rm) => ({ id: rm.id, title: rm.title, sub: rm.arm || rm.room, dir: rm.id === 'elsewhere' ? 'l' : 'r' })),
+  ...ROOMS.map((rm) => ({ id: rm.id, title: rm.title, sub: rm.arm || rm.room, dir: rm.id === 'elsewhere' ? 'l' : 'r', hint: rm.id === 'elsewhere' ? DOOR_STEP : null })),
   { id: 'callers', title: 'Post', sub: 'at the gate', dir: 'r' },
 ];
 const TILT = [-2.2, 1.6, -1.1, 2.2, -2.6, 5.5];
@@ -47,12 +50,12 @@ const parts = {
     `<p class="hello">Say hello any time: <button type="button" class="copy" data-copy="${esc(c.email)}">or copy the address</button></p>`,
     `<div class="post-desk"><a href="mailto:${esc(c.email)}" class="letter mail" aria-label="Write to me at ${esc(c.email)}">${letter({ seed: 17 })}<span class="addr" aria-hidden="true"><span class="via">by Quick Post</span><span class="to">To <span class="em">${esc(c.email)}</span></span><span class="at">at the round green door, Under-Hill</span></span></a></div>`,
   ].join('\n'),
-  rooms: ROOMS.map((rm) => `<section class="room-block" aria-labelledby="${rm.id}"><h2 id="${rm.id}"><span class="wash" aria-hidden="true"></span><span class="title">${esc(rm.title)}</span><span class="room">${esc(rm.room)}</span>${rm.note ? `<small>${esc(rm.note)}</small>` : ''}${rm.mark || ''}</h2><ul class="${rm.inline ? 'knobs inline' : 'knobs'}">
+  rooms: ROOMS.map((rm) => `<section class="room-block" aria-labelledby="${rm.id}"><h2 id="${rm.id}"><span class="wash" aria-hidden="true"></span><span class="title">${esc(rm.title)}</span><span class="room">${esc(rm.room)}</span>${rm.note ? `<small>${esc(rm.note)}</small>` : ''}${rm.mark || ''}</h2>${rm.motto ? `<p class="motto">“${esc(rm.motto[0])}” <span class="by">${esc(rm.motto[1])}</span></p>` : ''}<ul class="${rm.inline ? 'knobs inline' : 'knobs'}">
 ${rm.items.map((it) => `<li>${it}</li>`).join('\n')}
 </ul></section>`).join('\n'),
   signpost: [
     `<span class="upright" aria-hidden="true">${upright({ w: 26, h: 262, seed: 7 })}</span>`,
-    ...ARMS.map((arm, i) => `<a href="#${arm.id}" class="arm ${arm.dir}" style="--i:${i}; --tilt:${TILT[i]}deg"><b>${esc(arm.title)}</b> <small>${esc(arm.sub)}</small></a>`),
+    ...ARMS.map((arm, i) => `<a href="#${arm.id}" class="arm ${arm.dir}" style="--i:${i}; --tilt:${TILT[i]}deg"${arm.hint ? ` title="${esc(arm.hint)}"` : ''}><b>${esc(arm.title)}</b> <small>${esc(arm.sub)}</small></a>`),
   ].join('\n'),
   flick: mark('m-flick', flick({ seed: 9 })),
   post: a(`mailto:${c.email}`, c.email, ' id="post"'),
