@@ -1,0 +1,11 @@
+:root, [data-season] { --paper: #f9f1e1; --link: #2a5c3b; --link-line: rgba(42, 92, 59, 0.35); --brass: #c8922a; --holly: #9e3328; }
+[data-time='morning'] { --paper: #faf3e4; }
+[data-time='afternoon'] { --paper: #f8eedb; }
+[data-time='dusk'] { --paper: #f6eada; }
+[data-time='night'] { --paper: #f1e7d8; }
+::selection { background: rgba(178, 58, 46, 0.2); }
+.say.sfx.carol { color: var(--holly); font-weight: 600; animation: carol-word 3s cubic-bezier(0.25, 0.6, 0.35, 1) both; }
+[data-time='dusk'] .say.sfx.carol, [data-time='night'] .say.sfx.carol { color: #fbd9a8; }
+@keyframes carol-word { 0% { opacity: 0; translate: 0 6px; scale: 0.85; } 18% { opacity: 1; translate: 4px -6px; scale: 1; } 60% { opacity: 1; translate: -4px -22px; } 100% { opacity: 0; translate: 6px -40px; } }
+.almanac input[type='range'] { accent-color: var(--holly); }
+

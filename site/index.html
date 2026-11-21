@@ -10,6 +10,26 @@
 const SEASONS = ['spring', 'summer', 'autumn', 'winter'];
 const TIMES = ['morning', 'day', 'afternoon', 'dusk', 'night'];
 
+const HOLIDAYS = {
+  lithe: { name: 'Lithe', from: [6, 19], to: [6, 24], season: 1, light: [4.75, 17, 20.25, 22.75] },
+  bilbo: { name: 'Bilbo’s birthday', from: [9, 19], to: [9, 25], season: 2 },
+  halloween: { name: 'Halloween', from: [10, 20], to: [10, 31], season: 2 },
+  yule: { name: 'Yule', from: [12, 18], to: [1, 3], season: 3 },
+};
+
+function holiday(params = new URLSearchParams(location.search), now = new Date()) {
+  const asked = params.get('holiday');
+  if (asked === 'none') return null;
+  if (Object.hasOwn(HOLIDAYS, asked)) return asked;
+  const day = params.get('day')?.match(/^(\d{1,2})-(\d{1,2})$/);
+  const md = day ? +day[1] * 100 + +day[2] : (now.getMonth() + 1) * 100 + now.getDate();
+  for (const [key, { from, to }] of Object.entries(HOLIDAYS)) {
+    const a = from[0] * 100 + from[1], b = to[0] * 100 + to[1];
+    if (a <= b ? md >= a && md <= b : md >= a || md <= b) return key;
+  }
+  return null;
+}
+
 function when(params = new URLSearchParams(location.search), now = new Date()) {
   let month = now.getMonth();
   let hours = now.getHours() + now.getMinutes() / 60;
@@ -17,28 +37,34 @@ function when(params = new URLSearchParams(location.search), now = new Date()) {
   if (day) month = Math.min(11, Math.max(0, +day[1] - 1));
   let season = [3, 3, 0, 0, 0, 1, 1, 1, 2, 2, 2, 3][month];
   if (SEASONS.includes(params.get('season'))) season = SEASONS.indexOf(params.get('season'));
+  const feast = HOLIDAYS[holiday(params, now)];
+  if (feast) season = feast.season;
   const t = params.get('time') || '';
   const hm = t.match(/^(\d{1,2}):(\d{2})$/);
   if (hm) hours = +hm[1] + +hm[2] / 60;
   // the light keeps different hours through the year
-  const dawn = [5.5, 5, 6.5, 7.25][season];
-  const golden = [16.5, 17.5, 15.5, 14.5][season];
-  const dusk = [18.75, 19.75, 17.5, 16.5][season];
-  const night = dusk + 2.25;
+  const [dawn, golden, dusk] = feast?.light || [[5.5, 5, 6.5, 7.25][season], [16.5, 17.5, 15.5, 14.5][season], [18.75, 19.75, 17.5, 16.5][season]];
+  const night = feast?.light?.[3] ?? dusk + 2.25;
   let time = hours >= night || hours < dawn ? 4 : hours >= dusk ? 3 : hours >= golden ? 2 : hours >= 10 ? 1 : 0;
   if (TIMES.includes(t)) time = TIMES.indexOf(t);
   // the clock's hour, unless a named time (?time=day) stands in for it
   return { season, time, hour: TIMES.includes(t) ? null : hours, elevenses: hours >= 11 && hours < 12 && !TIMES.includes(t) };
 }
-const s = when(new URLSearchParams(location.search));
+const q = new URLSearchParams(location.search);
+const s = when(q);
 const root = document.documentElement;
 root.dataset.season = SEASONS[s.season];
 root.dataset.time = TIMES[s.time];
+const feast = holiday(q);
+if (feast) root.dataset.holiday = window.__holiday = feast;
+window.__main = feast ? `holidays/${feast}/main.js` : 'main.js';
+document.head.append(Object.assign(document.createElement('link'), { rel: 'modulepreload', href: window.__main }));
 // whether the still goes up at once: on a phone (where the live painting is a long way
 // off on a cold load), or when the hill has already drawn itself in for this visitor
 let known = false;
 try { known = !!sessionStorage.getItem('shire-ii:drawn'); } catch {}
 root.classList.toggle('known', known);
+if (feast) return;
 root.classList.toggle('quick', known || matchMedia('(max-width: 600px)').matches);
 window.__still = `stills/${SEASONS[s.season]}-${TIMES[s.time]}.webp`;
 document.head.append(Object.assign(document.createElement('link'), { rel: 'preload', as: 'image', href: window.__still, fetchPriority: 'high' }));
@@ -62,7 +88,8 @@ document.head.append(Object.assign(document.createElement('link'), { rel: 'prelo
   <script src="shared/turn.js"></script>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="wash.css">
-  <link rel="modulepreload" href="main.js">
+  <!-- a holiday's colours over the page's own, written in so they're there for the first paint -->
+  <script>window.__holiday && document.write(`<link rel="stylesheet" href="holidays/${window.__holiday}/style.css">`);</script>
   <link rel="modulepreload" href="shared/rive-mount.js">
   <link rel="modulepreload" href="shared/content.js">
   <link rel="modulepreload" href="paint.js">
@@ -78,6 +105,7 @@ document.head.append(Object.assign(document.createElement('link'), { rel: 'prelo
       <img class="still" alt="" fetchpriority="high" onerror="this.remove()">
       <!-- build:still --><script>(() => {
 const still = document.currentScript.previousElementSibling;
+if (!window.__still) return still.remove();
 still.src = window.__still;
 // the still only shows if the live painting isn't there within a moment; on a quick
 // load the painting draws itself in, as it always has, with no picture before it.
@@ -245,7 +273,8 @@ if (!document.documentElement.classList.contains('quick')) setTimeout(() => stil
     </footer>
   </div>
 
-  <script type="module" src="main.js"></script>
+  <!-- the page's script, or on a holiday the holiday's (chosen and preloaded at the top) -->
+  <script type="module">import(`./${window.__main}`);</script>
   <script type="module" src="shared/turn-tune.js"></script>
 </body>
 </html>

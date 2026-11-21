@@ -75,9 +75,11 @@ let uid = 0;
 
 /**
  * A painted arm, `w` units long by 40 tall (the caller sizes the viewBox to the
- * link's own aspect, so the ink keeps its weight). Points right or left.
+ * link's own aspect, so the ink keeps its weight). Points right or left. `wood` can
+ * stain the board another colour (a holiday's), from its paper and edge to its glaze.
  */
-export function arm({ w = 200, dir = 'r', tint = 'E9B93A', seed = 1 }) {
+export function arm({ w = 200, dir = 'r', tint = 'E9B93A', seed = 1, wood = {} }) {
+  const { face = 'F1E6CB', faceA = 0.96, edge = '9C7C58', edgeA = 0.5, edgeW = 1.2, tintA = 0.26 } = wood;
   const id = `a${++uid}`;
   const r = rng(seed);
   const H = 40;
@@ -89,8 +91,8 @@ export function arm({ w = 200, dir = 'r', tint = 'E9B93A', seed = 1 }) {
   const grainLine = `M${f(X(9))} ${f(10 + r.jit(1))}C${f(X(w * 0.3))} ${f(9 + r.jit(1.4))} ${f(X(w * 0.6))} ${f(11 + r.jit(1.4))} ${f(X(w - 30))} ${f(9.5 + r.jit(1))}`;
   return `<svg class='paint' viewBox='0 0 ${f(w)} ${H}' preserveAspectRatio='none' aria-hidden='true' focusable='false'>${DEFS(id, seed)}
 <g class='soak' filter='url(#d${id})'>
-<path d='${board}' fill='#F1E6CB' fill-opacity='.96' stroke='#9C7C58' stroke-opacity='.5' stroke-width='1.2'/>
-<path class='tint' d='${glaze}' fill='#${tint}' fill-opacity='.26' style='mix-blend-mode:multiply'/>
+<path d='${board}' fill='#${face}' fill-opacity='${faceA}' stroke='#${edge}' stroke-opacity='${edgeA}' stroke-width='${edgeW}'/>
+<path class='tint' d='${glaze}' fill='#${tint}' fill-opacity='${tintA}' style='mix-blend-mode:multiply'/>
 <path d='${board}' filter='url(#g${id})' opacity='.42'/>
 <path d='${grainLine}' fill='none' stroke='#5E554C' stroke-opacity='.3' stroke-width='.8'/>
 </g>
@@ -374,7 +376,7 @@ ${waxSeal({ seed: seed + 3, x: tie, y: 34, scale: 0.86, wet: `d${id}`, grain: `g
  * bottom 12px, its tip at (`tail`, h). Paper, a pooled wash and a hand-ruled ink
  * edge, as a background image sized to the words; angry is the same in red ink.
  */
-export function bubble({ w, h, tail = 16, seed = 1, ink = INK, tint = 'E9B93A', tintA = 0.14 }) {
+export function bubble({ w, h, tail = 16, seed = 1, ink = INK, paper = 'FBF6EA', tint = 'E9B93A', tintA = 0.14 }) {
   const r = rng(seed);
   const T = 12;
   const x0 = 1.5, y0 = 1.5, x1 = w - 1.5, y1 = h - T;
@@ -393,7 +395,7 @@ export function bubble({ w, h, tail = 16, seed = 1, ink = INK, tint = 'E9B93A', 
     + `Q${f(x0 + j())} ${f(y0 + j())} ${f(x0 + R)} ${f(y0 + j(0.4))}Z`;
   const glaze = blob(r, w * 0.5, (y0 + y1) / 2, w * 0.4, (y1 - y0) * 0.32, 12, 0.16);
   const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 ${f(w)} ${f(h)}' width='${f(w)}' height='${f(h)}'>
-<path d='${d}' fill='#FBF6EA'/>
+<path d='${d}' fill='#${paper}'/>
 <path d='${glaze}' fill='#${tint}' fill-opacity='${tintA}'/>
 <path d='${d}' fill='none' stroke='#${ink}' stroke-opacity='.14' stroke-width='3.6' stroke-linejoin='round'/>
 <path d='${d}' fill='none' stroke='#${ink}' stroke-width='1.6' stroke-linejoin='round' stroke-linecap='round'/>

@@ -1,0 +1,16 @@
+:root, [data-season] { --paper: #faf0d8; --link: #9c3b28; --link-line: rgba(156, 59, 40, 0.35); --brass: #d9951e; }
+[data-time='morning'] { --paper: #fbf3df; }
+[data-time='afternoon'] { --paper: #f9ecd0; }
+[data-time='dusk'] { --paper: #f7e7d2; }
+[data-time='night'] { --paper: #efe7da; }
+[data-time='afternoon'] { --hour: rgba(237, 178, 78, 0.17); }
+[data-time='dusk'] { --hour: rgba(215, 137, 90, 0.22); }
+[data-time='night'] { --hour: rgba(38, 50, 108, 0.38); }
+::selection { background: rgba(240, 180, 41, 0.38); }
+.lithe-note { display: block; margin-top: 2px; max-width: 36em; text-wrap: balance; font: 500 18px/1.25 'Caveat', 'Caveat Fallback', cursive; color: #7d4f33; transform: rotate(0.5deg); transform-origin: left; }
+.lithe-note .sprig { display: inline-block; width: 19px; height: 19px; vertical-align: -4px; margin-right: 5px; }
+@media (max-width: 600px) {
+  .lithe-note { font-size: 16.5px; margin-top: 4px; }
+}
+.say.sfx.tune { font-size: 16px; font-weight: 500; }
+

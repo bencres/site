@@ -424,6 +424,15 @@ main { margin-top: 30px; }
   opacity: 0; visibility: hidden; transition: opacity 0.3s, max-height 0.3s, margin-top 0.3s, visibility 0s 0.3s;
 }
 .almanac.open.moved .now { max-height: 1.2em; margin-top: 0; opacity: 1; visibility: visible; transition-delay: 0s; }
+/* the holidays, on any day of the year: the one showing is underlined */
+.almanac .feasts { display: flex; flex-wrap: wrap; align-items: baseline; gap: 1px 10px; margin: -2px 0 4px; }
+.almanac .feasts span { flex-basis: 100%; }
+.almanac .feasts button {
+  padding: 0; border: 0; background: none; cursor: pointer;
+  font: 500 16px/1.2 'Caveat', 'Caveat Fallback', cursive; color: var(--soft); transition: color 0.2s;
+}
+.almanac .feasts button:hover { color: var(--ink); }
+.almanac .feasts [aria-pressed='true'] { color: var(--ink); cursor: default; text-decoration: underline wavy rgba(43, 35, 28, 0.35); text-underline-offset: 3px; }
 .almanac :focus-visible { outline: 2px dashed var(--link); outline-offset: 2px; }
 @media (prefers-reduced-motion: reduce) {
   .almanac, .almanac.open { transform: rotate(-0.6deg); }

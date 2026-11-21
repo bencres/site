@@ -563,6 +563,8 @@ const almanac = (() => {
     time = dial('time', 4);
     now = h('button', { type: 'button', class: 'now' }, 'back to now');
     now.addEventListener('click', () => {
+      // a holiday picked (or put away) in the almanac takes loading the page again
+      if (params.has('holiday')) return location.assign(location.pathname);
       previewing = false;
       for (const k of ['season', 'time', 'day']) params.delete(k);
       history.replaceState(history.state, '', location.pathname);
@@ -573,7 +575,9 @@ const almanac = (() => {
     shut.addEventListener('click', () => toggle(false));
     card = h('aside', { class: 'almanac', 'aria-label': 'Preview a season and time' }, shut, h('p', { class: 'head' }, 'season & time'), season.label, time.label, now);
     card.addEventListener('keydown', (e) => e.key === 'Escape' && toggle(false));
-    if (urlPreview) card.classList.add('moved');
+    if (urlPreview || params.has('holiday')) card.classList.add('moved');
+    // and the holidays, on any day of the year (fetched only once the card is wanted)
+    import('./holidays/pick.js').then(({ holidayRow }) => now.before(holidayRow()));
     document.body.append(card);
     show(state);
     void card.offsetWidth;

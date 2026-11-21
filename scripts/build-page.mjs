@@ -61,24 +61,33 @@ ${rm.items.map((it) => `<li>${it}</li>`).join('\n')}
   post: a(`mailto:${c.email}`, c.email, ' id="post"'),
   // Before first paint: the visitor's season and hour (when.js, inlined) go on <html>
   // for the paper and inks, and the hill's finished painting is shown as a still
-  // until the live one is ready (main.js swaps them)
+  // until the live one is ready (main.js swaps them). On a holiday the page is dressed
+  // for it instead: its own script and painting (holidays/<name>/main.js), its colours
+  // over the page's (written in after wash.css), and no still.
   early: `<script>(() => {
 ${readFileSync(join(root, 'site/when.js'), 'utf8').replace(/^\/\/.*\n/gm, '').replace(/^export /gm, '').trim()}
-const s = when(new URLSearchParams(location.search));
+const q = new URLSearchParams(location.search);
+const s = when(q);
 const root = document.documentElement;
 root.dataset.season = SEASONS[s.season];
 root.dataset.time = TIMES[s.time];
+const feast = holiday(q);
+if (feast) root.dataset.holiday = window.__holiday = feast;
+window.__main = feast ? \`holidays/\${feast}/main.js\` : 'main.js';
+document.head.append(Object.assign(document.createElement('link'), { rel: 'modulepreload', href: window.__main }));
 // whether the still goes up at once: on a phone (where the live painting is a long way
 // off on a cold load), or when the hill has already drawn itself in for this visitor
 let known = false;
 try { known = !!sessionStorage.getItem('shire-ii:drawn'); } catch {}
 root.classList.toggle('known', known);
+if (feast) return;
 root.classList.toggle('quick', known || matchMedia('(max-width: 600px)').matches);
 window.__still = \`stills/\${SEASONS[s.season]}-\${TIMES[s.time]}.webp\`;
 document.head.append(Object.assign(document.createElement('link'), { rel: 'preload', as: 'image', href: window.__still, fetchPriority: 'high' }));
 })();</script>`,
   still: `<script>(() => {
 const still = document.currentScript.previousElementSibling;
+if (!window.__still) return still.remove();
 still.src = window.__still;
 // the still only shows if the live painting isn't there within a moment; on a quick
 // load the painting draws itself in, as it always has, with no picture before it.
