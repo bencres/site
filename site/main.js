@@ -467,7 +467,8 @@ hillFigEl.addEventListener('pointermove', (e) => {
 });
 
 // ---------- small things to find
-// the chimney blows smoke rings, wobblier the more you ask, and every fifth a heart
+// the chimney blows smoke rings, wobblier the more you ask, and every fifth a heart (the
+// rings speak for themselves: no word floats up with them)
 let rings = 0, ringsCool = 0;
 function chimney() {
   clearTimeout(ringsCool);
@@ -475,7 +476,6 @@ function chimney() {
   rings++;
   const kind = rings % 5 === 0 ? 'heart' : rings >= 3 ? 'wobble' : 'ring';
   hill.fire(`ring-${kind}`);
-  sfx(hillFigEl, paintAt(712, 128), kind === 'heart' ? 'pff ♥' : 'puff', { spread: 20 });
 }
 const hillEvents = { door: () => knockAt(), chimney };
 
