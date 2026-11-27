@@ -45,6 +45,13 @@ canvas[aria-hidden] { pointer-events: auto; }
   clip: rect(0 0 0 0); white-space: nowrap;
 }
 
+/* a first visit fades up from the browser's blank white instead of popping in
+   (turn.js marks it): the paper washes in under the page as the page itself comes up */
+@keyframes fresh-paper { from { background-color: #fff; } }
+@keyframes fresh-page { from { opacity: 0; } }
+html.fresh { animation: fresh-paper 0.3s ease-out; }
+html.fresh body { animation: fresh-page 0.3s ease-out; }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
