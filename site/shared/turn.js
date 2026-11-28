@@ -86,11 +86,6 @@ globalThis.turnSettled = new Promise((done) => (settle = done));
 {
   const a = globalThis.navigation?.activation;
   if (!TURNS || !('onpagereveal' in globalThis) || document.visibilityState === 'hidden' || matchMedia('(prefers-reduced-motion: reduce)').matches || (a && (!a.from || a.navigationType === 'reload'))) settle();
-  // a first visit, with no page of ours before it, comes up out of the browser's blank
-  // white rather than popping in (base.css). From another page here (or a reload) the
-  // old sheet stays up until this one is ready, so it's the drops, or a plain cut
-  const from = a ? a.from : document.referrer && new URL(document.referrer).origin === location.origin;
-  if (!from) document.documentElement.classList.add('fresh');
 }
 
 addEventListener('pagereveal', (e) => {
